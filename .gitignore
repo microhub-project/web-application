@@ -7,3 +7,5 @@ package-lock.json
 .env.dev
 
 public/tailwind/output.css
+.DS_Store
+.vscode
