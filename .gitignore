@@ -5,3 +5,5 @@ package-lock.json
 .github
 .env
 .env.dev
+
+public/tailwind/output.css
