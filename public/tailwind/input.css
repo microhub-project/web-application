@@ -5,9 +5,29 @@
   --background-noise: url("/assets/img/texture/noise.svg")
 }
 
-@theme {
+@theme inline {
   --font-mono: "JetBrains Mono", monospace;
   --font-sans: "Inter", sans-serif;
+
+  /* referência: https://magicui.design/docs/components/aurora-text */
+  --animate-aurora-text: aurora-text 4s ease-in-out infinite alternate;
+  @keyframes aurora-text {
+   0% {
+      background-position: 0% 50%;
+    }
+    25% {
+      background-position: 50% 100%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    75% {
+      background-position: 50% 0%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
 }
 
 @layer base {
