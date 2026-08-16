@@ -35,7 +35,7 @@ const loadFaqItems = () => {
   questionsAndAnswers.forEach(((item, i) => {
     container.innerHTML += `
       <div class="flex items-center justify-center w-full" onclick="faqHandler(${i})">
-        <div class="flex flex-col items-center justify-center gap-3 w-full bg-slate-800 rounded-2xl px-6 py-4 max-w-3xl cursor-pointer">
+        <div class="flex flex-col items-center justify-center gap-3 w-full bg-slate-800 rounded-2xl px-6 py-4 max-w-3xl cursor-pointer border border-transparent hover:scale-103" id="item-${i}">
           <div class="flex justify-start items-center gap-4 w-full">
             <button class="flex justify-center cursor-pointer">
               <i id="carret-${i}" class="ph ph-caret-down text-4xl"></i>
@@ -60,6 +60,7 @@ const faqHandler = (index) => {
   for (let i = 0; i < questionsAndAnswers.length; i++) {
     const carretElement = document.getElementById(`carret-${i}`)
     const answerElement = document.getElementById(`answer-${i}`)
+    const itemElement = document.getElementById(`item-${i}`)
 
     if (answerElement.classList.contains("flex") && index !== i) {
       answerElement.classList.add("hidden")
@@ -67,11 +68,15 @@ const faqHandler = (index) => {
 
       carretElement.classList.add("ph-caret-down")
       carretElement.classList.remove("ph-caret-up")
+
+      itemElement.classList.remove("scale-103", "border-blue-500!")
     }
   }
 
   const carretElement = document.getElementById(`carret-${index}`)
   const answerElement = document.getElementById(`answer-${index}`)
+  const itemElement = document.getElementById(`item-${index}`)
+
 
   if (answerElement.classList.contains("hidden")) {
     answerElement.classList.remove("hidden")
@@ -79,11 +84,15 @@ const faqHandler = (index) => {
 
     carretElement.classList.remove("ph-caret-down")
     carretElement.classList.add("ph-caret-up")
+
+    itemElement.classList.add("scale-103", "border-blue-500!")
   } else {
     answerElement.classList.add("hidden")
     answerElement.classList.remove("flex")
 
     carretElement.classList.add("ph-caret-down")
     carretElement.classList.remove("ph-caret-up")
+
+    itemElement.classList.remove("scale-103", "border-blue-500!")
   }
 }
