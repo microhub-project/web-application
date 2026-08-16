@@ -34,8 +34,8 @@ const loadFaqItems = () => {
 
   questionsAndAnswers.forEach(((item, i) => {
     container.innerHTML += `
-      <div class="flex items-center justify-center w-full" onclick="faqHandler(${i})">
-        <div class="flex flex-col items-center justify-center gap-3 w-full bg-slate-800 rounded-2xl px-6 py-4 max-w-3xl cursor-pointer border border-transparent hover:scale-103" id="item-${i}">
+      <div class="flex items-center justify-center w-full *:transition-all *:duration-300">
+        <div class="flex flex-col items-center justify-center gap-3 w-full bg-slate-800 rounded-2xl px-6 py-4 max-w-3xl cursor-pointer border border-transparent hover:scale-103" id="item-${i}" onclick="faqHandler(${i})">
           <div class="flex justify-start items-center gap-4 w-full">
             <button class="flex justify-center cursor-pointer">
               <i id="carret-${i}" class="ph ph-caret-down text-4xl"></i>
