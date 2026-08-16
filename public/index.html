@@ -12,9 +12,10 @@
     type="text/css"
     href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"
   />
+  <script src="script.js"></script>
 </head>
 
-<body class="bg-slate-950 text-slate-50 font-mono font-normal overflow-x-hidden antialiased *:selection:bg-blue-50 *:selection:text-indigo-900">
+<body class="bg-slate-950 text-slate-50 font-mono font-normal overflow-x-hidden antialiased *:selection:bg-blue-50 *:selection:text-indigo-900" onload="loadFaqItems()">
   <div class="bg-noise"></div>
   <header class="w-full bg-slate-950 flex items-center justify-around py-6 px-8 border-y border-slate-700 z-50 fixed overflow-hidden">
     <div>
@@ -187,6 +188,11 @@
           </div>
         </div>
       </div>
+    </section>
+    <section id="faq" class="flex flex-col items-center justify-center w-full gap-4">
+      <h1 class="text-4xl max-w-lg font-semibold text-center mb-20">
+        Perguntas Frequentes (FAQ)
+      </h1>
     </section>
   </main>
 </body>
