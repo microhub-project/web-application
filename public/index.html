@@ -7,33 +7,32 @@
   <title>Microhub</title>
   <link href="./tailwind/output.css" rel="stylesheet">
   <link rel="shortcut icon" href="/assets/img/logo/icon-128.ico" type="image/x-icon">
-  <link
-    rel="stylesheet"
-    type="text/css"
-    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"
-  />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
   <script src="script.js"></script>
 </head>
 
-<body class="bg-slate-950 text-slate-50 font-mono font-normal overflow-x-hidden antialiased *:selection:bg-blue-50 *:selection:text-indigo-900" onload="loadFaqItems()">
+<body
+  class="bg-slate-950 text-slate-50 font-mono font-normal overflow-x-hidden antialiased *:selection:bg-blue-50 *:selection:text-indigo-900"
+  onload="loadFaqItems()">
   <div class="bg-noise"></div>
-  <header class="w-full bg-slate-950 flex items-center justify-around py-6 px-8 border-y border-slate-700 z-50 fixed overflow-hidden">
+  <header
+    class="w-full bg-slate-950 flex items-center justify-around py-6 px-8 border-y border-slate-700 z-50 fixed overflow-hidden">
     <div>
-      <img 
-        src="/assets/img/logo/logo-light.svg" 
-        alt="Logo da Microhub" 
-        class="max-h-11"
-      >
+      <img src="/assets/img/logo/logo-light.svg" alt="Logo da Microhub" class="max-h-11">
     </div>
-    <nav class="flex gap-6 text-slate-300 *:border-b *:border-b-transparent *:hover:border-b-slate-100 *:cursor-pointer *:hover:text-slate-50 *:transition-all *:duration-300">
+    <nav
+      class="flex gap-6 text-slate-300 *:border-b *:border-b-transparent *:hover:border-b-slate-100 *:cursor-pointer *:hover:text-slate-50 *:transition-all *:duration-300">
       <ul>Início</ul>
       <ul>Solução</ul>
       <ul>FAQ</ul>
       <ul>Contate-nos</ul>
     </nav>
     <div class="flex gap-4 *:cursor-pointer relative">
-      <button class="min-w-32 py-2 border border-slate-50 rounded-lg hover:bg-slate-50 transition-colors duration-300 hover:text-blue-600">Entrar</button>
-      <button class="min-w-32 py-2 border border-blue-600 rounded-lg hover:bg-blue-600 transition-colors duration-300">Cadastre-se</button>
+      <button
+        class="min-w-32 py-2 border border-slate-50 rounded-lg hover:bg-slate-50 transition-colors duration-300 hover:text-blue-600">Entrar</button>
+      <button
+        class="min-w-32 py-2 border border-blue-600 rounded-lg hover:bg-blue-600 transition-colors duration-300">Cadastre-se</button>
       <div class="w-60 h-16 bg-blue-800 absolute -top-24 -right-32 blur-3xl"></div>
     </div>
   </header>
@@ -41,14 +40,18 @@
     <section id="home" class="w-full min-h-[60dvh] flex flex-col items-center justify-end text-center gap-6 relative">
       <div class="w-xl h-40 bg-blue-800 absolute top-0 -left-56 blur-[8rem] rotate-45"></div>
       <div class="flex flex-col items-center justify-center gap-3">
-        <h1 class="text-5xl max-w-4xl font-semibold bg-linear-120 from-blue-600 via-blue-400 to-indigo-600 via-35% bg-clip-text text-transparent animate-aurora-text bg-size-[200%_auto]">
+        <h1
+          class="text-5xl max-w-4xl font-semibold bg-linear-120 from-blue-600 via-blue-400 to-indigo-600 via-35% bg-clip-text text-transparent animate-aurora-text bg-size-[200%_auto]">
           Visibilidade para sua infraestrutura nos momentos que mais importam.
         </h1>
         <p class="text-slate-200 max-w-5xl">
-          Monitore CPU, memória e rede dos seus microsserviços em um único dashboard e identifique rapidamente sinais de sobrecarga e degradação de desempenho.
+          Monitore CPU, memória e rede dos seus microsserviços em um único dashboard e identifique rapidamente sinais de
+          sobrecarga e degradação de desempenho.
         </p>
       </div>
-      <button class="cursor-pointer min-w-32 py-2 px-6 bg-blue-500 shadow-lg shadow-blue-500 rounded-lg hover:shadow-xl hover:scale-102 transition-all duration-300">Conheça a solução</button>
+      <button
+        class="cursor-pointer min-w-32 py-2 px-6 bg-blue-500 shadow-lg shadow-blue-500 rounded-lg hover:shadow-xl hover:scale-102 transition-all duration-300">Conheça
+        a solução</button>
     </section>
     <section id="problem" class="w-full flex flex-col items-center justify-center relative gap-3">
       <div class="w-2xl h-16 bg-linear-to-b from-blue-800 via-indigo-700 to-indigo-800 absolute -top-5 blur-3xl"></div>
@@ -62,22 +65,21 @@
           </h1>
           <div class="*:indent-6 flex flex-col gap-3">
             <p>
-              Eventos como Black Friday, Natal e Dia das Mães podem provocar aumentos repentinos no tráfego de um e-commerce.
-            </p>
-            <p> 
-              Em ambientes baseados em microsserviços, esse crescimento pode elevar o consumo de recursos e aumentar a dependência entre diferentes componentes da aplicação.
+              Eventos como Black Friday, Natal e Dia das Mães podem provocar aumentos repentinos no tráfego de um
+              e-commerce.
             </p>
             <p>
-              Sem visibilidade adequada, identificar a origem de uma degradação pode se tornar tão complexo quanto o próprio ambiente.
+              Em ambientes baseados em microsserviços, esse crescimento pode elevar o consumo de recursos e aumentar a
+              dependência entre diferentes componentes da aplicação.
+            </p>
+            <p>
+              Sem visibilidade adequada, identificar a origem de uma degradação pode se tornar tão complexo quanto o
+              próprio ambiente.
             </p>
           </div>
         </div>
         <div class="w-1/2 flex items-center justify-end overflow-hidden">
-          <img 
-            class="rounded-l-2xl shadow-2xl shadow-slate-900/50"
-            src="https://placehold.co/500x300.png" 
-            alt=""
-          >
+          <img class="rounded-l-2xl shadow-2xl shadow-slate-900/50" src="https://placehold.co/500x300.png" alt="">
         </div>
       </div>
       <div class="w-full flex gap-3 items-stretch">
@@ -119,12 +121,14 @@
           </div>
           <div class="*:indent-6 flex flex-col gap-3 text-lg">
             <p>
-              Nossa solução coleta, processa e apresenta métricas de infraestrutura dos serviços monitorados em uma única interface.
+              Nossa solução coleta, processa e apresenta métricas de infraestrutura dos serviços monitorados em uma
+              única interface.
             </p>
             <p>
-              A plataforma transforma dados técnicos em indicadores visuais que permitem acompanhar o comportamento dos recursos, reconhecer padrões anormais e identificar serviços que apresentam sinais de sobrecarga.
+              A plataforma transforma dados técnicos em indicadores visuais que permitem acompanhar o comportamento dos
+              recursos, reconhecer padrões anormais e identificar serviços que apresentam sinais de sobrecarga.
             </p>
-          </div> 
+          </div>
         </div>
         <div class="w-1/3 bg-slate-800 rounded-2xl flex flex-col p-8 relative overflow-hidden">
           <div class="size-20 bg-indigo-600 rounded-md absolute z-10 blur-3xl bottom-0 right-0"></div>
@@ -132,7 +136,8 @@
         </div>
       </div>
       <div class="flex w-full gap-4 mt-4">
-        <div class="w-5/12 bg-linear-300 from-slate-700/90 via-blue-800/90 to-indigo-800/90 rounded-2xl flex flex-col p-8 pb-0 justify-between">
+        <div
+          class="w-5/12 bg-linear-300 from-slate-700/90 via-blue-800/90 to-indigo-800/90 rounded-2xl flex flex-col p-8 pb-0 justify-between">
           <div class="size-12 bg-slate-800 rounded-md flex justify-center items-center">
             <i class="ph ph-target text-4xl z-20"></i>
           </div>
@@ -141,9 +146,10 @@
               Tudo o que você precisa acompanhar em um único lugar.
             </h1>
             <p class="pb-3 indent-6">
-              Acompanhe o comportamento dos serviços ao longo do tempo e tenha uma visão consolidada da infraestrutura durante operações normais ou períodos de alta demanda.
+              Acompanhe o comportamento dos serviços ao longo do tempo e tenha uma visão consolidada da infraestrutura
+              durante operações normais ou períodos de alta demanda.
             </p>
-          </div> 
+          </div>
           <img class="bg-black rounded-t-2xl max-w-52 mx-auto" src="https://placehold.co/212x240.png" alt="">
         </div>
         <div class="w-7/12 flex flex-col gap-4">
@@ -157,7 +163,8 @@
               </h1>
             </div>
             <p class="indent-4 mt-4 text-lg">
-              Acompanhe a utilização dos recursos de processamento e identifique serviços próximos de situações de sobrecarga.
+              Acompanhe a utilização dos recursos de processamento e identifique serviços próximos de situações de
+              sobrecarga.
             </p>
           </div>
           <div class="w-full bg-slate-800 rounded-2xl p-8">
@@ -183,7 +190,8 @@
               </h1>
             </div>
             <p class="indent-4 mt-4 text-lg">
-              Visualize o tráfego de entrada e saída dos serviços e identifique alterações no comportamento da comunicação.
+              Visualize o tráfego de entrada e saída dos serviços e identifique alterações no comportamento da
+              comunicação.
             </p>
           </div>
         </div>
@@ -196,49 +204,91 @@
     </section>
     <section id="contact-us" class="flex flex-col items-center justify-center w-full gap-8">
       <div class="flex flex-col gap-1 items-center justify-center text-center relative">
-        <div class="w-lg h-60 bg-linear-0 from-blue-600 via-blue-700 to-indigo-800 absolute -bottom-60 blur-[8rem] -z-10"></div>
+        <div
+          class="w-lg h-60 bg-linear-0 from-blue-600 via-blue-700 to-indigo-800 absolute -bottom-60 blur-[8rem] -z-10">
+        </div>
         <h1 class="text-4xl max-w-lg font-semibold text-center">
           Entre em contato
         </h1>
         <p class="max-w-lg text-slate-200">
-          Se você tem alguma dúvida ou deseja mais informações sobre nossos serviços, entre em contato conosco. Estamos aqui para ajudar!
+          Se você tem alguma dúvida ou deseja mais informações sobre nossos serviços, entre em contato conosco. Estamos
+          aqui para ajudar!
         </p>
       </div>
-      <form class="bg-slate-800/90 w-full max-w-xl flex flex-col items-center p-20 rounded-2xl gap-4 *:transition-all *:duration-300 *:outline-none backdrop-blur-2xl relative overflow-hidden" id="contactForm">
-        <div class="w-52 h-60 bg-linear-0 from-blue-600 via-indigo-700 to-indigo-800 absolute top-0 -left-56 blur-[8rem] rotate-45 -z-10"></div>
-        <div class="w-52 h-60 bg-linear-0 from-blue-600 via-indigo-700 to-indigo-800 absolute top-0 -right-56 blur-[8rem] rotate-45 -z-10"></div>
-        <input 
-          type="text" 
-          id="contactName" 
-          placeholder="Nome"
-          class="px-4 py-3 bg-slate-900/90 backdrop-blur-2xl rounded placeholder:text-slate-500 w-full focus:text-lg hover:text-lg border border-transparent focus:border-blue-500"
-        >
-        <input 
-          type="email" 
-          id="contactEmail" 
-          placeholder="E-mail"
-          class="px-4 py-3 bg-slate-900/90 backdrop-blur-2xl rounded placeholder:text-slate-500 w-full focus:text-lg hover:text-lg border border-transparent focus:border-blue-500"
-        >
-        <input 
-          type="text" 
-          id="contactSubject" 
-          placeholder="Assunto"
-          class="px-4 py-3 bg-slate-900/90 backdrop-blur-2xl rounded placeholder:text-slate-500 w-full focus:text-lg hover:text-lg border border-transparent focus:border-blue-500"
-        >
-        <textarea 
-          id="contactMessage" 
-          placeholder="Mensagem"
-          class="px-4 py-3 bg-slate-900/90 backdrop-blur-2xl rounded placeholder:text-slate-500 w-full resize-none min-h-32 focus:text-lg hover:text-lg border border-transparent focus:border-blue-500"
-        ></textarea>
-        <button id="contactSendButton" class="cursor-pointer flex items-center justify-center gap-2 border border-blue-500 hover:bg-blue-500  w-full rounded-full px-4 py-3 mt-4 backdrop-blur-2xl shadow-md shadow-transparent hover:shadow-lg hover:shadow-blue-500">
+      <form
+        class="bg-slate-800/90 w-full max-w-xl flex flex-col items-center p-20 rounded-2xl gap-4 *:transition-all *:duration-300 *:outline-none backdrop-blur-2xl relative overflow-hidden"
+        id="contactForm">
+        <div
+          class="w-52 h-60 bg-linear-0 from-blue-600 via-indigo-700 to-indigo-800 absolute top-0 -left-56 blur-[8rem] rotate-45 -z-10">
+        </div>
+        <div
+          class="w-52 h-60 bg-linear-0 from-blue-600 via-indigo-700 to-indigo-800 absolute top-0 -right-56 blur-[8rem] rotate-45 -z-10">
+        </div>
+        <input type="text" id="contactName" placeholder="Nome"
+          class="px-4 py-3 bg-slate-900/90 backdrop-blur-2xl rounded placeholder:text-slate-500 w-full focus:text-lg hover:text-lg border border-transparent focus:border-blue-500">
+        <input type="email" id="contactEmail" placeholder="E-mail"
+          class="px-4 py-3 bg-slate-900/90 backdrop-blur-2xl rounded placeholder:text-slate-500 w-full focus:text-lg hover:text-lg border border-transparent focus:border-blue-500">
+        <input type="text" id="contactSubject" placeholder="Assunto"
+          class="px-4 py-3 bg-slate-900/90 backdrop-blur-2xl rounded placeholder:text-slate-500 w-full focus:text-lg hover:text-lg border border-transparent focus:border-blue-500">
+        <textarea id="contactMessage" placeholder="Mensagem"
+          class="px-4 py-3 bg-slate-900/90 backdrop-blur-2xl rounded placeholder:text-slate-500 w-full resize-none min-h-32 focus:text-lg hover:text-lg border border-transparent focus:border-blue-500"></textarea>
+        <button id="contactSendButton"
+          class="cursor-pointer flex items-center justify-center gap-2 border border-blue-500 hover:bg-blue-500  w-full rounded-full px-4 py-3 mt-4 backdrop-blur-2xl shadow-md shadow-transparent hover:shadow-lg hover:shadow-blue-500">
           <i class="ph ph-paper-plane-tilt text-xl -ml-4"></i><span class="font-medium">Enviar</span>
         </button>
       </form>
     </section>
   </main>
   <footer class="mt-40 w-dvw bg-black/40 border-y border-slate-700 py-8 px-8 relative overflow-hidden">
-    <div class="w-lg h-32 bg-linear-0 from-blue-600 via-blue-700 to-indigo-800 absolute left-1/2 -translate-x-1/2 -bottom-32 blur-[8rem] -z-10"></div>
-    
+    <div
+      class="w-96 w-lg h-32 bg-linear-0 from-blue-600 via-blue-700 to-indigo-800 absolute left-1/2 -translate-x-1/2 -bottom-32 blur-[8rem] -z-10">
+
+    </div>
+    <div class="max-w-6xl mx-auto">
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+
+        <div class="flex flex-col gap-5">
+
+          <div class="flex items-center gap-3">
+            <img src="/assets/img/logo/logo-light.svg" alt="Logo da Microhub" class="h-8 w-auto">
+          </div>
+
+          <p class="text-slate-400 text-sm max-w-xs">
+            Plataforma brasileira de microsserviços para e-commerce.
+            Confiança, performance e escala para qualquer operação.
+          </p>
+
+        </div>
+
+
+        <div class="flex flex col gap-5">
+          <h3 class="text-sm font-semibold text-slate-50">
+            Plataforma
+          </h3>
+          <nav class="flex flex-col gap-4">
+            <a href="#" class="text-sm text-slate-500 hover:text-slate-200 transition-colors duration-300">
+              serviços
+            </a>
+            <a href="#" class="text-sm text-slate-500 hover:text-slate-200 transition-colors duration-300">
+              Arquitetura
+            </a>
+            <a href="#" class="text-sm text-slate-500 hover:text-slate-200 transition-colors duration-300">
+              Preços
+            </a>
+
+            <a href="#" class="text-sm text-slate-500 hover:text-slate-200 transition-colors duration-300">
+              Documentação
+            </a>
+          </nav>
+
+        </div>
+      </div>
+
+    </div>
+
+
+
   </footer>
 </body>
 
