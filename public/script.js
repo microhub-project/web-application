@@ -40,11 +40,11 @@ const loadFaqItems = () => {
             <button class="flex justify-center cursor-pointer">
               <i id="carret-${i}" class="ph ph-caret-down text-4xl"></i>
             </button>
-            <h1 class="text-xl">
+            <h1 class="text-xl max-sm:text-base">
               ${item.question}
             </h1>
           </div>
-          <div id="answer-${i}" class="hidden w-full">
+          <div id="answer-${i}" class="hidden w-full max-sm:text-sm">
             <p>
               <i class="ph ph-arrow-bend-down-right text-xl text-blue-400"></i>
               ${item.answer}
@@ -94,5 +94,17 @@ const faqHandler = (index) => {
     carretElement.classList.remove("ph-caret-up")
 
     itemElement.classList.remove("scale-103", "border-blue-500!")
+  }
+}
+
+const toggleMenu = () => {
+  const menuElement = document.getElementById("header-mobile")
+
+  if (menuElement.classList.contains("hidden")) {
+    menuElement.classList.add("flex")
+    menuElement.classList.remove("hidden")
+  } else {
+    menuElement.classList.remove("flex")
+    menuElement.classList.add("hidden")
   }
 }
