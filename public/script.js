@@ -96,3 +96,15 @@ const faqHandler = (index) => {
     itemElement.classList.remove("scale-103", "border-blue-500!")
   }
 }
+
+const toggleMenu = () => {
+  const menuElement = document.getElementById("header-mobile")
+
+  if (menuElement.classList.contains("hidden")) {
+    menuElement.classList.add("flex")
+    menuElement.classList.remove("hidden")
+  } else {
+    menuElement.classList.remove("flex")
+    menuElement.classList.add("hidden")
+  }
+}
