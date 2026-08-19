@@ -232,7 +232,7 @@ const receiverEmailBody = `
 <body class="bg-body" style="margin:0; padding:0; background-color:#020617;">
 
   <div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#020617;">
-    Novo contato recebido pelo site: {{nome_do_contato}} — {{assunto}}
+    Novo contato recebido pelo site: {{name}} — {{subject}}
   </div>
 
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#020617;">
@@ -390,8 +390,8 @@ const send = async (req, res) => {
       subject: "Contato do site intitucional",
       html: 
         receiverEmailBody
-          .replace("{{name}}", name)
-          .replace("{{subject}}", subject)
+          .replaceAll("{{name}}", name)
+          .replaceAll("{{subject}}", subject)
           .replace("{{message}}", message)
           .replaceAll("{{e-mail}}", email)
           .replace("{{sent_at}}", dateFormated)
