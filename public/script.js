@@ -108,3 +108,18 @@ const toggleMenu = () => {
     menuElement.classList.add("hidden")
   }
 }
+
+
+const openRegistration = () => {
+  const cadastro = document.getElementById("registerUser");
+
+  cadastro.classList.remove("hidden");
+  cadastro.classList.add("flex");
+}
+
+const closeRegistration = () => {
+  const cadastro = document.getElementById("registerUser");
+
+  cadastro.classList.remove("flex");
+  cadastro.classList.add("hidden");
+}
