@@ -53,7 +53,7 @@ const loadFaqItems = () => {
         </div>
       </div>
     `
-  }))  
+  }))
 }
 
 const faqHandler = (index) => {
@@ -107,4 +107,65 @@ const toggleMenu = () => {
     menuElement.classList.remove("flex")
     menuElement.classList.add("hidden")
   }
+}
+
+const contactForm = document.getElementById("contactForm");
+function validateAndSubmitForm() {
+
+  const name = document.getElementById("contactName").value;
+  const email = document.getElementById("contactEmail").value;
+  const subject = document.getElementById("contactSubject").value;
+  const message = document.getElementById("contactMessage").value;
+
+  const nameRegex = /^[A-Za-zÀ-ÿ\s]{3,}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!nameRegex.test(name)) {
+    console.log("Digite um nome válido")
+    return;
+  } if (!emailRegex.test(email)) {
+    console.log("Digite um e-mail válido")
+    return;
+  } if (subject.trim().length < 3) {
+    console.log("O assunto deve ter pelo menos 3 caracteres")
+    return;
+  } if (message.trim().length < 10) {
+    console.log("O assunto deve ter pelo menos 10 caracteres")
+    return;
+  }
+
+  fetch("/mailer/send", {
+    method: "POST",
+
+    headers: {
+      "Content-Type": "application/json"
+    },
+
+    body: JSON.stringify({
+      name,
+      email,
+      subject,
+      message
+    })
+  })
+    .then(function (response) {
+      if (!response.ok) {
+        throw new Error("Erro ao enviar formulário");
+      }
+
+      return response.json();
+    })
+    .then(function (data) {
+
+      console.log(data);
+
+      document.getElementById("contactName").value = "";
+      document.getElementById("contactEmail").value = "";
+      document.getElementById("contactSubject").value = "";
+      document.getElementById("contactMessage").value = "";
+
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 }
