@@ -108,6 +108,7 @@ const toggleMenu = () => {
     menuElement.classList.add("hidden")
   }
 }
+
 const openRegistration = () => {
   const cadastro = document.getElementById("registerUser");
 
@@ -124,6 +125,18 @@ const closeRegistration = () => {
 
 const contactForm = document.getElementById("contactForm");
 const validateAndSubmitForm = async () => {
+  const fields = [
+    document.getElementById("contactName"), 
+    document.getElementById("contactEmail"), 
+    document.getElementById("contactSubject"), 
+    document.getElementById("contactMessage")
+  ]
+
+  fields.forEach(field => {
+    if (field.classList.contains("border-amber-500!"))
+      field.classList.remove("border-amber-500!")
+  })
+
   const button = document.getElementById("contactSendButton")
 
   const name = document.getElementById("contactName").value;
@@ -134,17 +147,25 @@ const validateAndSubmitForm = async () => {
   const nameRegex = /^[A-Za-zÀ-ÿ\s]{3,}$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!nameRegex.test(name)) 
+  if (!nameRegex.test(name)) {
+    fields[0].classList.add("border-amber-500!")
     return showToast("Digite um nome válido", "warning")
+  }
   
-  if (!emailRegex.test(email)) 
+  if (!emailRegex.test(email)) {
+    fields[1].classList.add("border-amber-500!")
     return showToast("Digite um e-mail válido", "warning")
+  }
   
-  if (subject.trim().length < 3) 
+  if (subject.trim().length < 3) {
+    fields[2].classList.add("border-amber-500!")
     return showToast("O assunto deve ter pelo menos 3 caracteres", "warning")
+  }
   
-  if (message.trim().length < 10) 
-    return showToast("O assunto deve ter pelo menos 10 caracteres", "warning")
+  if (message.trim().length < 10) {
+    fields[3].classList.add("border-amber-500!")
+    return showToast("A mensagem deve ter pelo menos 10 caracteres", "warning")
+  }
 
   try {
     toggleLoadingContactButton(button)
@@ -189,7 +210,7 @@ const validateAndSubmitForm = async () => {
 
 const toggleLoadingContactButton = (button) => {
   if(!button) return
-  
+
   if (button.disabled) {
     button.disabled = false
     button.innerHTML = `<i class="ph ph-paper-plane-tilt text-xl -ml-4"></i><span class="font-medium">Enviar</span>`
