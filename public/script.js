@@ -108,6 +108,7 @@ const toggleMenu = () => {
     menuElement.classList.add("hidden")
   }
 }
+
 const openRegistration = () => {
   const cadastro = document.getElementById("registerUser");
 
@@ -123,7 +124,20 @@ const closeRegistration = () => {
 }
 
 const contactForm = document.getElementById("contactForm");
-function validateAndSubmitForm() {
+const validateAndSubmitForm = async () => {
+  const fields = [
+    document.getElementById("contactName"), 
+    document.getElementById("contactEmail"), 
+    document.getElementById("contactSubject"), 
+    document.getElementById("contactMessage")
+  ]
+
+  fields.forEach(field => {
+    if (field.classList.contains("border-amber-500!"))
+      field.classList.remove("border-amber-500!")
+  })
+
+  const button = document.getElementById("contactSendButton")
 
   const name = document.getElementById("contactName").value;
   const email = document.getElementById("contactEmail").value;
@@ -134,51 +148,116 @@ function validateAndSubmitForm() {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!nameRegex.test(name)) {
-    console.log("Digite um nome válido")
-    return;
-  } if (!emailRegex.test(email)) {
-    console.log("Digite um e-mail válido")
-    return;
-  } if (subject.trim().length < 3) {
-    console.log("O assunto deve ter pelo menos 3 caracteres")
-    return;
-  } if (message.trim().length < 10) {
-    console.log("O assunto deve ter pelo menos 10 caracteres")
-    return;
+    fields[0].classList.add("border-amber-500!")
+    return showToast("Digite um nome válido", "warning")
+  }
+  
+  if (!emailRegex.test(email)) {
+    fields[1].classList.add("border-amber-500!")
+    return showToast("Digite um e-mail válido", "warning")
+  }
+  
+  if (subject.trim().length < 3) {
+    fields[2].classList.add("border-amber-500!")
+    return showToast("O assunto deve ter pelo menos 3 caracteres", "warning")
+  }
+  
+  if (message.trim().length < 10) {
+    fields[3].classList.add("border-amber-500!")
+    return showToast("A mensagem deve ter pelo menos 10 caracteres", "warning")
   }
 
-  fetch("/mailer/send", {
-    method: "POST",
+  try {
+    toggleLoadingContactButton(button)
 
-    headers: {
-      "Content-Type": "application/json"
-    },
-
-    body: JSON.stringify({
-      name,
-      email,
-      subject,
-      message
+    const fetchResponse = await fetch("/mailer/send", {
+      method: "POST",
+  
+      headers: {
+        "Content-Type": "application/json"
+      },
+  
+      body: JSON.stringify({
+        name,
+        email,
+        subject,
+        message
+      })
     })
-  })
-  .then(function (response) {
-    if (!response.ok) {
-      throw new Error("Erro ao enviar formulário");
+
+    const response = await fetchResponse.json()
+
+    if (fetchResponse.status == 400) 
+      return showToast(response.message, "warning");
+
+    else if (fetchResponse.status != 200) 
+      return showToast(response.message, "error");
+
+    showToast(response.message, "success");
+
+  } catch (e) {
+    console.error(e)
+    showToast("Algo deu errado. Tente novamente mais tarde.", "error");
+  }
+
+  document.getElementById("contactName").value = "";
+  document.getElementById("contactEmail").value = "";
+  document.getElementById("contactSubject").value = "";
+  document.getElementById("contactMessage").value = "";
+
+  toggleLoadingContactButton(button)
+}
+
+const toggleLoadingContactButton = (button) => {
+  if(!button) return
+
+  if (button.disabled) {
+    button.disabled = false
+    button.innerHTML = `<i class="ph ph-paper-plane-tilt text-xl -ml-4"></i><span class="font-medium">Enviar</span>`
+  } else {
+    button.disabled = true
+    button.innerHTML = `<i class="ph ph-spinner text-xl -ml-4 animate-spin"></i><span class="font-medium">Enviando...</span>`
+  }
+}
+
+let counter = 0
+const showToast = (message, type) => {
+  const types = {
+    "success": {
+      "color": "green",
+      "icon": "ph ph-check-fat"
+    },
+    "error": {
+      "color": "red",
+      "icon": "ph-bold ph-x"
+    },
+    "warning": {
+      "color": "yellow",
+      "icon": "ph ph-warning"
     }
+  }
 
-    return response.json();
-  })
-  .then(function (data) {
+  if (!["success", "error", "warning"].includes(type)) 
+    return alert(message)
 
-    console.log(data);
+  const toastContainer = document.getElementById("toast-container")
+  
+  const toastId = `toast-${counter}`
+  toastContainer.innerHTML += `
+    <div id="${toastId}" class="w-full bg-slate-800 flex p-4 gap-4 rounded border toast-${type}">
+      <i class="${types[type].icon} self-center text-3xl"></i>
+      <span>
+        <p>${message}</p>
+      </span>
+    </div>
+  `
+  
+  
+  setTimeout(() => cleanToast(toastId), 5000)
+  counter++
+}
 
-    document.getElementById("contactName").value = "";
-    document.getElementById("contactEmail").value = "";
-    document.getElementById("contactSubject").value = "";
-    document.getElementById("contactMessage").value = "";
-
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+const cleanToast = (elementId) => {
+  const toastElement = document.getElementById(elementId)
+  toastElement.classList.add("hidden")
 }
