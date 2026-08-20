@@ -124,6 +124,7 @@ const closeRegistration = () => {
 
 const contactForm = document.getElementById("contactForm");
 const validateAndSubmitForm = async () => {
+  const button = document.getElementById("contactSendButton")
 
   const name = document.getElementById("contactName").value;
   const email = document.getElementById("contactEmail").value;
@@ -146,6 +147,8 @@ const validateAndSubmitForm = async () => {
     return showToast("O assunto deve ter pelo menos 10 caracteres", "warning")
 
   try {
+    toggleLoadingContactButton(button)
+
     const fetchResponse = await fetch("/mailer/send", {
       method: "POST",
   
@@ -181,6 +184,19 @@ const validateAndSubmitForm = async () => {
   document.getElementById("contactSubject").value = "";
   document.getElementById("contactMessage").value = "";
 
+  toggleLoadingContactButton(button)
+}
+
+const toggleLoadingContactButton = (button) => {
+  if(!button) return
+  
+  if (button.disabled) {
+    button.disabled = false
+    button.innerHTML = `<i class="ph ph-paper-plane-tilt text-xl -ml-4"></i><span class="font-medium">Enviar</span>`
+  } else {
+    button.disabled = true
+    button.innerHTML = `<i class="ph ph-spinner text-xl -ml-4 animate-spin"></i><span class="font-medium">Enviando...</span>`
+  }
 }
 
 let counter = 0
