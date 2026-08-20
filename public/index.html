@@ -24,8 +24,8 @@
       <button 
         type="button" 
         onclick="closeRegistration()"
-        class="absolute top-4 right-5 text-slate-400 hover:text-white text-xl cursor-pointer"> 
-        X 
+        class="absolute top-5 right-5 text-slate-400 hover:text-white cursor-pointer transition-all duration-300"> 
+        <i class="ph ph-x text-3xl"></i>
       </button>
 
       <div class="mb-5">
@@ -115,7 +115,7 @@
         class="min-w-32 py-2 border border-slate-50 rounded-lg hover:bg-slate-50 transition-colors duration-300 hover:text-blue-600">Entrar</button>
       <button
         type="button"
-        onclick="openRegistration()"
+        onclick="openRegistration(); toggleMenu()"
         class="min-w-32 py-2 border border-blue-600 rounded-lg hover:bg-blue-600 transition-colors duration-300">Cadastre-se</button>
     </div>
   </header>
