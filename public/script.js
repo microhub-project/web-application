@@ -133,19 +133,17 @@ function validateAndSubmitForm() {
   const nameRegex = /^[A-Za-zÀ-ÿ\s]{3,}$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!nameRegex.test(name)) {
-    console.log("Digite um nome válido")
-    return;
-  } if (!emailRegex.test(email)) {
-    console.log("Digite um e-mail válido")
-    return;
-  } if (subject.trim().length < 3) {
-    console.log("O assunto deve ter pelo menos 3 caracteres")
-    return;
-  } if (message.trim().length < 10) {
-    console.log("O assunto deve ter pelo menos 10 caracteres")
-    return;
-  }
+  if (!nameRegex.test(name)) 
+    return showToast("Digite um nome válido", "warning")
+  
+  if (!emailRegex.test(email)) 
+    return showToast("Digite um e-mail válido", "warning")
+  
+  if (subject.trim().length < 3) 
+    return showToast("O assunto deve ter pelo menos 3 caracteres", "warning")
+  
+  if (message.trim().length < 10) 
+    return showToast("O assunto deve ter pelo menos 10 caracteres", "warning")
 
   fetch("/mailer/send", {
     method: "POST",
@@ -163,7 +161,7 @@ function validateAndSubmitForm() {
   })
   .then(function (response) {
     if (!response.ok) {
-      throw new Error("Erro ao enviar formulário");
+      showToast("Erro ao enviar formulário", "error");
     }
 
     return response.json();
@@ -171,6 +169,8 @@ function validateAndSubmitForm() {
   .then(function (data) {
 
     console.log(data);
+
+    showToast(data.message, "success");
 
     document.getElementById("contactName").value = "";
     document.getElementById("contactEmail").value = "";
