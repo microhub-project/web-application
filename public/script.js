@@ -123,7 +123,7 @@ const closeRegistration = () => {
 }
 
 const contactForm = document.getElementById("contactForm");
-function validateAndSubmitForm() {
+const validateAndSubmitForm = async () => {
 
   const name = document.getElementById("contactName").value;
   const email = document.getElementById("contactEmail").value;
@@ -145,42 +145,42 @@ function validateAndSubmitForm() {
   if (message.trim().length < 10) 
     return showToast("O assunto deve ter pelo menos 10 caracteres", "warning")
 
-  fetch("/mailer/send", {
-    method: "POST",
-
-    headers: {
-      "Content-Type": "application/json"
-    },
-
-    body: JSON.stringify({
-      name,
-      email,
-      subject,
-      message
+  try {
+    const fetchResponse = await fetch("/mailer/send", {
+      method: "POST",
+  
+      headers: {
+        "Content-Type": "application/json"
+      },
+  
+      body: JSON.stringify({
+        name,
+        email,
+        subject,
+        message
+      })
     })
-  })
-  .then(function (response) {
-    if (!response.ok) {
-      showToast("Erro ao enviar formulário", "error");
-    }
 
-    return response.json();
-  })
-  .then(function (data) {
+    const response = await fetchResponse.json()
 
-    console.log(data);
+    if (fetchResponse.status == 400) 
+      return showToast(response.message, "warning");
 
-    showToast(data.message, "success");
+    else if (fetchResponse.status != 200) 
+      return showToast(response.message, "error");
 
-    document.getElementById("contactName").value = "";
-    document.getElementById("contactEmail").value = "";
-    document.getElementById("contactSubject").value = "";
-    document.getElementById("contactMessage").value = "";
+    showToast(response.message, "success");
 
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+  } catch (e) {
+    console.error(e)
+    showToast("Algo deu errado. Tente novamente mais tarde.", "error");
+  }
+
+  document.getElementById("contactName").value = "";
+  document.getElementById("contactEmail").value = "";
+  document.getElementById("contactSubject").value = "";
+  document.getElementById("contactMessage").value = "";
+
 }
 
 let counter = 0
