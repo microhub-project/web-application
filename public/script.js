@@ -200,10 +200,7 @@ const validateAndSubmitForm = async () => {
     showToast("Algo deu errado. Tente novamente mais tarde.", "error");
   }
 
-  document.getElementById("contactName").value = "";
-  document.getElementById("contactEmail").value = "";
-  document.getElementById("contactSubject").value = "";
-  document.getElementById("contactMessage").value = "";
+  fields.forEach(field => field.value = "")
 
   toggleLoadingContactButton(button)
 }
