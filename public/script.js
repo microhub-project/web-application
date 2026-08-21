@@ -123,6 +123,49 @@ const closeRegistration = () => {
   cadastro.classList.add("hidden");
 }
 
+const validateRegistration = () => {
+
+  const evento = window.event;
+  if (evento) evento.preventDefault();
+
+  const nome = document.querySelector("#nome").value.trim();
+  const email = document.querySelector("#email").value.trim();
+  const senha = document.querySelector("#senha").value;
+  const senha2 = document.querySelector("#senha2").value;
+  const codigo = document.querySelector("#codigo").value.trim();
+
+  let validate = true;
+
+  const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const regexNome = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
+
+  let message = "a";
+  let type = "error";
+
+  if (nome === "" || !regexNome.test(nome) || nome.length < 3) {
+    validate = false;
+    message = "Formato do nome incorreto!";
+  }else if (email === "" || !regexEmail.test(email)) {
+    validate = false;
+    message = "Formato do email incorreto!";
+  }else if (senha === "" || senha.length < 8) {
+    validate = false;
+    message = "Formato da senha incorreta!";
+  }else if (senha2 === "" || senha2 !== senha) {
+    validate = false;
+    message = "Senha divergete!";
+  }else if (codigo === "") {  // falta verificar o codigo da empresa
+    validate = false;
+    message = "Código da empresa obrigatório!";
+  }
+  if(validate){
+    message = "Sucesso!";
+    type = "success";
+    cadastrar(nome, email, senha); // o cadastrar não esta funcionando (talvez seja o banco q n foi criado)
+  }
+  showToast(message, type);
+  }
+
 const contactForm = document.getElementById("contactForm");
 const validateAndSubmitForm = async () => {
   const fields = [
