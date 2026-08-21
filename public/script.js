@@ -123,7 +123,7 @@ const closeRegistration = () => {
   cadastro.classList.add("hidden");
 }
 
-const validateRegistration = () => {
+const validateRegistration = async () => {
 
   const evento = window.event;
   if (evento) evento.preventDefault();
@@ -160,9 +160,36 @@ const validateRegistration = () => {
   }
   if(validate){
     message = "Sucesso!";
-    type = "success";
-    cadastrar(nome, email, senha); // o cadastrar não esta funcionando (talvez seja o banco q n foi criado)
+    type = "success"
+    console.log( JSON.stringify({
+        nome,
+        email,
+        senha}
+      ))
+    const cadastrar = await fetch("/usuarios/cadastrar", {
+      method: "POST",
+  
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        nome,
+        email,
+        senha
+
+      })
+    })
+  //   const response = await cadastrar.json()
+
+  //   if (cadastrar.status == 400) 
+  //     return showToast(response.message, "warning");
+
+  //   else if (cadastrar.status != 200) 
+  //     return showToast(response.message, "error");
+
+  //   showToast(response.message, "success");
   }
+
   showToast(message, type);
   }
 
