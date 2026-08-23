@@ -117,13 +117,25 @@ const openRegistration = () => {
 
   cadastro.classList.remove("hidden");
   cadastro.classList.add("flex");
+
+  setTimeout(() => {
+    cadastro.classList.remove("opacity-0");
+    cadastro.classList.add("opacity-100");
+
+  }, 10)
 }
 
 const closeRegistration = () => {
   const cadastro = document.getElementById("registerUser");
 
-  cadastro.classList.remove("flex");
-  cadastro.classList.add("hidden");
+  cadastro.classList.add("opacity-0");
+  cadastro.classList.remove("opacity-100");
+
+  setTimeout(() => {
+    cadastro.classList.remove("flex");
+    cadastro.classList.add("hidden");
+  }, 500)
+  
 }
 
 const validateRegistration = () => {
