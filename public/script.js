@@ -1,3 +1,4 @@
+// FAQ 
 const questionsAndAnswers = [
   {
     question: "O que é a plataforma?",
@@ -97,6 +98,7 @@ const faqHandler = (index) => {
   }
 }
 
+// MENU
 const toggleMenu = () => {
   const menuElement = document.getElementById("header-mobile")
 
@@ -109,6 +111,7 @@ const toggleMenu = () => {
   }
 }
 
+// CADASTRO DE USUÁRIO
 const openRegistration = () => {
   const cadastro = document.getElementById("registerUser");
 
@@ -166,6 +169,7 @@ const validateRegistration = () => {
   showToast(message, type);
   }
 
+// CONTATO
 const contactForm = document.getElementById("contactForm");
 const validateAndSubmitForm = async () => {
   const fields = [
@@ -260,6 +264,7 @@ const toggleLoadingContactButton = (button) => {
   }
 }
 
+// TOAST
 let counter = 0
 const showToast = (message, type) => {
   const types = {
@@ -301,3 +306,5 @@ const cleanToast = (elementId) => {
   const toastElement = document.getElementById(elementId)
   toastElement.classList.add("hidden")
 }
+
+// GSAP/ANIMAÇÕES
