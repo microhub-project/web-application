@@ -102,12 +102,12 @@ const faqHandler = (index) => {
 const toggleMenu = () => {
   const menuElement = document.getElementById("header-mobile")
 
-  if (menuElement.classList.contains("hidden")) {
-    menuElement.classList.add("flex")
-    menuElement.classList.remove("hidden")
+  if (menuElement.classList.contains("translate-x-full")) {
+    menuElement.classList.add("translate-x-0")
+    menuElement.classList.remove("translate-x-full")
   } else {
-    menuElement.classList.remove("flex")
-    menuElement.classList.add("hidden")
+    menuElement.classList.remove("translate-x-0")
+    menuElement.classList.add("translate-x-full")
   }
 }
 
