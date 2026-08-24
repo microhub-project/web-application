@@ -123,6 +123,20 @@ const closeRegistration = () => {
   cadastro.classList.add("hidden");
 }
 
+const openLogin = () => {
+  const cadastro = document.getElementById("loginUser");
+
+  cadastro.classList.remove("hidden");
+  cadastro.classList.add("flex");
+}
+
+const closeLogin = () => {
+  const cadastro = document.getElementById("loginUser");
+
+  cadastro.classList.remove("flex");
+  cadastro.classList.add("hidden");
+}
+
 const validateRegistration = () => {
 
   const evento = window.event;
