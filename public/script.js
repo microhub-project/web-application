@@ -137,7 +137,7 @@ const closeLogin = () => {
   cadastro.classList.add("hidden");
 }
 
-const validateRegistration = async () => {
+const loginValidateRegistration = async () => {
 
   const evento = window.event;
   if (evento) evento.preventDefault();
@@ -154,65 +154,66 @@ const validateRegistration = async () => {
   const regexNome = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
 
   let message = "a";
-  let type = "error";
+  let type = "warning";
 
   if (nome === "" || !regexNome.test(nome) || nome.length < 3) {
     validate = false;
     message = "Formato do nome incorreto!";
-  }else if (email === "" || !regexEmail.test(email)) {
+  } else if (email === "" || !regexEmail.test(email)) {
     validate = false;
     message = "Formato do email incorreto!";
-  }else if (senha === "" || senha.length < 8) {
+  } else if (senha === "" || senha.length < 8) {
     validate = false;
     message = "Formato da senha incorreta!";
-  }else if (senha2 === "" || senha2 !== senha) {
+  } else if (senha2 === "" || senha2 !== senha) {
     validate = false;
     message = "Senha divergete!";
-  }else if (codigo === "") {  // falta verificar o codigo da empresa
+  } else if (codigo === "") {  // falta verificar o codigo da empresa
     validate = false;
     message = "Código da empresa obrigatório!";
   }
-  if(validate){
-    message = "Sucesso!";
+  if (validate) {
+
     type = "success"
-    console.log( JSON.stringify({
-        nome,
-        email,
-        senha}
-      ))
-    const cadastrar = await fetch("/usuarios/cadastrar", {
+    console.log(JSON.stringify({
+      nome,
+      email,
+      senha
+    }
+    ))
+    const responseCadastrar = await fetch("/usuarios/cadastrar", {
       method: "POST",
-  
+
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        nome,
-        email,
-        senha
+        nomeServer: nome,
+        emailServer:email,
+        senhaServer: senha,
 
       })
     })
-  //   const response = await cadastrar.json()
+    const response = await responseCadastrar.json()
 
-  //   if (cadastrar.status == 400) 
-  //     return showToast(response.message, "warning");
+    if (responseCadastrar.status == 400)
+      return showToast(response.message, "warning");
 
-  //   else if (cadastrar.status != 200) 
-  //     return showToast(response.message, "error");
+    else if (responseCadastrar.status != 200)
+      return showToast(response.message, "error");
 
-  //   showToast(response.message, "success");
+    showToast(response.message, "success");
   }
 
   showToast(message, type);
-  }
+}
 
 const contactForm = document.getElementById("contactForm");
-const validateAndSubmitForm = async () => {
+const contactValidateAndSubmitForm = async () => {
   const fields = [
-    document.getElementById("contactName"), 
-    document.getElementById("contactEmail"), 
-    document.getElementById("contactSubject"), 
+    document.getElementById("contactName"),
+    document.getElementById("contactEmail"),
+    document.getElementById("contactSubject"),
     document.getElementById("contactMessage")
   ]
 
@@ -235,17 +236,17 @@ const validateAndSubmitForm = async () => {
     fields[0].classList.add("border-amber-500!")
     return showToast("Digite um nome válido", "warning")
   }
-  
+
   if (!emailRegex.test(email)) {
     fields[1].classList.add("border-amber-500!")
     return showToast("Digite um e-mail válido", "warning")
   }
-  
+
   if (subject.trim().length < 3) {
     fields[2].classList.add("border-amber-500!")
     return showToast("O assunto deve ter pelo menos 3 caracteres", "warning")
   }
-  
+
   if (message.trim().length < 10) {
     fields[3].classList.add("border-amber-500!")
     return showToast("A mensagem deve ter pelo menos 10 caracteres", "warning")
@@ -256,11 +257,11 @@ const validateAndSubmitForm = async () => {
 
     const fetchResponse = await fetch("/mailer/send", {
       method: "POST",
-  
+
       headers: {
         "Content-Type": "application/json"
       },
-  
+
       body: JSON.stringify({
         name,
         email,
@@ -271,10 +272,10 @@ const validateAndSubmitForm = async () => {
 
     const response = await fetchResponse.json()
 
-    if (fetchResponse.status == 400) 
+    if (fetchResponse.status == 400)
       return showToast(response.message, "warning");
 
-    else if (fetchResponse.status != 200) 
+    else if (fetchResponse.status != 200)
       return showToast(response.message, "error");
 
     showToast(response.message, "success");
@@ -290,7 +291,7 @@ const validateAndSubmitForm = async () => {
 }
 
 const toggleLoadingContactButton = (button) => {
-  if(!button) return
+  if (!button) return
 
   if (button.disabled) {
     button.disabled = false
@@ -318,11 +319,11 @@ const showToast = (message, type) => {
     }
   }
 
-  if (!["success", "error", "warning"].includes(type)) 
+  if (!["success", "error", "warning"].includes(type))
     return alert(message)
 
   const toastContainer = document.getElementById("toast-container")
-  
+
   const toastId = `toast-${counter}`
   toastContainer.innerHTML += `
     <div id="${toastId}" class="w-full bg-slate-800 flex p-4 gap-4 rounded border toast-${type}">
@@ -332,8 +333,8 @@ const showToast = (message, type) => {
       </span>
     </div>
   `
-  
-  
+
+
   setTimeout(() => cleanToast(toastId), 5000)
   counter++
 }
