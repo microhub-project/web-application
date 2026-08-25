@@ -7,4 +7,6 @@ router.post("/send", function (req, res) {
   mailerController.send(req, res);
 })
 
+// [POST] /sendCode
+
 module.exports = router

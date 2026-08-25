@@ -418,3 +418,9 @@ const send = async (req, res) => {
 module.exports = {
   send
 }
+
+// sendCode()
+// body: {email, empresaId, expiraEm, cargo}
+// codeController.generateCode()
+// inserir no banco de dados
+// transporter.sendMail()
