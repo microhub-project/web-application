@@ -17,7 +17,7 @@ function autenticar(req, res) {
           console.log(`Resultados: ${JSON.stringify(resultadoAutenticar)}`); // transforma JSON em String
 
           if (resultadoAutenticar.length == 1) {
-            console.log(resultadoAutenticar);
+            res.status(200).json(resultadoAutenticar);
 
           } else if (resultadoAutenticar.length == 0) {
             res.status(403).send("Email e/ou senha inválido(s)");
@@ -55,7 +55,7 @@ function cadastrar(req, res) {
     usuarioModel.cadastrar(nome, email, senha)
       .then(
         function (resultado) {
-          res.json(resultado);
+          res.status(201).json(resultado);
         }
       ).catch(
         function (erro) {
