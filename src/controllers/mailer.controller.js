@@ -415,12 +415,191 @@ const send = async (req, res) => {
   }
 }
 
-module.exports = {
-  send
-}
 
-// sendCode()
-// body: {email, empresaId, expiraEm, cargo}
-// codeController.generateCode()
-// inserir no banco de dados
-// transporter.sendMail()
+
+const sendVerificationCode = async (email, code, empresaNome, cargo) => {
+  
+    const now = new Date();
+
+const verificationEmailBody = `
+    <!DOCTYPE html>
+    <html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Código de verificação - Microhub</title>
+    </head>
+
+    <body style="
+        margin:0;
+        padding:40px 16px;
+        background-color:#020617;
+        font-family:Arial, Helvetica, sans-serif;
+    ">
+
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+                <td align="center">
+
+                    <!-- Logo -->
+                    <img
+                        src="https://res.cloudinary.com/dhanssgkj/image/upload/v1787100223/logo-light.svg"
+                        alt="Microhub"
+                        width="140"
+                        style="display:block; margin-bottom:30px;"
+                    >
+
+                    <!-- Card -->
+                    <table
+                        width="600"
+                        cellpadding="0"
+                        cellspacing="0"
+                        style="
+                            max-width:600px;
+                            background-color:#1e293b;
+                            border:1px solid #334155;
+                            border-radius:16px;
+                            color:#f8fafc;
+                        "
+                    >
+                        <tr>
+                            <td align="center" style="padding:40px 30px;">
+
+                                <div style="
+                                    display:inline-block;
+                                    padding:14px;
+                                    background-color:#4f46e5;
+                                    border-radius:12px;
+                                    font-size:26px;
+                                ">
+                                    &#128273;
+                                </div>
+
+                                <h1 style="
+                                    margin:20px 0 10px;
+                                    font-size:26px;
+                                ">
+                                    Código de verificação
+                                </h1>
+
+                                <p style="
+                                    margin:0 0 25px;
+                                    color:#cbd5e1;
+                                    font-size:15px;
+                                    line-height:22px;
+                                ">
+                                    Olá! Recebemos uma solicitação de verificação
+                                    para sua conta na Microhub.
+                                </p>
+
+                                <!-- Informações -->
+                                <table
+                                    width="100%"
+                                    cellpadding="0"
+                                    cellspacing="0"
+                                    style="
+                                        background-color:#0f172a;
+                                        border:1px solid #334155;
+                                        border-radius:10px;
+                                        margin-bottom:20px;
+                                    "
+                                >
+                                    <tr>
+                                        <td style="
+                                            padding:18px;
+                                            color:#cbd5e1;
+                                            font-size:14px;
+                                        ">
+                                            <strong>Empresa:</strong> ${empresaNome}<br>
+                                            <strong>Cargo:</strong> ${cargo}
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <!-- Código -->
+                                <p style="
+                                    margin:0 0 10px;
+                                    color:#93c5fd;
+                                    font-size:12px;
+                                    text-transform:uppercase;
+                                ">
+                                    Seu código
+                                </p>
+
+                                <div style="
+                                    padding:20px;
+                                    background-color:#0f172a;
+                                    border:1px solid #334155;
+                                    border-radius:10px;
+                                    font-family:monospace;
+                                    font-size:32px;
+                                    font-weight:bold;
+                                    letter-spacing:8px;
+                                    color:#ffffff;
+                                ">
+                                    ${code}
+                                </div>
+
+                                <p style="
+                                    margin:20px 0 0;
+                                    color:#94a3b8;
+                                    font-size:14px;
+                                ">
+                                    Este código é válido por <strong>10 minutos</strong>.
+                                </p>
+
+                                <p style="
+                                    margin:20px 0 0;
+                                    color:#94a3b8;
+                                    font-size:13px;
+                                    line-height:20px;
+                                ">
+                                    Por segurança, não compartilhe este código.
+                                    Se você não solicitou esta verificação,
+                                    ignore este e-mail.
+                                </p>
+
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Rodapé -->
+                    <p style="
+                        margin:25px 0 5px;
+                        color:#64748b;
+                        font-size:13px;
+                    ">
+                        Atenciosamente, Equipe Microhub
+                    </p>
+
+                    <p style="
+                        margin:0;
+                        color:#475569;
+                        font-size:11px;
+                    ">
+                        Plataforma de monitoramento de microsserviços para e-commerce.
+                    </p>
+
+                </td>
+            </tr>
+        </table>
+
+    </body>
+    </html>
+      `;
+
+    const infoEmail = await transporter.sendMail({
+      from: '"Microh/ub" <' + process.env.SMTP_USER +'>',
+      to: process.env.SMTP_USER,   // email
+      subject: "Seu código de verificação — Microhub",
+      html: verificationEmailBody
+    });
+
+    return infoEmail;
+};
+       
+
+module.exports = {
+  send,
+  sendVerificationCode
+}
