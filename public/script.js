@@ -195,12 +195,15 @@ const loginValidateRegistration = async () => {
       })
     })
     const response = await responseCadastrar.json()
+    console.log(response)
 
-    if (responseCadastrar.status == 400)
+    if (responseCadastrar.status == 400){
       return showToast(response.message, "warning");
+    }
 
-    else if (responseCadastrar.status != 200)
+    else if (responseCadastrar.status != 200 && responseCadastrar.status != 201){
       return showToast(response.message, "error");
+    }
 
     showToast(response.message, "success");
   }
