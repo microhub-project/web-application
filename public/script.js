@@ -207,8 +207,6 @@ const loginValidateRegistration = async () => {
 
     showToast(response.message, "success");
   }
-
-  showToast(message, type);
 }
 
 const contactForm = document.getElementById("contactForm");
