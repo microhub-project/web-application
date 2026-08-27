@@ -51,11 +51,13 @@ function cadastrar(req, res) {
     res.status(400).send("Sua senha está undefined!");
   } else {
 
+   }
+
     // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
     usuarioModel.cadastrar(nome, email, senha)
       .then(
         function (resultado) {
-          res.status(201).json(resultado);
+          res.status(201).json({message: "Sucesso"});
         }
       ).catch(
         function (erro) {
@@ -64,11 +66,10 @@ function cadastrar(req, res) {
             "\nHouve um erro ao realizar o cadastro! Erro: ",
             erro.sqlMessage
           );
-          res.status(500).json(erro.sqlMessage);
+          res.status(500).json({message: "Erro"});
         }
       );
   }
-}
 
 module.exports = {
   autenticar,
