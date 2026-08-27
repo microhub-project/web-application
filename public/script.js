@@ -137,7 +137,7 @@ const closeLogin = () => {
   cadastro.classList.add("hidden");
 }
 
-const loginValidateRegistration = async () => {
+const validateRegistration = async () => {
 
   const evento = window.event;
   if (evento) evento.preventDefault();
@@ -154,67 +154,134 @@ const loginValidateRegistration = async () => {
   const regexNome = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
 
   let message = "a";
-  let type = "warning";
+  let type = "error";
 
   if (nome === "" || !regexNome.test(nome) || nome.length < 3) {
     validate = false;
     message = "Formato do nome incorreto!";
-  } else if (email === "" || !regexEmail.test(email)) {
+  }else if (email === "" || !regexEmail.test(email)) {
     validate = false;
     message = "Formato do email incorreto!";
-  } else if (senha === "" || senha.length < 8) {
+  }else if (senha === "" || senha.length < 8) {
     validate = false;
     message = "Formato da senha incorreta!";
-  } else if (senha2 === "" || senha2 !== senha) {
+  }else if (senha2 === "" || senha2 !== senha) {
     validate = false;
     message = "Senha divergete!";
-  } else if (codigo === "") {  // falta verificar o codigo da empresa
+  }else if (codigo === "") {  // falta verificar o codigo da empresa
     validate = false;
     message = "Código da empresa obrigatório!";
   }
-  if (validate) {
-
+  if(validate){
+    message = "Sucesso!";
     type = "success"
-    console.log(JSON.stringify({
-      nome,
-      email,
-      senha
-    }
-    ))
-    const responseCadastrar = await fetch("/usuarios/cadastrar", {
+    console.log( JSON.stringify({
+        nome,
+        email,
+        senha}
+      ))
+    const cadastrar = await fetch("/usuarios/cadastrar", {
       method: "POST",
-
+  
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        nomeServer: nome,
-        emailServer:email,
-        senhaServer: senha,
+        nome,
+        email,
+        senha
 
       })
     })
-    const response = await responseCadastrar.json()
-    console.log(response)
+  //   const response = await cadastrar.json()
 
-    if (responseCadastrar.status == 400){
-      return showToast(response.message, "warning");
-    }
+  //   if (cadastrar.status == 400) 
+  //     return showToast(response.message, "warning");
 
-    else if (responseCadastrar.status != 200 && responseCadastrar.status != 201){
-      return showToast(response.message, "error");
-    }
+  //   else if (cadastrar.status != 200) 
+  //     return showToast(response.message, "error");
 
-    showToast(response.message, "success");
+  //   showToast(response.message, "success");
   }
-}
+
+  showToast(message, type);
+  }
+//=====================================================
+  const validarLogin = async () =>{
+    aguardar();
+
+    const email = document.querySelector("#email").value.trim();
+    const senha = document.querySelector("#senha").value;
+
+
+    if (email === "" || senha === "") {
+      cardErro.style.display = "block"
+    showToast("warning", "Email ou senha invalidos.")
+      finalizarAguardar();
+      return false;
+    }
+
+    // console.log("FORM LOGIN: ", email);
+    // console.log("FORM SENHA: ", senha);
+
+    fetch("/usuarios/autenticar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        emailServer: email,
+        senhaServer: senha
+      })
+    }).then(function (resposta) {
+      console.log("ESTOU NO THEN DO entrar()!")
+
+      if (resposta.ok) {
+        console.log(resposta);
+
+        resposta.json().then(json => {
+          console.log(json);
+          console.log(JSON.stringify(json));
+          sessionStorage.EMAIL_USUARIO = json[0].email;
+          sessionStorage.NOME_USUARIO = json[0].nome;
+          sessionStorage.ID_USUARIO = json[0].id;
+        
+
+          setTimeout(function () {
+            window.location = "";
+          }, 1000); // apenas para exibir o loading
+          console.log("Redirecionando para a dash!")
+        });
+
+      } else {
+
+        console.log("Houve um erro ao tentar realizar o login!");
+        showToast("error", "Houve um erro ao tentar realizar o login!")
+        resposta.text().then(texto => {
+          console.error(texto);
+          finalizarAguardar(texto);
+        });
+      }
+
+    }).catch(function (erro) {
+      console.log(erro);
+    })
+
+    return false;
+  }
+  
+
+
+//=====================================================
+
+
 
 const contactForm = document.getElementById("contactForm");
-const contactValidateAndSubmitForm = async () => {
+const validateAndSubmitForm = async () => {
   const fields = [
-    document.getElementById("contactName"),
-    document.getElementById("contactEmail"),
-    document.getElementById("contactSubject"),
+    document.getElementById("contactName"), 
+    document.getElementById("contactEmail"), 
+    document.getElementById("contactSubject"), 
     document.getElementById("contactMessage")
   ]
 
@@ -237,17 +304,17 @@ const contactValidateAndSubmitForm = async () => {
     fields[0].classList.add("border-amber-500!")
     return showToast("Digite um nome válido", "warning")
   }
-
+  
   if (!emailRegex.test(email)) {
     fields[1].classList.add("border-amber-500!")
     return showToast("Digite um e-mail válido", "warning")
   }
-
+  
   if (subject.trim().length < 3) {
     fields[2].classList.add("border-amber-500!")
     return showToast("O assunto deve ter pelo menos 3 caracteres", "warning")
   }
-
+  
   if (message.trim().length < 10) {
     fields[3].classList.add("border-amber-500!")
     return showToast("A mensagem deve ter pelo menos 10 caracteres", "warning")
@@ -258,11 +325,11 @@ const contactValidateAndSubmitForm = async () => {
 
     const fetchResponse = await fetch("/mailer/send", {
       method: "POST",
-
+  
       headers: {
         "Content-Type": "application/json"
       },
-
+  
       body: JSON.stringify({
         name,
         email,
@@ -273,10 +340,10 @@ const contactValidateAndSubmitForm = async () => {
 
     const response = await fetchResponse.json()
 
-    if (fetchResponse.status == 400)
+    if (fetchResponse.status == 400) 
       return showToast(response.message, "warning");
 
-    else if (fetchResponse.status != 200)
+    else if (fetchResponse.status != 200) 
       return showToast(response.message, "error");
 
     showToast(response.message, "success");
@@ -292,7 +359,7 @@ const contactValidateAndSubmitForm = async () => {
 }
 
 const toggleLoadingContactButton = (button) => {
-  if (!button) return
+  if(!button) return
 
   if (button.disabled) {
     button.disabled = false
@@ -320,11 +387,11 @@ const showToast = (message, type) => {
     }
   }
 
-  if (!["success", "error", "warning"].includes(type))
+  if (!["success", "error", "warning"].includes(type)) 
     return alert(message)
 
   const toastContainer = document.getElementById("toast-container")
-
+  
   const toastId = `toast-${counter}`
   toastContainer.innerHTML += `
     <div id="${toastId}" class="w-full bg-slate-800 flex p-4 gap-4 rounded border toast-${type}">
@@ -334,8 +401,8 @@ const showToast = (message, type) => {
       </span>
     </div>
   `
-
-
+  
+  
   setTimeout(() => cleanToast(toastId), 5000)
   counter++
 }
