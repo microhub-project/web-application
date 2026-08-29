@@ -146,11 +146,16 @@ const validateRegistration = async () => {
   const email = document.querySelector("#email").value.trim();
   const senha = document.querySelector("#senha").value;
   const senha2 = document.querySelector("#senha2").value;
-  const codigo = document.querySelector("#codigo").value.trim();
+  const codigo = document.querySelector("#codigo").value.trim()
+    .replaceAll("		", "")
+    .replaceAll("	", "")
+    .replaceAll("	", "")
+    .replaceAll(" ", "")
+    .toUpperCase();
 
   let validate = true;
 
-  const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/;
   const regexNome = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
 
   let message = "a";
@@ -178,7 +183,9 @@ const validateRegistration = async () => {
     console.log( JSON.stringify({
         nome,
         email,
-        senha}
+        senha,
+        codigo
+      }
       ))
     const cadastrar = await fetch("/usuarios/cadastrar", {
       method: "POST",
@@ -187,24 +194,25 @@ const validateRegistration = async () => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        nome,
-        email,
-        senha
-
+        "name": nome,
+        "email": email,
+        "password": senha,
+        "code": codigo
       })
     })
-  //   const response = await cadastrar.json()
+    const response = await cadastrar.json()
 
-  //   if (cadastrar.status == 400) 
-  //     return showToast(response.message, "warning");
+    if (cadastrar.status == 400) 
+      return showToast(response.message, "warning");
 
-  //   else if (cadastrar.status != 200) 
-  //     return showToast(response.message, "error");
+    else if (cadastrar.status == 201) {
+      showToast(response.message, "success");
+      closeRegistration()
+      openLogin()
+    }
 
-  //   showToast(response.message, "success");
+    return showToast(response.message, "error");
   }
-
-  showToast(message, type);
   }
 //=====================================================
   const validarLogin = async () =>{
