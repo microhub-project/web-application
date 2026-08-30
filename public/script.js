@@ -223,66 +223,48 @@ const validateRegistration = async () => {
   }
 //=====================================================
   const validarLogin = async () =>{
-    aguardar();
-
-    const email = document.querySelector("#email").value.trim();
-    const senha = document.querySelector("#senha").value;
+    const email = document.querySelector("#emailLogin").value.trim();
+    const senha = document.querySelector("#senhaLogin").value;
 
 
-    if (email === "" || senha === "") {
-      cardErro.style.display = "block"
-    showToast("warning", "Email ou senha invalidos.")
-      finalizarAguardar();
-      return false;
-    }
-
-    // console.log("FORM LOGIN: ", email);
-    // console.log("FORM SENHA: ", senha);
-
-    fetch("/usuarios/autenticar", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        emailServer: email,
-        senhaServer: senha
+    if (!email) 
+      return showToast("Preencha o campo email", "warning")
+    
+    if (!senha) 
+      return showToast("Preencha o campo senha", "warning")
+    
+    try {
+      const authResponse = await fetch("/usuarios/autenticar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          password: senha
+        })
       })
-    }).then(function (resposta) {
-      console.log("ESTOU NO THEN DO entrar()!")
 
-      if (resposta.ok) {
-        console.log(resposta);
+      const authResponseJson = await authResponse.json()
+      console.log(authResponseJson, String(authResponse.status)[0]) 
+      if (authResponse.status == 500)
+        return showToast(authResponseJson.message, "error")
 
-        resposta.json().then(json => {
-          console.log(json);
-          console.log(JSON.stringify(json));
-          sessionStorage.EMAIL_USUARIO = json[0].email;
-          sessionStorage.NOME_USUARIO = json[0].nome;
-          sessionStorage.ID_USUARIO = json[0].id;
-        
+      if (String(authResponse.status)[0] == "4") 
+        return showToast(authResponseJson.message, "warning");
 
-          setTimeout(function () {
-            window.location = "";
-          }, 1000); // apenas para exibir o loading
-          console.log("Redirecionando para a dash!")
-        });
+      showToast(authResponseJson.message, "success")
+      
+      // sessionStorage.EMAIL_USUARIO = authResponseJson[0].email;
+      // sessionStorage.NOME_USUARIO = authResponseJson[0].nome;
+      // sessionStorage.ID_USUARIO = authResponseJson[0].id;
 
-      } else {
-
-        console.log("Houve um erro ao tentar realizar o login!");
-        showToast("error", "Houve um erro ao tentar realizar o login!")
-        resposta.text().then(texto => {
-          console.error(texto);
-          finalizarAguardar(texto);
-        });
-      }
-
-    }).catch(function (erro) {
-      console.log(erro);
-    })
-
-    return false;
+      setTimeout(() => { window.location = "./app/index.html" }, 2000)
+    } catch (e) {
+      console.error(e)
+      showToast("Algo deu errado. Tente novamente mais tarde", "error")
+    }
+    
   }
   
 
