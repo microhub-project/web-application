@@ -205,13 +205,20 @@ const validateRegistration = async () => {
     if (cadastrar.status == 400) 
       return showToast(response.message, "warning");
 
-    else if (cadastrar.status == 201) {
-      showToast(response.message, "success");
-      closeRegistration()
-      openLogin()
-    }
+    else if (cadastrar.status != 201) 
+      return showToast(response.message, "error");
+    
 
-    return showToast(response.message, "error");
+    showToast(response.message, "success");
+    closeRegistration()
+
+    document.querySelector("#nome").value = "";
+    document.querySelector("#email").value = "";
+    document.querySelector("#senha").value = "";
+    document.querySelector("#senha2").value = "";
+    document.querySelector("#codigo").value = ""
+
+    openLogin()
   }
   }
 //=====================================================
