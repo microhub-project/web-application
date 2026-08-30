@@ -82,6 +82,13 @@ async function cadastrar(req, res) {
         res.status(500).json(responseBody)
       }
 
+      const codeUpdateResponse = await codeModel.setCodeUsedByCode(code)
+
+      if (codeUpdateResponse.affectedRows !== 1) {
+        responseBody.message = "Não foi possível cadastrar o usuário. Tente novamente mais tarde"
+        res.status(500).json(responseBody)
+      }
+
       responseBody.message = "Cadastro realizado com sucesso! Faça login para prosseguir"
       res.status(201).json(responseBody)
       
