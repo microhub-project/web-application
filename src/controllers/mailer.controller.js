@@ -11,14 +11,14 @@ const transporter = nodemailer.createTransport({
 });
 
 const senderEmailBody = `
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Recebemos sua mensagem — Microhub</title>
+  <title>Seu código de confirmação — Microhub</title>
   <!--[if mso]>
   <noscript>
     <xml>
@@ -55,9 +55,10 @@ const senderEmailBody = `
     @media only screen and (max-width: 600px) {
       .container { width: 100% !important; }
       .stack { display: block !important; width: 100% !important; }
-      .px-mobile { padding-left: 20px !important; padding-right: 20px !important; }
       .hero-title { font-size: 24px !important; line-height: 32px !important; }
       .card-pad { padding: 28px 20px !important; }
+      .code-digit { width: 38px !important; height: 48px !important; font-size: 22px !important; }
+      .code-gap { width: 6px !important; }
     }
   </style>
 </head>
@@ -65,7 +66,7 @@ const senderEmailBody = `
 <body class="bg-body" style="margin:0; padding:0; background-color:#020617;">
   <!-- Preheader -->
   <div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#020617;">
-    Recebemos sua mensagem e nossa equipe vai te responder em breve. Obrigado por entrar em contato com a Microhub.
+    Seu código de confirmação é {{confirmation_code}}. Ele expira em {{expires_in}}.
   </div>
 
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#020617;">
@@ -94,60 +95,69 @@ const senderEmailBody = `
                 </tr>
 
                 <tr>
-                  <td class="card-pad" style="padding: 44px 44px 36px 44px;" align="center">
+                  <td class="card-pad" style="padding: 44px 44px 32px 44px;" align="center">
 
-                    <!-- Ícone de confirmação -->
+                    <!-- Ícone de segurança -->
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td align="center" style="width:64px; height:64px; border-radius:14px; background-color:#4f46e5;">
-                          <div style="font-family: Arial, sans-serif; font-size:28px; line-height:64px; color:#ffffff;">&#10003;</div>
+                          <div style="font-family: Arial, sans-serif; font-size:26px; line-height:64px; color:#ffffff;">&#128274;</div>
                         </td>
                       </tr>
                     </table>
 
                     <h1 class="font-sans hero-title" style="margin: 24px 0 12px 0; font-size:26px; line-height:34px; font-weight:700; color:#f8fafc; text-align:center;">
-                      Recebemos sua mensagem
+                      Seu código de confirmação
                     </h1>
 
-                    <p class="font-sans" style="margin:0; font-size:15px; line-height:24px; color:#cbd5e1; text-align:center; max-width:440px;">
-                      Olá, <strong style="color:#f8fafc;">{{user_name}}</strong>. Obrigado por entrar em contato com a Microhub.
-                      Nossa equipe já recebeu sua solicitação e retornará em breve.
+                    <p class="font-sans" style="margin:0; font-size:15px; line-height:24px; color:#cbd5e1; text-align:center; max-width:420px;">
+                      {{message}}
                     </p>
                   </td>
                 </tr>
 
-                <!-- Resumo da mensagem enviada -->
+                <!-- Código de 6 dígitos -->
                 <tr>
-                  <td style="padding: 0 44px 8px 44px;">
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0f172a; border:1px solid #334155; border-radius:12px;">
+                  <td style="padding: 8px 44px 8px 44px;" align="center">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="background-color:#0f172a; border:1px solid #334155; border-radius:12px;">
                       <tr>
-                        <td style="padding: 24px 28px;">
-                          <p class="font-mono" style="margin:0 0 14px 0; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:#93c5fd;">
-                            Resumo da sua mensagem
-                          </p>
-
-                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                            <tr>
-                              <td style="padding: 6px 0; font-family:sans-serif; font-size:13px; color:#64748b; width:100px; vertical-align:top;">Assunto</td>
-                              <td style="padding: 6px 0; font-family:sans-serif; font-size:14px; color:#e2e8f0; vertical-align:top;">{{subject}}</td>
-                            </tr>
-                            <tr>
-                              <td style="padding: 6px 0; font-family:sans-serif; font-size:13px; color:#64748b; vertical-align:top;">Enviado em</td>
-                              <td style="padding: 6px 0; font-family:sans-serif; font-size:14px; color:#e2e8f0; vertical-align:top;">{{sent_at}}</td>
-                            </tr>
-                          </table>
+                        <td align="center" style="padding: 26px 20px;">
+                          <!--[if mso]>
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+                          <td style="width:46px; height:56px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_1}}</td>
+                          <td style="width:8px;">&nbsp;</td>
+                          <td style="width:46px; height:56px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_2}}</td>
+                          <td style="width:8px;">&nbsp;</td>
+                          <td style="width:46px; height:56px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_3}}</td>
+                          <td style="width:8px;">&nbsp;</td>
+                          <td style="width:46px; height:56px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_4}}</td>
+                          <td style="width:8px;">&nbsp;</td>
+                          <td style="width:46px; height:56px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_5}}</td>
+                          <td style="width:8px;">&nbsp;</td>
+                          <td style="width:46px; height:56px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_6}}</td>
+                          </tr></table>
+                          <![endif]-->
+                          <!--[if !mso]><!-->
+                          <div style="mso-hide:all;">
+                            <span class="code-digit" style="display:inline-block; width:46px; height:56px; line-height:56px; margin:0 4px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_1}}</span><span class="code-digit" style="display:inline-block; width:46px; height:56px; line-height:56px; margin:0 4px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_2}}</span><span class="code-digit" style="display:inline-block; width:46px; height:56px; line-height:56px; margin:0 4px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_3}}</span><span class="code-digit" style="display:inline-block; width:46px; height:56px; line-height:56px; margin:0 4px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_4}}</span><span class="code-digit" style="display:inline-block; width:46px; height:56px; line-height:56px; margin:0 4px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_5}}</span><span class="code-digit" style="display:inline-block; width:46px; height:56px; line-height:56px; margin:0 4px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_6}}</span>
+                          </div>
+                          <!--<![endif]-->
                         </td>
                       </tr>
                     </table>
+
+                    <p class="font-sans" style="margin:16px 0 0 0; font-size:13px; line-height:20px; color:#64748b; text-align:center;">
+                      Este código expira em <strong style="color:#93c5fd;">{{expires_in}}</strong> minutos.
+                    </p>
                   </td>
                 </tr>
 
-                <!-- Tempo de resposta -->
+                <!-- Aviso de segurança -->
                 <tr>
-                  <td style="padding: 20px 44px 8px 44px;">
-                    <p class="font-sans" style="margin:0; font-size:14px; line-height:22px; color:#94a3b8; text-align:center;">
-                      Nosso tempo médio de resposta é de até <strong style="color:#e2e8f0;">1 dia útil</strong>.
-                      Se preferir, você também pode acompanhar novidades da plataforma enquanto aguarda.
+                  <td style="padding: 24px 44px 8px 44px;">
+                    <p class="font-sans" style="margin:0; font-size:13px; line-height:21px; color:#64748b; text-align:center;">
+                      Por segurança, nunca compartilhe este código com outras pessoas.
+                      A equipe da Microhub jamais solicitará seu código por telefone, chat ou e-mail.
                     </p>
                   </td>
                 </tr>
@@ -156,7 +166,7 @@ const senderEmailBody = `
                   <td style="padding: 32px 44px 40px 44px;">
                     <hr style="border:none; border-top:1px solid #334155; margin:0 0 24px 0;">
                     <p class="font-sans" style="margin:0; font-size:13px; line-height:20px; color:#64748b; text-align:center;">
-                      Se você não realizou esse contato, pode ignorar este e-mail com segurança.
+                      Se você não solicitou este código, pode ignorar este e-mail com segurança.
                     </p>
                   </td>
                 </tr>
@@ -356,6 +366,190 @@ const receiverEmailBody = `
 
 </html>
 `
+const codeUserEmailBody = `
+<!DOCTYPE html>
+<html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Seu código de confirmação — Microhub</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <style>
+    /* Reset básico para clientes de e-mail */
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+    body { margin: 0; padding: 0; width: 100% !important; height: 100% !important; }
+
+    body, .bg-body {
+      background-color: #020617; /* slate-950 */
+    }
+
+    .font-mono {
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    }
+    .font-sans {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    a { color: #60a5fa; }
+
+    .btn:hover {
+      background-color: #3b82f6 !important;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .container { width: 100% !important; }
+      .stack { display: block !important; width: 100% !important; }
+      .hero-title { font-size: 24px !important; line-height: 32px !important; }
+      .card-pad { padding: 28px 20px !important; }
+      .code-digit { width: 38px !important; height: 48px !important; font-size: 22px !important; }
+      .code-gap { width: 6px !important; }
+    }
+  </style>
+</head>
+
+<body class="bg-body" style="margin:0; padding:0; background-color:#020617;">
+  <!-- Preheader -->
+  <div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#020617;">
+    Seu código de confirmação é {{confirmation_code}}. Ele expira em {{expires_in}}.
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#020617;">
+    <tr>
+      <td align="center" style="padding: 40px 16px;">
+
+        <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px;">
+
+          <!-- Logo -->
+          <tr>
+            <td align="center" style="padding-bottom: 32px;">
+              <img src="https://res.cloudinary.com/dhanssgkj/image/upload/v1787100223/logo-light.svg" alt="Logo da Microhub" width="140" style="display:block; max-width:140px; height:auto;">
+            </td>
+          </tr>
+
+          <!-- Card principal -->
+          <tr>
+            <td style="background-color:#1e293b; border-radius:16px; border:1px solid #334155;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+
+                <!-- Faixa de destaque no topo -->
+                <tr>
+                  <td style="border-radius:16px 16px 0 0; overflow:hidden; height:6px; line-height:6px; font-size:0;">
+                    <div style="height:6px; background-color:#3b82f6; background-image:linear-gradient(90deg,#1e293b,#3b82f6,#4f46e5);">&nbsp;</div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="card-pad" style="padding: 44px 44px 32px 44px;" align="center">
+
+                    <!-- Ícone de segurança -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td align="center" style="width:64px; height:64px; border-radius:14px; background-color:#4f46e5;">
+                          <div style="font-family: Arial, sans-serif; font-size:26px; line-height:64px; color:#ffffff;">&#128274;</div>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <h1 class="font-sans hero-title" style="margin: 24px 0 12px 0; font-size:26px; line-height:34px; font-weight:700; color:#f8fafc; text-align:center;">
+                      Seu código de confirmação
+                    </h1>
+
+                    <p class="font-sans" style="margin:0; font-size:15px; line-height:24px; color:#cbd5e1; text-align:center; max-width:420px;">
+                      {{message}}
+                    </p>
+                  </td>
+                </tr>
+
+                <!-- Código de 6 dígitos -->
+                <tr>
+                  <td style="padding: 8px 44px 8px 44px;" align="center">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="background-color:#0f172a; border:1px solid #334155; border-radius:12px;">
+                      <tr>
+                        <td style="padding: 28px 24px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td class="code-digit" style="width:46px; height:56px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_1}}</td>
+                              <td class="code-gap" style="width:8px;"></td>
+                              <td class="code-digit" style="width:46px; height:56px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_2}}</td>
+                              <td class="code-gap" style="width:8px;"></td>
+                              <td class="code-digit" style="width:46px; height:56px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_3}}</td>
+                              <td class="code-gap" style="width:8px;"></td>
+                              <td class="code-digit" style="width:46px; height:56px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_4}}</td>
+                              <td class="code-gap" style="width:8px;"></td>
+                              <td class="code-digit" style="width:46px; height:56px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_5}}</td>
+                              <td class="code-gap" style="width:8px;"></td>
+                              <td class="code-digit" style="width:46px; height:56px; background-color:#1e293b; border:1px solid #3b82f6; border-radius:8px; text-align:center; font-family:'SFMono-Regular',Consolas,monospace; font-size:26px; font-weight:700; color:#f8fafc;">{{digit_6}}</td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <p class="font-sans" style="margin:16px 0 0 0; font-size:13px; line-height:20px; color:#64748b; text-align:center;">
+                      Este código expira em <strong style="color:#93c5fd;">{{expires_in}}</strong> minutos.
+                    </p>
+                  </td>
+                </tr>
+
+                <!-- Aviso de segurança -->
+                <tr>
+                  <td style="padding: 24px 44px 8px 44px;">
+                    <p class="font-sans" style="margin:0; font-size:13px; line-height:21px; color:#64748b; text-align:center;">
+                      Por segurança, nunca compartilhe este código com outras pessoas.
+                      A equipe da Microhub jamais solicitará seu código por telefone, chat ou e-mail.
+                    </p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding: 32px 44px 40px 44px;">
+                    <hr style="border:none; border-top:1px solid #334155; margin:0 0 24px 0;">
+                    <p class="font-sans" style="margin:0; font-size:13px; line-height:20px; color:#64748b; text-align:center;">
+                      Se você não solicitou este código, pode ignorar este e-mail com segurança.
+                    </p>
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+          </tr>
+
+          <!-- Assinatura / rodapé -->
+          <tr>
+            <td align="center" style="padding: 32px 20px 0 20px;">
+              <p class="font-sans" style="margin:0 0 6px 0; font-size:13px; color:#64748b;">
+                Atenciosamente, <span style="color:#94a3b8;">Equipe Microhub</span>
+              </p>
+              <p class="font-mono" style="margin:0 0 16px 0; font-size:12px; color:#475569;">
+                Plataforma brasileira de monitoramento de microsserviços para e-commerce.
+              </p>
+
+              <p class="font-sans" style="margin:20px 0 0 0; font-size:11px; color:#334155;">
+                © {{year}} Microhub. Todos os direitos reservados.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>
+`
 
 const send = async (req, res) => {
   const { name, email, subject, message } = req.body
@@ -417,185 +611,34 @@ const send = async (req, res) => {
 
 
 
-const sendVerificationCode = async (email, code, empresaNome, cargo) => {
+const sendVerificationCode = async (email, code, companyName, role) => {
+  const now = new Date()
+  const expiresIn = 15;
+
+  try {
+    let bodyFormatted = codeUserEmailBody
+        .replace("{{confirmation_code}}", code)
+        .replace("{{message}}", `Olá. Seja bem-vindo a Microhub! Utilize o código abaixo para criar sua conta atrelada à empresa <strong style="color:#93c5fd;">${companyName}</strong> com cargo de <strong style="color:#93c5fd;">${role == 0 ? "adminstrador" : "desenvolvedor"}</strong>.`)
+        .replaceAll("{{expires_in}}", expiresIn)
+        .replace("{{year}}", now.getFullYear())
+
+    for (let i = 0; i < 6; i++)
+      bodyFormatted = bodyFormatted.replace(`{{digit_${i +1}}}`, code[i])
+
+      const infoEmail = await transporter.sendMail({
+        from: '"Microhub" <' + process.env.SMTP_USER +'>',
+        to: email,
+        subject: "Seu código de verificação - Microhub",
+        html: bodyFormatted
+      });
+
+      return infoEmail;
+  } catch (e) {
+    console.error(e)
+    responseBody.message = "Algo deu errado. Tente novamente mais tarde"
+    res.status(500).json(responseBody)
+  }
   
-    const now = new Date();
-
-const verificationEmailBody = `
-    <!DOCTYPE html>
-    <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Código de verificação - Microhub</title>
-    </head>
-
-    <body style="
-        margin:0;
-        padding:40px 16px;
-        background-color:#020617;
-        font-family:Arial, Helvetica, sans-serif;
-    ">
-
-        <table width="100%" cellpadding="0" cellspacing="0">
-            <tr>
-                <td align="center">
-
-                    <!-- Logo -->
-                    <img
-                        src="https://res.cloudinary.com/dhanssgkj/image/upload/v1787100223/logo-light.svg"
-                        alt="Microhub"
-                        width="140"
-                        style="display:block; margin-bottom:30px;"
-                    >
-
-                    <!-- Card -->
-                    <table
-                        width="600"
-                        cellpadding="0"
-                        cellspacing="0"
-                        style="
-                            max-width:600px;
-                            background-color:#1e293b;
-                            border:1px solid #334155;
-                            border-radius:16px;
-                            color:#f8fafc;
-                        "
-                    >
-                        <tr>
-                            <td align="center" style="padding:40px 30px;">
-
-                                <div style="
-                                    display:inline-block;
-                                    padding:14px;
-                                    background-color:#4f46e5;
-                                    border-radius:12px;
-                                    font-size:26px;
-                                ">
-                                    &#128273;
-                                </div>
-
-                                <h1 style="
-                                    margin:20px 0 10px;
-                                    font-size:26px;
-                                ">
-                                    Código de verificação
-                                </h1>
-
-                                <p style="
-                                    margin:0 0 25px;
-                                    color:#cbd5e1;
-                                    font-size:15px;
-                                    line-height:22px;
-                                ">
-                                    Olá! Recebemos uma solicitação de verificação
-                                    para sua conta na Microhub.
-                                </p>
-
-                                <!-- Informações -->
-                                <table
-                                    width="100%"
-                                    cellpadding="0"
-                                    cellspacing="0"
-                                    style="
-                                        background-color:#0f172a;
-                                        border:1px solid #334155;
-                                        border-radius:10px;
-                                        margin-bottom:20px;
-                                    "
-                                >
-                                    <tr>
-                                        <td style="
-                                            padding:18px;
-                                            color:#cbd5e1;
-                                            font-size:14px;
-                                        ">
-                                            <strong>Empresa:</strong> ${empresaNome}<br>
-                                            <strong>Cargo:</strong> ${cargo}
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <!-- Código -->
-                                <p style="
-                                    margin:0 0 10px;
-                                    color:#93c5fd;
-                                    font-size:12px;
-                                    text-transform:uppercase;
-                                ">
-                                    Seu código
-                                </p>
-
-                                <div style="
-                                    padding:20px;
-                                    background-color:#0f172a;
-                                    border:1px solid #334155;
-                                    border-radius:10px;
-                                    font-family:monospace;
-                                    font-size:32px;
-                                    font-weight:bold;
-                                    letter-spacing:8px;
-                                    color:#ffffff;
-                                ">
-                                    ${code}
-                                </div>
-
-                                <p style="
-                                    margin:20px 0 0;
-                                    color:#94a3b8;
-                                    font-size:14px;
-                                ">
-                                    Este código é válido por <strong>10 minutos</strong>.
-                                </p>
-
-                                <p style="
-                                    margin:20px 0 0;
-                                    color:#94a3b8;
-                                    font-size:13px;
-                                    line-height:20px;
-                                ">
-                                    Por segurança, não compartilhe este código.
-                                    Se você não solicitou esta verificação,
-                                    ignore este e-mail.
-                                </p>
-
-                            </td>
-                        </tr>
-                    </table>
-
-                    <!-- Rodapé -->
-                    <p style="
-                        margin:25px 0 5px;
-                        color:#64748b;
-                        font-size:13px;
-                    ">
-                        Atenciosamente, Equipe Microhub
-                    </p>
-
-                    <p style="
-                        margin:0;
-                        color:#475569;
-                        font-size:11px;
-                    ">
-                        Plataforma de monitoramento de microsserviços para e-commerce.
-                    </p>
-
-                </td>
-            </tr>
-        </table>
-
-    </body>
-    </html>
-      `;
-
-    const infoEmail = await transporter.sendMail({
-      from: '"Microh/ub" <' + process.env.SMTP_USER +'>',
-      to: process.env.SMTP_USER,   // email
-      subject: "Seu código de verificação — Microhub",
-      html: verificationEmailBody
-    });
-
-    return infoEmail;
 };
        
 
