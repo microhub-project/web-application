@@ -32,6 +32,18 @@
 
 @layer base {
   .bg-noise {
-    @apply fixed pointer-events-none opacity-[0.12] z-60 bg-(image:--background-noise) inset-0;
+    @apply fixed pointer-events-none opacity-[0.12] z-100 bg-(image:--background-noise) inset-0;
+  }
+
+  .toast-success {
+    @apply border-emerald-500 text-emerald-500
+  }
+
+  .toast-error {
+    @apply border-rose-500 text-rose-500
+  }
+
+  .toast-warning {
+    @apply border-amber-500 text-amber-500
   }
 }

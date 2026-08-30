@@ -16,6 +16,8 @@ var HOST_APP = process.env.APP_HOST;
 var app = express();
 
 var usuarioRouter = require("./src/routes/usuarios");
+const mailerRouter = require("./src/routes/mailer");
+const codeRouter = require("./src/routes/code");
 
 
 app.use(express.json());
@@ -25,6 +27,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
 app.use("/usuarios", usuarioRouter);
+app.use("/mailer", mailerRouter);
+app.use("/code", codeRouter)
 
 
 app.listen(PORTA_APP, function () {

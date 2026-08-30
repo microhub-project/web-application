@@ -53,7 +53,7 @@ const loadFaqItems = () => {
         </div>
       </div>
     `
-  }))  
+  }))
 }
 
 const faqHandler = (index) => {
@@ -107,4 +107,304 @@ const toggleMenu = () => {
     menuElement.classList.remove("flex")
     menuElement.classList.add("hidden")
   }
+}
+
+const openRegistration = () => {
+  const cadastro = document.getElementById("registerUser");
+
+  cadastro.classList.remove("hidden");
+  cadastro.classList.add("flex");
+}
+
+const closeRegistration = () => {
+  const cadastro = document.getElementById("registerUser");
+
+  cadastro.classList.remove("flex");
+  cadastro.classList.add("hidden");
+}
+
+const openLogin = () => {
+  const cadastro = document.getElementById("loginUser");
+
+  cadastro.classList.remove("hidden");
+  cadastro.classList.add("flex");
+}
+
+const closeLogin = () => {
+  const cadastro = document.getElementById("loginUser");
+
+  cadastro.classList.remove("flex");
+  cadastro.classList.add("hidden");
+}
+
+const validateRegistration = async () => {
+
+  const evento = window.event;
+  if (evento) evento.preventDefault();
+
+  const nome = document.querySelector("#nome").value.trim();
+  const email = document.querySelector("#email").value.trim();
+  const senha = document.querySelector("#senha").value;
+  const senha2 = document.querySelector("#senha2").value;
+  const codigo = document.querySelector("#codigo").value.trim()
+    .replaceAll("		", "")
+    .replaceAll("	", "")
+    .replaceAll("	", "")
+    .replaceAll(" ", "")
+    .toUpperCase();
+
+  let validate = true;
+
+  const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/;
+  const regexNome = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
+
+  let message = "a";
+  let type = "error";
+
+  if (nome === "" || !regexNome.test(nome) || nome.length < 3) {
+    validate = false;
+    message = "Formato do nome incorreto!";
+  }else if (email === "" || !regexEmail.test(email)) {
+    validate = false;
+    message = "Formato do email incorreto!";
+  }else if (senha === "" || senha.length < 8) {
+    validate = false;
+    message = "Formato da senha incorreta!";
+  }else if (senha2 === "" || senha2 !== senha) {
+    validate = false;
+    message = "Senha divergete!";
+  }else if (codigo === "") {  // falta verificar o codigo da empresa
+    validate = false;
+    message = "Código da empresa obrigatório!";
+  }
+  if(validate){
+    message = "Sucesso!";
+    type = "success"
+    console.log( JSON.stringify({
+        nome,
+        email,
+        senha,
+        codigo
+      }
+      ))
+    const cadastrar = await fetch("/usuarios/cadastrar", {
+      method: "POST",
+  
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "name": nome,
+        "email": email,
+        "password": senha,
+        "code": codigo
+      })
+    })
+    const response = await cadastrar.json()
+
+    if (cadastrar.status == 400) 
+      return showToast(response.message, "warning");
+
+    else if (cadastrar.status != 201) 
+      return showToast(response.message, "error");
+    
+
+    showToast(response.message, "success");
+    closeRegistration()
+
+    document.querySelector("#nome").value = "";
+    document.querySelector("#email").value = "";
+    document.querySelector("#senha").value = "";
+    document.querySelector("#senha2").value = "";
+    document.querySelector("#codigo").value = ""
+
+    openLogin()
+  }
+  }
+//=====================================================
+  const validarLogin = async () =>{
+    const email = document.querySelector("#emailLogin").value.trim();
+    const senha = document.querySelector("#senhaLogin").value;
+
+
+    if (!email) 
+      return showToast("Preencha o campo email", "warning")
+    
+    if (!senha) 
+      return showToast("Preencha o campo senha", "warning")
+    
+    try {
+      const authResponse = await fetch("/usuarios/autenticar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          password: senha
+        })
+      })
+
+      const authResponseJson = await authResponse.json()
+      console.log(authResponseJson, String(authResponse.status)[0]) 
+      if (authResponse.status == 500)
+        return showToast(authResponseJson.message, "error")
+
+      if (String(authResponse.status)[0] == "4") 
+        return showToast(authResponseJson.message, "warning");
+
+      showToast(authResponseJson.message, "success")
+      
+      // sessionStorage.EMAIL_USUARIO = authResponseJson[0].email;
+      // sessionStorage.NOME_USUARIO = authResponseJson[0].nome;
+      // sessionStorage.ID_USUARIO = authResponseJson[0].id;
+
+      setTimeout(() => { window.location = "./app/index.html" }, 2000)
+    } catch (e) {
+      console.error(e)
+      showToast("Algo deu errado. Tente novamente mais tarde", "error")
+    }
+    
+  }
+  
+
+
+//=====================================================
+
+
+
+const contactForm = document.getElementById("contactForm");
+const validateAndSubmitForm = async () => {
+  const fields = [
+    document.getElementById("contactName"), 
+    document.getElementById("contactEmail"), 
+    document.getElementById("contactSubject"), 
+    document.getElementById("contactMessage")
+  ]
+
+  fields.forEach(field => {
+    if (field.classList.contains("border-amber-500!"))
+      field.classList.remove("border-amber-500!")
+  })
+
+  const button = document.getElementById("contactSendButton")
+
+  const name = document.getElementById("contactName").value;
+  const email = document.getElementById("contactEmail").value;
+  const subject = document.getElementById("contactSubject").value;
+  const message = document.getElementById("contactMessage").value;
+
+  const nameRegex = /^[A-Za-zÀ-ÿ\s]{3,}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!nameRegex.test(name)) {
+    fields[0].classList.add("border-amber-500!")
+    return showToast("Digite um nome válido", "warning")
+  }
+  
+  if (!emailRegex.test(email)) {
+    fields[1].classList.add("border-amber-500!")
+    return showToast("Digite um e-mail válido", "warning")
+  }
+  
+  if (subject.trim().length < 3) {
+    fields[2].classList.add("border-amber-500!")
+    return showToast("O assunto deve ter pelo menos 3 caracteres", "warning")
+  }
+  
+  if (message.trim().length < 10) {
+    fields[3].classList.add("border-amber-500!")
+    return showToast("A mensagem deve ter pelo menos 10 caracteres", "warning")
+  }
+
+  try {
+    toggleLoadingContactButton(button)
+
+    const fetchResponse = await fetch("/mailer/send", {
+      method: "POST",
+  
+      headers: {
+        "Content-Type": "application/json"
+      },
+  
+      body: JSON.stringify({
+        name,
+        email,
+        subject,
+        message
+      })
+    })
+
+    const response = await fetchResponse.json()
+
+    if (fetchResponse.status == 400) 
+      return showToast(response.message, "warning");
+
+    else if (fetchResponse.status != 200) 
+      return showToast(response.message, "error");
+
+    showToast(response.message, "success");
+
+  } catch (e) {
+    console.error(e)
+    showToast("Algo deu errado. Tente novamente mais tarde.", "error");
+  }
+
+  fields.forEach(field => field.value = "")
+
+  toggleLoadingContactButton(button)
+}
+
+const toggleLoadingContactButton = (button) => {
+  if(!button) return
+
+  if (button.disabled) {
+    button.disabled = false
+    button.innerHTML = `<i class="ph ph-paper-plane-tilt text-xl -ml-4"></i><span class="font-medium">Enviar</span>`
+  } else {
+    button.disabled = true
+    button.innerHTML = `<i class="ph ph-spinner text-xl -ml-4 animate-spin"></i><span class="font-medium">Enviando...</span>`
+  }
+}
+
+let counter = 0
+const showToast = (message, type) => {
+  const types = {
+    "success": {
+      "color": "green",
+      "icon": "ph ph-check-fat"
+    },
+    "error": {
+      "color": "red",
+      "icon": "ph-bold ph-x"
+    },
+    "warning": {
+      "color": "yellow",
+      "icon": "ph ph-warning"
+    }
+  }
+
+  if (!["success", "error", "warning"].includes(type)) 
+    return alert(message)
+
+  const toastContainer = document.getElementById("toast-container")
+  
+  const toastId = `toast-${counter}`
+  toastContainer.innerHTML += `
+    <div id="${toastId}" class="w-full bg-slate-800 flex p-4 gap-4 rounded border toast-${type}">
+      <i class="${types[type].icon} self-center text-3xl"></i>
+      <span>
+        <p>${message}</p>
+      </span>
+    </div>
+  `
+  
+  
+  setTimeout(() => cleanToast(toastId), 5000)
+  counter++
+}
+
+const cleanToast = (elementId) => {
+  const toastElement = document.getElementById(elementId)
+  toastElement.classList.add("hidden")
 }
