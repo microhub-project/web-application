@@ -62,6 +62,87 @@ const generateCode = () => {
   return code
 }
 
+const editCode = async (req, res) => {
+  const { id, role, email, isRenewal } = req.body // é possível adicionar o companyId e o userId para fazer as queries com maior segurança
+
+  const responseBody = {
+    message: ""
+  }
+
+  if (!id) {
+    responseBody.message = "Id do código está inválido"
+    return res.status(400).json(responseBody)
+  }
+
+  if (!role && !isRenewal && !email) {
+    responseBody.message = "Dados inválidos"
+    return res.status(400).json(responseBody)
+  }
+
+  const isEmailValid = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/.test(email);
+  if (email && !isEmailValid) {
+    responseBody.message = "Email está inválido"
+    return res.status(400).json(responseBody)
+  }
+  
+  try {
+
+    if (role !== null && typeof role !== "undefined") {
+      console.log("cargo: " + role)
+      const response = await codeModel.updateRoleById(id, role)
+
+      if (response.affectedRows !== 1) {
+        responseBody.message = "Não foi possível alterar o cargo relacionado ao código. Tente novamente mais tarde"
+        return res.status(500).json(responseBody);
+      } 
+
+      responseBody.message = "O cargo do código foi alterado com sucesso"
+      return res.status(200).json(responseBody)
+    }
+
+    else if (email !== null && typeof email !== "undefined" && email !== "") {
+      console.log("email: " + email)
+      const dbResponse = await codeModel.getCodeDataByCodeId(id)
+
+      if (dbResponse.length !== 1) {
+        responseBody.message = "Não foi possível encontrar o código de ativação";
+        return res.status(500).json(responseBody);
+      }
+
+      console.log(dbResponse)
+      const { cargo, nome_fantasia, codigo } = dbResponse[0]
+      const mailerResponse = await mailerController.sendVerificationCode(email, codigo, nome_fantasia, cargo)
+
+      if (mailerResponse.rejected && mailerResponse.rejected.length > 0) {
+        responseBody.message = "Não foi possível enviar o e-mail. Tente novamente mais tarde";
+        return res.status(500).json(responseBody);
+      }
+
+      responseBody.message = "O email foi reenviado com sucesso"
+      return res.status(200).json(responseBody)
+    }
+
+    else if (isRenewal === true) {
+      console.log("renovar? " + isRenewal)
+      const response = await codeModel.updateExpiresAtById(id)
+
+      if (response.affectedRows !== 1) {
+        responseBody.message = "Não foi possível renovar data de expiração do código. Tente novamente mais tarde"
+        return res.status(500).json(responseBody);
+      } 
+
+      responseBody.message = "A data de expiração do código foi renovado com sucesso"
+      return res.status(200).json(responseBody)
+    }
+
+  } catch (e) {
+    console.error(e)
+    responseBody.message = "Algo deu errado. Tente novamente mais tarde"
+    return res.status(500).json(responseBody);
+  }
+}
+
 module.exports = {
-  sendCode
+  sendCode,
+  editCode
 }
