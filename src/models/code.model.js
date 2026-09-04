@@ -18,8 +18,29 @@ const setCodeUsedByCode = async (code) => {
   return await database.execute(query, [code])
 }
 
+const updateRoleById = async (id, role) => {
+  const query = "update codigo_ativacao set cargo = ?, atualizado_em = current_timestamp() where id = ?"
+
+  return await database.execute(query, [role, id])
+}
+
+const updateExpiresAtById = async (id) => {
+  const query = "update codigo_ativacao set expira_em = date_add(current_timestamp(), interval 15 minute), atualizado_em = current_timestamp() where id = ?"
+
+  return await database.execute(query, [id])
+}
+
+const getCodeDataByCodeId = async (id) => {
+   const query = "select e.nome_fantasia, ca.cargo, ca.codigo from empresa e join codigo_ativacao ca on ca.empresa_id = e.id where ca.id = ? and ca.expira_em > current_timestamp() and ca.deletado_em is null and ca.usado_em is null"
+
+  return await database.execute(query, [id])
+}
+
 module.exports = {
   create,
   getCompanyAndRoleByCode,
-  setCodeUsedByCode
+  setCodeUsedByCode,
+  updateRoleById,
+  updateExpiresAtById,
+  getCodeDataByCodeId
 }
