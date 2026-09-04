@@ -274,7 +274,7 @@ const validateRegistration = async () => {
 
 
 const contactForm = document.getElementById("contactForm");
-const validateAndSubmitForm = async () => {
+const contactValidateAndSubmitForm = async () => {
   const fields = [
     document.getElementById("contactName"), 
     document.getElementById("contactEmail"), 
