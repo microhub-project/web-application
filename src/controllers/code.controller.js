@@ -142,7 +142,38 @@ const editCode = async (req, res) => {
   }
 }
 
+const disableCode = async (req, res) => {
+  const { id } = req.body
+
+  const responseBody = {
+    message: "Id do código de ativação inválido"
+  }
+
+  if (!id) 
+    return res.status(400).json(responseBody)
+
+  try {
+    const dbResponse = await codeModel.disableCodeById(id)
+    console.log(dbResponse)
+  
+    if (dbResponse.affectedRows !== 1) {
+      responseBody.message = "Código de ativação não encontrado"
+      return res.status(404).json(responseBody)
+    }
+
+    responseBody.message = "Código de ativação foi desativado com sucesso"
+    return res.status(200).json(responseBody)
+    
+  } catch (e) {
+    console.error(e)
+    responseBody.message = "Algo deu errado. Tente novamente mais tarde"
+    return res.status(500).json(responseBody)
+  }
+  
+}
+
 module.exports = {
   sendCode,
-  editCode
+  editCode,
+  disableCode,
 }
