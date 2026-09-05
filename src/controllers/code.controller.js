@@ -163,7 +163,7 @@ const disableCode = async (req, res) => {
 
     responseBody.message = "Código de ativação foi desativado com sucesso"
     return res.status(200).json(responseBody)
-    
+
   } catch (e) {
     console.error(e)
     responseBody.message = "Algo deu errado. Tente novamente mais tarde"
@@ -172,8 +172,40 @@ const disableCode = async (req, res) => {
   
 }
 
+const getAllCodes = async (req, res) => {
+  const { userId, companyId } = req.query
+
+  const responseBody = {
+    message: "Credenciais inválidas",
+    data: {}
+  }
+
+  if (!userId || !companyId)
+    return res.status(400).json(responseBody)
+
+  try {
+    const dbResponse = await codeModel.getAllCodesByUserAndCompanyId(userId, companyId)
+
+    if (dbResponse.length === 0) {
+      responseBody.message = "Nenhum código de ativação foi encontrado"
+      responseBody.data = dbResponse
+      return res.status(204).json(responseBody)
+    }
+
+    responseBody.message = ""
+    responseBody.data = dbResponse
+    return res.status(200).json(responseBody)
+
+  } catch (e) {
+    console.error(e)
+    responseBody.message = "Algo deu errado. Tente novamente mais tarde"
+    return res.status(500).json(responseBody)
+  }
+} 
+
 module.exports = {
   sendCode,
   editCode,
   disableCode,
+  getAllCodes
 }
