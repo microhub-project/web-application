@@ -42,6 +42,12 @@ const disableCodeById = async (id) => {
   return await database.execute(query, [id])
 }
 
+const getAllCodesByUserAndCompanyId = async (userId, companyId) => {
+  const query = "select c.id, c.codigo, c.cargo, c.criado_em, c.expira_em, c.usado_em, c.atualizado_em, c.deletado_em from codigo_ativacao c join empresa e on c.empresa_id = e.id join usuario u on u.empresa_id = e.id where u.id = ? and u.cargo = 1 and e.id = ? and c.deletado_em is null"
+
+  return await database.execute(query, [userId, companyId])
+}
+
 module.exports = {
   create,
   getCompanyAndRoleByCode,
@@ -49,5 +55,6 @@ module.exports = {
   updateRoleById,
   updateExpiresAtById,
   getCodeDataByCodeId,
-  disableCodeById
+  disableCodeById,
+  getAllCodesByUserAndCompanyId
 }
