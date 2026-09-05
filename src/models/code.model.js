@@ -36,11 +36,18 @@ const getCodeDataByCodeId = async (id) => {
   return await database.execute(query, [id])
 }
 
+const disableCodeById = async (id) => {
+  const query = "update codigo_ativacao set deletado_em = current_timestamp() where id = ? and deletado_em is null"
+
+  return await database.execute(query, [id])
+}
+
 module.exports = {
   create,
   getCompanyAndRoleByCode,
   setCodeUsedByCode,
   updateRoleById,
   updateExpiresAtById,
-  getCodeDataByCodeId
+  getCodeDataByCodeId,
+  disableCodeById
 }
