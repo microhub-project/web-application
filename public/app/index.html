@@ -14,6 +14,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="./script.js"></script>
+    <script src="../js/session.js"></script>
 
 </head>
 
@@ -44,7 +45,7 @@
           class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl">
           <i class="ph ph-user text-2xl"></i> Usuários
         </a>
-        <a href="#"
+        <a href="./codes"
           class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl">
           <i class="ph ph-lock text-2xl"></i> Códigos
         </a>
@@ -57,7 +58,7 @@
           Usuário
         </div>
         <div>
-          <a href="../index.html"><i class="ph ph-sign-out text-2xl"></i></a>
+          <a onclick="logout()"><i class="ph ph-sign-out text-2xl"></i></a>
         </div>
       </div>
     </nav>
