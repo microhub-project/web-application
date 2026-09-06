@@ -26,14 +26,16 @@ const sendCode = async (req, res) => {
     }
 
     try {
-        const { nome_fantasia } = await companyModel.getNameById(companyId)[0]
+        const dbResponse = await companyModel.getNameById(companyId)
 
-        if (!nome_fantasia) {
+        if (dbResponse.length !== 1) {
           responseBody.message = "Não foi possível encontrar a empresa.";
           return res.status(500).json(responseBody);
         }
 
-        const infoEmail = await mailerController.sendVerificationCode(email, code, nome_fantasia, role);
+        const companyName = dbResponse[0].nome_fantasia
+
+        const infoEmail = await mailerController.sendVerificationCode(email, code, companyName, role);
         
         if (infoEmail.rejected && infoEmail.rejected.length > 0) {
             responseBody.message = "Não foi possível enviar o e-mail.";
@@ -48,7 +50,8 @@ const sendCode = async (req, res) => {
         return res.status(200).json(responseBody);
 
 
-    } catch {
+    } catch (e) {
+      console.error(e)
         responseBody.message =
             "Algo deu errado. Tente novamente mais tarde.";
 
