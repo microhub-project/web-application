@@ -104,3 +104,8 @@ const dateToTime = (date) => {
   else 
     return days + " dia" + (days > 1 ? "s" : "")
 }
+
+const copyCode = (elementId) => {
+  navigator.clipboard.writeText(elementId.substring(0, 6))
+  showToast("Código copiado para sua área de transferência.", "success")
+}
