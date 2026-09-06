@@ -1,9 +1,9 @@
 const mailerController = require("./mailer.controller");
 const codeModel = require("../models/code.model")
+const companyModel = require("../models/company.model")
 
 const sendCode = async (req, res) => {
-    const { email, companyId, role } = req.body; 
-    const companyName = "Microhub" // está só para teste por enquanto
+    const { email, companyId, role } = req.body
 
     const code = generateCode()
 
@@ -26,7 +26,14 @@ const sendCode = async (req, res) => {
     }
 
     try {
-        const infoEmail = await mailerController.sendVerificationCode(email, code, companyName, role);
+        const { nome_fantasia } = await companyModel.getNameById(companyId)[0]
+
+        if (!nome_fantasia) {
+          responseBody.message = "Não foi possível encontrar a empresa.";
+          return res.status(500).json(responseBody);
+        }
+
+        const infoEmail = await mailerController.sendVerificationCode(email, code, nome_fantasia, role);
         
         if (infoEmail.rejected && infoEmail.rejected.length > 0) {
             responseBody.message = "Não foi possível enviar o e-mail.";
