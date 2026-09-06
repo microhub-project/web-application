@@ -41,8 +41,8 @@ const getCodes = async () => {
           </div>
           <h1 class="text-3xl font-bold tracking-widest text-slate-800">${codigo}</h1>
           <div class="flex *:cursor-pointer items-center gap-5">
-            <i onclick="copyCode('${elementId}')" tabindex="0" class="ph-bold ph-copy-simple text-2xl hover:text-blue-600 duration-150 transition-all"></i>
-            <i onclick="refreshCode('${elementId}')" tabindex="0" class="ph-bold ph-arrows-clockwise text-2xl hover:text-green-600 duration-150 transition-all"></i>
+            <i onclick="copyCode('${elementId}')" tabindex="0" class="ph-bold ph-copy-simple text-2xl hover:text-blue-600 duration-150 transition-all ${usado_em ? "pointer-events-none opacity-25" : ""}"></i>
+            <i onclick="refreshCode('${elementId}')" tabindex="0" class="ph-bold ph-arrows-clockwise text-2xl hover:text-green-600 duration-150 transition-all ${usado_em ? "pointer-events-none opacity-25" : ""}"></i>
             <i onclick="disableCode('${elementId}')" tabindex="0" class="ph-bold ph-trash-simple text-2xl hover:text-red-600 duration-150 transition-all"></i>
           </div>
         </div>
