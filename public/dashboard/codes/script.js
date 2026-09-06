@@ -179,6 +179,60 @@ const resendCode = async (elementId) => {
   }
 }
 
+const disableCode = (elementId) => {
+  const popUpBody = `
+    <div class="flex justify-around gap-4">
+    <button 
+        onclick="closePopUp()"
+        id="disableCodeConfirmedButton"
+        class="w-full py-3 mt-2 outline outline-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center">
+        <span class="font-medium">Cancelar</span>
+      </button>
+      <button 
+        onclick="disableCodeConfirmed('${elementId}')"
+        id="disableCodeConfirmedButton"
+        class="w-full py-3 mt-2 bg-red-600 hover:bg-red-700 rounded-lg font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center">
+        <span class="font-medium">Desativar código</span>
+      </button>
+    </div>
+  `
+
+  showPopUp("Desativar código", popUpBody)
+}
+
+const disableCodeConfirmed = async (elementId) => {
+  const button = document.getElementById("disableCodeConfirmedButton")
+  toggleDisableButton(button)
+
+  const codeId = elementId.split("-")[1]
+  const body = { 
+    id: codeId
+  }
+
+  try {
+    const response = await fetch("/code/disable", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    })
+    
+    const responseJson = await response.json()
+  
+    toggleDisableButton(button)
+    if (response.status !== 200) 
+      return showToast(responseJson.message, "error")
+
+    showToast(responseJson.message, "success")
+    
+    closePopUp()
+  } catch (e) {
+    console.error(e)
+    return showToast("Algo deu errado. Tente novamente mais tarde", "error")
+  }
+}
+
 const showPopUp = (title, popUpBody) => {
   const popUpContainer = document.getElementById("popUpContainer")
   const popUpContent = document.getElementById("popUpContent")
@@ -212,4 +266,10 @@ const toggleLoadingSendButton = (button) => {
     button.disabled = true
     button.innerHTML = `<i class="ph ph-spinner text-xl -ml-4 animate-spin"></i><span class="font-medium">Enviando...</span>`
   }
+}
+
+const toggleDisableButton = (button) => {
+  if(!button) return
+
+  button.disabled = !button.disabled
 }
