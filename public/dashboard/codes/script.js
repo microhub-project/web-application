@@ -31,7 +31,7 @@ const getCodes = async () => {
         <div class="flex justify-between items-center">
           <div class="flex items-center gap-2 font-semibold">
             <i class="ph-bold ph-briefcase text-2xl"></i>
-            <select id="roleSelect-${elementId}" class="text-lg" onchange="editRole('${elementId}')">
+            <select id="roleSelect-${elementId}" class="text-lg outline-none!" onchange="editRole('${elementId}')">
               <option value="0" ${cargo === 0 ? "selected" : ""}>Novo parceiro</option>
               <option value="1" ${cargo === 1 ? "selected" : ""}>Gerente TI</option>
               <option value="2" ${cargo === 2 ? "selected" : ""}>FinOps</option>
