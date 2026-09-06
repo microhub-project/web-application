@@ -197,7 +197,7 @@ const disableCode = (elementId) => {
     </div>
   `
 
-  showPopUp("Desativar código", popUpBody)
+  showPopUp(`Desativar código: <span class="font-bold">${elementId.split("-")[0]}</span>`, popUpBody)
 }
 
 const disableCodeConfirmed = async (elementId) => {
