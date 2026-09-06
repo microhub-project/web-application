@@ -138,7 +138,6 @@ const closeLogin = () => {
 }
 
 const validateRegistration = async () => {
-
   const evento = window.event;
   if (evento) evento.preventDefault();
 
@@ -153,74 +152,58 @@ const validateRegistration = async () => {
     .replaceAll(" ", "")
     .toUpperCase();
 
-  let validate = true;
-
   const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/;
   const regexNome = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
 
-  let message = "a";
-  let type = "error";
+  if (nome === "" || !regexNome.test(nome) || nome.length < 3)
+    return showToast("Formato do nome incorreto!", "warning")
 
-  if (nome === "" || !regexNome.test(nome) || nome.length < 3) {
-    validate = false;
-    message = "Formato do nome incorreto!";
-  }else if (email === "" || !regexEmail.test(email)) {
-    validate = false;
-    message = "Formato do email incorreto!";
-  }else if (senha === "" || senha.length < 8) {
-    validate = false;
-    message = "Formato da senha incorreta!";
-  }else if (senha2 === "" || senha2 !== senha) {
-    validate = false;
-    message = "Senha divergete!";
-  }else if (codigo === "") {  // falta verificar o codigo da empresa
-    validate = false;
-    message = "Código da empresa obrigatório!";
-  }
-  if(validate){
-    message = "Sucesso!";
-    type = "success"
-    console.log( JSON.stringify({
-        nome,
-        email,
-        senha,
-        codigo
-      }
-      ))
-    const cadastrar = await fetch("/usuarios/cadastrar", {
-      method: "POST",
-  
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        "name": nome,
-        "email": email,
-        "password": senha,
-        "code": codigo
-      })
+  else if (email === "" || !regexEmail.test(email))
+    return showToast("Formato do email incorreto!", "warning")
+
+  else if (senha === "" || senha.length < 8)
+    return showToast("Formato da senha incorreta!", "warning")
+
+  else if (senha2 === "" || senha2 !== senha)
+    return showToast("Senha divergete!", "warning")
+
+  else if (codigo === "")
+    return showToast("Código de ativação é obrigatório!", "warning")
+
+  const cadastrar = await fetch("/usuarios/cadastrar", {
+    method: "POST",
+
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      "name": nome,
+      "email": email,
+      "password": senha,
+      "code": codigo
     })
-    const response = await cadastrar.json()
+  })
+  
+  const response = await cadastrar.json()
 
-    if (cadastrar.status == 400) 
-      return showToast(response.message, "warning");
+  if (cadastrar.status == 400) 
+    return showToast(response.message, "warning");
 
-    else if (cadastrar.status != 201) 
-      return showToast(response.message, "error");
-    
+  else if (cadastrar.status != 201) 
+    return showToast(response.message, "error");
+  
 
-    showToast(response.message, "success");
-    closeRegistration()
+  showToast(response.message, "success");
+  closeRegistration()
 
-    document.querySelector("#nome").value = "";
-    document.querySelector("#email").value = "";
-    document.querySelector("#senha").value = "";
-    document.querySelector("#senha2").value = "";
-    document.querySelector("#codigo").value = ""
+  document.querySelector("#nome").value = "";
+  document.querySelector("#email").value = "";
+  document.querySelector("#senha").value = "";
+  document.querySelector("#senha2").value = "";
+  document.querySelector("#codigo").value = ""
 
-    openLogin()
-  }
-  }
+  openLogin()
+}
 //=====================================================
   const validarLogin = async () =>{
     const email = document.querySelector("#emailLogin").value.trim();
