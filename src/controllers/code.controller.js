@@ -80,7 +80,7 @@ const editCode = async (req, res) => {
   }
 
   const isEmailValid = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/.test(email);
-  if (email && !isEmailValid) {
+  if (isEmailValid && email && !isEmailValid) {
     responseBody.message = "Email está inválido"
     return res.status(400).json(responseBody)
   }
@@ -100,16 +100,22 @@ const editCode = async (req, res) => {
       return res.status(200).json(responseBody)
     }
 
-    else if (email !== null && typeof email !== "undefined" && email !== "") {
+    else if (isEmailValid && email !== null && typeof email !== "undefined" && email !== "") {
       console.log("email: " + email)
-      const dbResponse = await codeModel.getCodeDataByCodeId(id)
 
+      const response = await codeModel.updateExpiresAtById(id)
+
+      if (response.affectedRows !== 1) {
+        responseBody.message = "Não foi possível renovar data de expiração do código. Tente novamente mais tarde"
+        return res.status(500).json(responseBody);
+      } 
+
+      const dbResponse = await codeModel.getCodeDataByCodeId(id)
       if (dbResponse.length !== 1) {
         responseBody.message = "Não foi possível encontrar o código de ativação";
         return res.status(500).json(responseBody);
       }
-
-      console.log(dbResponse)
+      
       const { cargo, nome_fantasia, codigo } = dbResponse[0]
       const mailerResponse = await mailerController.sendVerificationCode(email, codigo, nome_fantasia, cargo)
 
@@ -122,17 +128,9 @@ const editCode = async (req, res) => {
       return res.status(200).json(responseBody)
     }
 
-    else if (isRenewal === true) {
-      console.log("renovar? " + isRenewal)
-      const response = await codeModel.updateExpiresAtById(id)
-
-      if (response.affectedRows !== 1) {
-        responseBody.message = "Não foi possível renovar data de expiração do código. Tente novamente mais tarde"
-        return res.status(500).json(responseBody);
-      } 
-
-      responseBody.message = "A data de expiração do código foi renovado com sucesso"
-      return res.status(200).json(responseBody)
+    else {
+      responseBody.message = "Credenciais inválidas"
+      return res.status(400).json(responseBody)
     }
 
   } catch (e) {
