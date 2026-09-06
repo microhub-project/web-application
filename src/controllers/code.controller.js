@@ -186,12 +186,9 @@ const getAllCodes = async (req, res) => {
   try {
     const dbResponse = await codeModel.getAllCodesByUserAndCompanyId(userId, companyId)
 
-    if (dbResponse.length === 0) {
-      responseBody.message = "Nenhum código de ativação foi encontrado"
-      responseBody.data = dbResponse
+    if (dbResponse.length === 0) 
       return res.status(204).json(responseBody)
-    }
-
+    
     responseBody.message = ""
     responseBody.data = dbResponse
     return res.status(200).json(responseBody)
