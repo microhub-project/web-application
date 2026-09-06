@@ -110,6 +110,75 @@ const copyCode = (elementId) => {
   showToast("Código copiado para sua área de transferência.", "success")
 }
 
+const refreshCode = (elementId) => {
+  const popUpBody = `
+    <div class="flex flex-col">
+      <div class="flex flex-col gap-1.5">
+        <label for="emailReceiver" class="text-slate-200">Email</label> 
+        <input type="email" id="emailReceiver" placeholder="Digite o email a receber o código" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
+      </div>
+      <button 
+        onclick="resendCode('${elementId}')"
+        id="resendCodeButton"
+        class="w-full py-3 mt-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center">
+        <i class="ph ph-paper-plane-tilt text-xl -ml-4"></i><span class="font-medium">Reenviar código</span>
+      </button>
+    </div>
+  `
+
+  showPopUp("Reenviar código", popUpBody)
+}
+
+const resendCode = async (elementId) => {
+  const emailReceiverElement = document.getElementById("emailReceiver")
+  const emailReceiver = emailReceiverElement.value.trim()
+
+  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/
+  if (!emailReceiver || !emailRegex.test(emailReceiver))
+    return showToast("Email inválido", "warning")
+
+  const codeId = elementId.split("-")[1]
+  const body = { 
+    id: codeId, 
+    role: null, 
+    email: emailReceiver, 
+    isRenewal: true
+  }
+
+  const resendCodeButton = document.getElementById("resendCodeButton")
+  try {
+    toggleLoadingSendButton(resendCodeButton)
+    const response = await fetch("/code/edit", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    })
+    
+    const responseJson = await response.json()
+    console.log(responseJson)
+  
+    toggleLoadingSendButton(resendCodeButton)
+    if (response.status === 500) 
+      return showToast(responseJson.message, "error")
+  
+    if (response.status === 400) 
+      return showToast(responseJson.message, "warning")
+  
+    if (response.status !== 200) 
+      return showToast(responseJson.message, "error")
+
+    emailReceiverElement.innerHTML = ""
+    showToast(responseJson.message, "success")
+    
+    closePopUp()
+  } catch (e) {
+    console.error(e)
+    return showToast("Algo deu errado. Tente novamente mais tarde", "error")
+  }
+}
+
 const showPopUp = (title, popUpBody) => {
   const popUpContainer = document.getElementById("popUpContainer")
   const popUpContent = document.getElementById("popUpContent")
@@ -131,4 +200,16 @@ const showPopUp = (title, popUpBody) => {
 const closePopUp = () => {
   document.getElementById("popUpContainer").classList.replace("flex", "hidden")
   document.getElementById("popUpContent").innerHTML = ""
+}
+
+const toggleLoadingSendButton = (button) => {
+  if(!button) return
+
+  if (button.disabled) {
+    button.disabled = false
+    button.innerHTML = `<i class="ph ph-paper-plane-tilt text-xl -ml-4"></i><span class="font-medium">Enviar código</span>`
+  } else {
+    button.disabled = true
+    button.innerHTML = `<i class="ph ph-spinner text-xl -ml-4 animate-spin"></i><span class="font-medium">Enviando...</span>`
+  }
 }
