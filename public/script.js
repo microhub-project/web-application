@@ -266,7 +266,7 @@ const validarLogin = async () =>{
     sessionStorage.USER_ID = authResponseJson.body.id
     sessionStorage.ROLE = authResponseJson.body.cargo
 
-    setTimeout(() => { window.location = "./dashboard/index.html" }, 2000)
+    setTimeout(() => { window.location = "./app/index.html" }, 2000)
     document.querySelector("#emailLogin").value = ""
     document.querySelector("#senhaLogin").value = ""
   } catch (e) {
