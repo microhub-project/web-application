@@ -1,3 +1,4 @@
+// FAQ 
 const questionsAndAnswers = [
   {
     question: "O que é a plataforma?",
@@ -97,30 +98,44 @@ const faqHandler = (index) => {
   }
 }
 
+// MENU
 const toggleMenu = () => {
   const menuElement = document.getElementById("header-mobile")
 
-  if (menuElement.classList.contains("hidden")) {
-    menuElement.classList.add("flex")
-    menuElement.classList.remove("hidden")
+  if (menuElement.classList.contains("translate-x-full")) {
+    menuElement.classList.add("translate-x-0")
+    menuElement.classList.remove("translate-x-full")
   } else {
-    menuElement.classList.remove("flex")
-    menuElement.classList.add("hidden")
+    menuElement.classList.remove("translate-x-0")
+    menuElement.classList.add("translate-x-full")
   }
 }
 
+// CADASTRO DE USUÁRIO
 const openRegistration = () => {
   const cadastro = document.getElementById("registerUser");
 
   cadastro.classList.remove("hidden");
   cadastro.classList.add("flex");
+
+  setTimeout(() => {
+    cadastro.classList.remove("opacity-0");
+    cadastro.classList.add("opacity-100");
+
+  }, 10)
 }
 
 const closeRegistration = () => {
   const cadastro = document.getElementById("registerUser");
 
-  cadastro.classList.remove("flex");
-  cadastro.classList.add("hidden");
+  cadastro.classList.add("opacity-0");
+  cadastro.classList.remove("opacity-100");
+
+  setTimeout(() => {
+    cadastro.classList.remove("flex");
+    cadastro.classList.add("hidden");
+  }, 500)
+  
 }
 
 const openLogin = () => {
@@ -263,6 +278,7 @@ const validarLogin = async () =>{
 
 //=====================================================
 
+// CONTATO
 const contactForm = document.getElementById("contactForm");
 const validateAndSubmitForm = async () => {
   const fields = [
@@ -357,6 +373,7 @@ const toggleLoadingContactButton = (button) => {
   }
 }
 
+// TOAST
 let counter = 0
 const showToast = (message, type) => {
   const types = {
@@ -397,4 +414,148 @@ const showToast = (message, type) => {
 const cleanToast = (elementId) => {
   const toastElement = document.getElementById(elementId)
   toastElement.classList.add("hidden")
+}
+
+// GSAP/ANIMAÇÕES
+const initAnimations = () => {
+  gsap.registerPlugin(ScrollTrigger)
+  
+  const navbar = document.getElementById('header-main')
+
+  const tlNavbar = gsap.timeline({ 
+    defaults: {
+      duration: 1.2,
+      ease: "power1.inOut"
+    }
+  })
+
+  tlNavbar.from(navbar, {
+    y: -100,
+    opacity: 0,
+    filter: "blur(16px)",
+  })
+  .to(navbar, {
+    y: 0,
+    blur: 0,
+    filter: "blur(0px)",
+    opacity: 100,
+  })
+
+  const homeSection = document.getElementById('home')
+
+  const tlHome = gsap.timeline({ 
+    defaults: {
+      duration: 1.5,
+      ease: "power1.inOut"
+    }
+  })
+
+  tlHome.from(homeSection, {
+    y: 200,
+    opacity: 0,
+    filter: "blur(16px)",
+  })
+  .to(homeSection, {
+    y: 0,
+    blur: 0,
+    filter: "blur(0px)",
+    opacity: 100,
+  })
+
+  const problemSection = document.getElementById('problem')
+
+  const tlProblem = gsap.timeline({ 
+    defaults: {
+      duration: 1.5,
+      ease: "power1.inOut",
+      delay: 1
+    },
+    scrollTrigger: {
+      trigger: problemSection
+    }
+  })
+
+  tlProblem.from(problemSection, {
+    y: 200,
+    opacity: 0,
+    filter: "blur(16px)",
+  })
+  .to(problemSection, {
+    y: 0,
+    blur: 0,
+    filter: "blur(0px)",
+    opacity: 100,
+  })
+
+  const solutionSection = document.getElementById('solution')
+
+  const tlSolutionSection = gsap.timeline({ 
+    defaults: {
+      duration: 1.5,
+      ease: "power1.inOut"
+    },
+    scrollTrigger: {
+      trigger: solutionSection,
+    }
+  })
+
+  tlSolutionSection.from(solutionSection, {
+    y: 200,
+    opacity: 0,
+    filter: "blur(16px)",
+  })
+  .to(solutionSection, {
+    y: 0,
+    blur: 0,
+    filter: "blur(0px)",
+    opacity: 100,
+  })
+  
+  const faqSection = document.getElementById('faq')
+
+  const tlFaqSection = gsap.timeline({ 
+    defaults: {
+      duration: 1.5,
+      ease: "power1.inOut"
+    },
+    scrollTrigger: {
+      trigger: faqSection,
+    }
+  })
+
+  tlFaqSection.from(faqSection, {
+    y: 200,
+    opacity: 0,
+    filter: "blur(16px)",
+  })
+  .to(faqSection, {
+    y: 0,
+    blur: 0,
+    filter: "blur(0px)",
+    opacity: 100,
+  })
+
+  const contactSection = document.getElementById('contact-us')
+
+  const tlContactSection = gsap.timeline({ 
+    defaults: {
+      duration: 1.5,
+      ease: "power1.inOut"
+    },
+    scrollTrigger: {
+      trigger: contactSection,
+    }
+  })
+
+  tlContactSection.from(contactSection, {
+    y: 200,
+    opacity: 0,
+    filter: "blur(16px)",
+  })
+  .to(contactSection, {
+    y: 0,
+    blur: 0,
+    filter: "blur(0px)",
+    opacity: 100,
+  })
 }
