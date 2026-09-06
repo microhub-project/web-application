@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Códogos de Ativação</title>
+  <link rel="stylesheet" href="../../tailwind/output.css">
+  <link rel="stylesheet" href="../../assets/img/logo/icon-128.ico" type="image/x-icon">
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+
+  <script src="./script.js"></script>
+  <script src="../../js/toast.js"></script>
+</head>
+
+<body onload="getCodes()" class="bg-slate-300 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
+  <div class="flex min-h-screen">
+
+    <nav class="w-72 h-screen bg-slate-900 border-r border-slate-800 flex flex-col p-6 shrink-0 justify-between">
+      <div class="mb-8">
+        <span class="text-xl font-bold text-slate-100">Microhub</span>
+      </div>
+
+      <div class="flex flex-col gap-8">
+        <a href="#"
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-2xl">
+          <i class="ph ph-house text-lg"></i> Geral
+        </a>
+        <a href="#"
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-2xl">
+          <i class="ph ph-hard-drives text-lg"></i> Aplicações
+        </a>
+        <a href="#"
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-2xl">
+          <i class="ph ph-bell text-2xl"></i> Histórico Alertas
+        </a>
+        <a href="#"
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-2xl">
+          <i class="ph ph-user text-xl"></i> Usuários
+        </a>
+        <a href="#"
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-2xl">
+          <i class="ph ph-lock text-xl"></i> Códigos
+        </a>
+      </div>
+      <div class="flex justify-around items-center">
+        <div class="rounded-full bg-slate-950 size-10 flex justify-center items-center">
+          sa
+        </div>
+        <div>
+          <a href="../../index.html"><i class="ph ph-sign-out"></i></a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="flex flex-col p-8 w-full relative text-slate-900">
+      
+    </main>
+
+  </div>
+  <div id="toast-container" class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden"></div>
+</body>
+
+</html>
