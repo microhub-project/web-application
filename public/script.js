@@ -259,12 +259,12 @@ const validarLogin = async () =>{
 
     showToast(authResponseJson.message, "success")
     
-    sessionStorage.COMPANY_ID = authResponseJson.empresa_id
-    sessionStorage.COMPANY_NAME = authResponseJson.nome_fantasia
-    sessionStorage.USER_EMAIL = authResponseJson.email
-    sessionStorage.USER_NAME = authResponseJson.nome
-    sessionStorage.USER_ID = authResponseJson.id
-    sessionStorage.ROLE = authResponseJson.cargo
+    sessionStorage.COMPANY_ID = authResponseJson.body.empresa_id
+    sessionStorage.COMPANY_NAME = authResponseJson.body.nome_fantasia
+    sessionStorage.USER_EMAIL = authResponseJson.body.email
+    sessionStorage.USER_NAME = authResponseJson.body.nome
+    sessionStorage.USER_ID = authResponseJson.body.id
+    sessionStorage.ROLE = authResponseJson.body.cargo
 
     setTimeout(() => { window.location = "./dashboard/index.html" }, 2000)
     document.querySelector("#emailLogin").value = ""
