@@ -17,7 +17,7 @@
   <script src="../../js/session.js"></script>
 </head>
 
-<body onload="getCodes()" class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
+<body onload="getCodes(); fillUserInfos()" class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
   <div class="flex min-h-screen">
     <div id="popUpContainer" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-4">
       <div id="popUpContent" class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl px-8 py-6 shadow-2xl">
@@ -53,10 +53,10 @@
         </a>
       </div>
       <div class="flex justify-around items-center bg-slate-800 py-3 rounded">
-        <div class="rounded-full bg-slate-950 size-10 flex justify-center items-center font-bold">
+        <div id="navUserIcon" class="rounded-full bg-slate-950 size-10 flex justify-center items-center font-bold">
           US
         </div>
-        <div class="">
+        <div id="navUserName" class="">
           Usuário
         </div>
         <div>

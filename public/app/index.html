@@ -18,7 +18,7 @@
 
 </head>
 
-<body onload="loadCharts()" class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
+<body onload="loadCharts(); fillUserInfos()" class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
 
   <div class="flex min-h-screen">
 
@@ -51,10 +51,10 @@
         </a>
       </div>
       <div class="flex justify-around items-center bg-slate-800 py-3 rounded">
-        <div class="rounded-full bg-slate-950 size-10 flex justify-center items-center font-bold">
+        <div id="navUserIcon" class="rounded-full bg-slate-950 size-10 flex justify-center items-center font-bold">
           US
         </div>
-        <div class="">
+        <div id="navUserName" class="">
           Usuário
         </div>
         <div>
