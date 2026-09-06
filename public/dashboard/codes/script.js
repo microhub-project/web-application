@@ -44,7 +44,6 @@ const getCodes = async () => {
               <option value="2" ${cargo === 2 ? "selected" : ""}>FinOps</option>
               <option value="3" ${cargo === 3 ? "selected" : ""}>DevOps</option>
             </select>
-            <!-- select aqui. toda vez que renovar o codigo, deve-se enviar o email novamente e vice-versa -->
           </div>
           <h1 class="text-3xl font-bold tracking-widest text-slate-800">${codigo}</h1>
           <div class="flex *:cursor-pointer items-center gap-5">
@@ -277,6 +276,85 @@ const editRoleConfirmed = async (elementId) => {
   try {
     const response = await fetch("/code/edit", {
       method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    })
+    
+    const responseJson = await response.json()
+  
+    toggleDisableButton(button)
+    if (response.status === 500) 
+      return showToast(responseJson.message, "error")
+  
+    if (response.status === 400) 
+      return showToast(responseJson.message, "warning")
+  
+    if (response.status !== 200) 
+      return showToast(responseJson.message, "error")
+
+    showToast(responseJson.message, "success")
+    
+    closePopUp()
+  } catch (e) {
+    console.error(e)
+    return showToast("Algo deu errado. Tente novamente mais tarde", "error")
+  }
+}
+
+const sendCode = () => {
+  const newRoleSelect = document.getElementById("newRoleSelect").value
+  const newEmailReceiver = document.getElementById("newEmailReceiver").value.trim()
+
+  if (!newRoleSelect)
+    return showToast("Selecione um cargo", "warning")
+
+  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/
+  if (!newEmailReceiver || !emailRegex.test(newEmailReceiver))
+    return showToast("Digite um email válido", "warning")
+
+  const popUpBody = `
+    <div class="flex flex-col justify-around gap-4">
+      <div>
+      <span class="flex gap-2"><p class="font-semibold">Cargo:</p> ${roleHash[newRoleSelect]}</span>
+      <span class="flex gap-2"><p class="font-semibold">Email:</p> ${newEmailReceiver}</span>
+      </div>
+      <div>
+        <button
+          onclick="closePopUp()"
+          class="w-full py-3 mt-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center">
+          <span class="font-medium">Cancelar</span>
+        </button>
+        <button
+          onclick="sendCodeConfirmed()"
+          id="sendCodeConfirmedButton"
+          class="w-full py-3 mt-2 outline outline-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center">
+          <span class="font-medium">Confirmar</span>
+        </button>
+      </div>
+    </div>
+  `
+
+  showPopUp("Confirme as informações:", popUpBody)
+}
+
+const sendCodeConfirmed = async () => {
+  const button = document.getElementById("sendCodeConfirmed")
+  const roleSelected = document.getElementById(`newRoleSelect`).value
+  const newEmailReceiver = document.getElementById("newEmailReceiver").value.trim()
+
+  toggleDisableButton(button)
+
+  const body = { 
+    "companyId": sessionStorage.getItem("COMPANY_ID"), 
+    "role": roleSelected, 
+    "email": newEmailReceiver
+  }
+
+  try {
+    const response = await fetch("/code/send", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
