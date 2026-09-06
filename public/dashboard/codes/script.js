@@ -1,3 +1,10 @@
+const roleHash = {
+  0: "Novo parceiro",
+  1: "Gerente TI",
+  2: "FinOps",
+  3: "DevOps",
+}
+
 const getCodes = async () => {
   const userId = sessionStorage.getItem("USER_ID")
   const companyId = sessionStorage.getItem("COMPANY_ID")
@@ -184,7 +191,6 @@ const disableCode = (elementId) => {
     <div class="flex justify-around gap-4">
     <button 
         onclick="closePopUp()"
-        id="disableCodeConfirmedButton"
         class="w-full py-3 mt-2 outline outline-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center">
         <span class="font-medium">Cancelar</span>
       </button>
@@ -233,6 +239,71 @@ const disableCodeConfirmed = async (elementId) => {
   }
 }
 
+const editRole = (elementId) => {
+  const popUpBody = `
+    <div class="flex justify-around gap-4">
+    <button 
+        onclick="closePopUp()"
+        class="w-full py-3 mt-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center">
+        <span class="font-medium">Cancelar</span>
+      </button>
+      <button 
+        onclick="editRoleConfirmed('${elementId}')"
+        id="editRoleConfirmedButton"
+        class="w-full py-3 mt-2 outline outline-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center">
+        <span class="font-medium">Alterar cargo</span>
+      </button>
+    </div>
+  `
+
+  const roleSelected = document.getElementById(`roleSelect-${elementId}`).value
+  showPopUp(`Alterar cargo: <span class="font-bold">${roleHash[roleSelected]}</span>`, popUpBody)
+}
+
+const editRoleConfirmed = async (elementId) => {
+  const button = document.getElementById("disableCodeConfirmedButton")
+  const roleSelected = document.getElementById(`roleSelect-${elementId}`).value
+  toggleDisableButton(button)
+
+  const codeId = elementId.split("-")[1]
+
+  const body ={ 
+    "id": codeId, 
+    "role": roleSelected, 
+    "email": null, 
+    "isRenewal": false
+  }
+
+  try {
+    const response = await fetch("/code/edit", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    })
+    
+    const responseJson = await response.json()
+  
+    toggleDisableButton(button)
+    if (response.status === 500) 
+      return showToast(responseJson.message, "error")
+  
+    if (response.status === 400) 
+      return showToast(responseJson.message, "warning")
+  
+    if (response.status !== 200) 
+      return showToast(responseJson.message, "error")
+
+    showToast(responseJson.message, "success")
+    
+    closePopUp()
+  } catch (e) {
+    console.error(e)
+    return showToast("Algo deu errado. Tente novamente mais tarde", "error")
+  }
+}
+
 const showPopUp = (title, popUpBody) => {
   const popUpContainer = document.getElementById("popUpContainer")
   const popUpContent = document.getElementById("popUpContent")
@@ -254,6 +325,7 @@ const showPopUp = (title, popUpBody) => {
 const closePopUp = () => {
   document.getElementById("popUpContainer").classList.replace("flex", "hidden")
   document.getElementById("popUpContent").innerHTML = ""
+  setTimeout(() => window.location.reload(), 2500)
 }
 
 const toggleLoadingSendButton = (button) => {
