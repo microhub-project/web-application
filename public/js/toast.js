@@ -22,7 +22,7 @@ const showToast = (message, type) => {
   
   const toastId = `toast-${counter}`
   toastContainer.innerHTML += `
-    <div id="${toastId}" class="w-full bg-slate-800 flex p-4 gap-4 rounded border toast-${type}">
+    <div id="${toastId}" class="w-full bg-slate-800 flex p-4 gap-4 rounded border toast-${type} justify-center">
       <i class="${types[type].icon} self-center text-3xl"></i>
       <span>
         <p>${message}</p>
