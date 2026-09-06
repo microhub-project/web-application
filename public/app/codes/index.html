@@ -14,6 +14,7 @@
 
   <script src="./script.js"></script>
   <script src="../../js/toast.js"></script>
+  <script src="../../js/session.js"></script>
 </head>
 
 <body onload="getCodes()" class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
@@ -23,44 +24,48 @@
 
       </div>
     </div>
-    <nav class="w-72 h-screen bg-slate-900 border-r border-slate-800 flex flex-col p-6 shrink-0 justify-between">
-      <div class="mb-8">
-        <span class="text-xl font-bold text-slate-100">Microhub</span>
+    <nav
+      class="w-72 fixed h-screen bg-slate-900 border-r border-slate-800 flex flex-col px-6 py-9 shrink-0 justify-between z-100">
+      <div class="flex items-center justify-center -ml-5">
+        <img src="/assets/img/logo/logo-light.svg" alt="Logo da Microhub" class="max-h-11">
       </div>
 
       <div class="flex flex-col gap-8">
         <a href="#"
-          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-2xl">
-          <i class="ph ph-house text-lg"></i> Geral
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl">
+          <i class="ph ph-house text-2xl"></i> Geral
         </a>
         <a href="#"
-          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-2xl">
-          <i class="ph ph-hard-drives text-lg"></i> Aplicações
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl">
+          <i class="ph ph-hard-drives text-2xl"></i> Aplicações
         </a>
         <a href="#"
-          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-2xl">
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl">
           <i class="ph ph-bell text-2xl"></i> Histórico Alertas
         </a>
         <a href="#"
-          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-2xl">
-          <i class="ph ph-user text-xl"></i> Usuários
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl">
+          <i class="ph ph-user text-2xl"></i> Usuários
         </a>
-        <a href="#"
-          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-2xl">
-          <i class="ph ph-lock text-xl"></i> Códigos
+        <a href="./codes"
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl">
+          <i class="ph ph-lock text-2xl"></i> Códigos
         </a>
       </div>
-      <div class="flex justify-around items-center">
-        <div class="rounded-full bg-slate-950 size-10 flex justify-center items-center">
-          sa
+      <div class="flex justify-around items-center bg-slate-800 py-3 rounded">
+        <div class="rounded-full bg-slate-950 size-10 flex justify-center items-center font-bold">
+          US
+        </div>
+        <div class="">
+          Usuário
         </div>
         <div>
-          <a href="../../index.html"><i class="ph ph-sign-out"></i></a>
+          <a onclick="logout()"><i class="ph ph-sign-out text-2xl"></i></a>
         </div>
       </div>
     </nav>
 
-    <main class="flex flex-col p-8 w-full relative text-slate-900 gap-5">
+    <main class="text-slate-900 flex flex-col p-8 absolute right-0 top-0 w-[calc(100dvw-18rem)] min-h-dvh gap-12">
       <h1 class="text-2xl font-extrabold">Códigos de Ativação</h1>
       <section id="codesContainer" class="w-full flex p-4 flex-col gap-6">
         <div class="bg-slate-100 p-6 rounded-lg flex flex-col gap-4 shadow">
