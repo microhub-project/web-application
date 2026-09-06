@@ -602,11 +602,18 @@ const send = async (req, res) => {
 const sendVerificationCode = async (email, code, companyName, role) => {
   const now = new Date()
   const expiresIn = 15;
+  
+  const roleHash = {
+    0: "Novo parceiro",
+    1: "Gerente TI",
+    2: "FinOps",
+    3: "DevOps",
+  }
 
   try {
     let bodyFormatted = codeUserEmailBody
         .replace("{{confirmation_code}}", code)
-        .replace("{{message}}", `Olá. Seja bem-vindo a Microhub! Utilize o código abaixo para criar sua conta atrelada à empresa <strong style="color:#93c5fd;">${companyName}</strong> com cargo de <strong style="color:#93c5fd;">${role == 0 ? "adminstrador" : "desenvolvedor"}</strong>.`)
+        .replace("{{message}}", `Olá. Seja bem-vindo a Microhub! Utilize o código abaixo para criar sua conta atrelada à empresa <strong style="color:#93c5fd;">${companyName}</strong> com cargo de <strong style="color:#93c5fd;">${roleHash[role]}</strong>.`)
         .replaceAll("{{expires_in}}", expiresIn)
         .replace("{{year}}", now.getFullYear())
 
