@@ -109,3 +109,26 @@ const copyCode = (elementId) => {
   navigator.clipboard.writeText(elementId.substring(0, 6))
   showToast("Código copiado para sua área de transferência.", "success")
 }
+
+const showPopUp = (title, popUpBody) => {
+  const popUpContainer = document.getElementById("popUpContainer")
+  const popUpContent = document.getElementById("popUpContent")
+
+  popUpContainer.classList.replace("hidden", "flex")
+  popUpContent.innerHTML = `
+    <h1 class="text-2xl pb-4">${title}</h1>
+    <button 
+      type="button" 
+      onclick="closePopUp()"
+      class="absolute top-5 right-5 text-slate-400 hover:text-white cursor-pointer transition-all duration-300"> 
+      <i class="ph ph-x text-3xl"></i>
+    </button>
+  `
+
+  popUpContent.innerHTML += popUpBody
+}
+
+const closePopUp = () => {
+  document.getElementById("popUpContainer").classList.replace("flex", "hidden")
+  document.getElementById("popUpContent").innerHTML = ""
+}
