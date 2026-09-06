@@ -183,7 +183,7 @@ const validateRegistration = async () => {
       "code": codigo
     })
   })
-  
+
   const response = await cadastrar.json()
 
   if (cadastrar.status == 400) 
@@ -204,57 +204,64 @@ const validateRegistration = async () => {
 
   openLogin()
 }
+
 //=====================================================
-  const validarLogin = async () =>{
-    const email = document.querySelector("#emailLogin").value.trim();
-    const senha = document.querySelector("#senhaLogin").value;
+
+const validarLogin = async () =>{
+  const evento = window.event;
+  if (evento) evento.preventDefault();
+
+  const email = document.querySelector("#emailLogin").value.trim();
+  const senha = document.querySelector("#senhaLogin").value;
 
 
-    if (!email) 
-      return showToast("Preencha o campo email", "warning")
-    
-    if (!senha) 
-      return showToast("Preencha o campo senha", "warning")
-    
-    try {
-      const authResponse = await fetch("/usuarios/autenticar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email: email,
-          password: senha
-        })
+  if (!email) 
+    return showToast("Preencha o campo email", "warning")
+  
+  if (!senha) 
+    return showToast("Preencha o campo senha", "warning")
+  
+  try {
+    const authResponse = await fetch("/usuarios/autenticar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: email,
+        password: senha
       })
+    })
 
-      const authResponseJson = await authResponse.json()
-      console.log(authResponseJson, String(authResponse.status)[0]) 
-      if (authResponse.status == 500)
-        return showToast(authResponseJson.message, "error")
-
-      if (String(authResponse.status)[0] == "4") 
-        return showToast(authResponseJson.message, "warning");
-
-      showToast(authResponseJson.message, "success")
-      
-      // sessionStorage.EMAIL_USUARIO = authResponseJson[0].email;
-      // sessionStorage.NOME_USUARIO = authResponseJson[0].nome;
-      // sessionStorage.ID_USUARIO = authResponseJson[0].id;
-
-      setTimeout(() => { window.location = "./app/index.html" }, 2000)
-    } catch (e) {
-      console.error(e)
-      showToast("Algo deu errado. Tente novamente mais tarde", "error")
-    }
+    const authResponseJson = await authResponse.json()
+    console.log(authResponseJson)
     
+    if (authResponse.status == 500)
+      return showToast(authResponseJson.message, "error")
+
+    if (String(authResponse.status)[0] == "4") 
+      return showToast(authResponseJson.message, "warning");
+
+    showToast(authResponseJson.message, "success")
+    
+    sessionStorage.COMPANY_ID = authResponseJson.empresa_id
+    sessionStorage.COMPANY_NAME = authResponseJson.nome_fantasia
+    sessionStorage.USER_EMAIL = authResponseJson.email
+    sessionStorage.USER_NAME = authResponseJson.nome
+    sessionStorage.USER_ID = authResponseJson.id
+    sessionStorage.ROLE = authResponseJson.cargo
+
+    setTimeout(() => { window.location = "./dashboard/index.html" }, 2000)
+    document.querySelector("#emailLogin").value = ""
+    document.querySelector("#senhaLogin").value = ""
+  } catch (e) {
+    console.error(e)
+    showToast("Algo deu errado. Tente novamente mais tarde", "error")
   }
   
-
+}
 
 //=====================================================
-
-
 
 const contactForm = document.getElementById("contactForm");
 const validateAndSubmitForm = async () => {
