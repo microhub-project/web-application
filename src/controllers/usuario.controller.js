@@ -97,7 +97,122 @@ async function cadastrar(req, res) {
     }
   }
 
+
+  async function buscarPorId(req, res) {
+    const id = req.params.id;
+    try {
+        const resultado = await usuarioModel.buscarPorId(id);
+        if (resultado[0].length != 1) {
+            return res.status(404).json({
+                message: "Usuário não encontrado"
+            });
+        }
+
+        return res.status(200).json(resultado[0][0]);
+
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({
+            message: "Erro ao buscar usuário"
+        });
+    }
+}
+
+
+async function listar(req, res) {
+    try {
+        const resultado = await usuarioModel.listar();
+        console.log("RESULTADO:", resultado);
+        return res.status(200).json(resultado);
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({
+            message: "Erro ao listar usuários"
+        });
+    }
+}
+
+
+async function pesquisar(req, res) {
+    const nome = req.params.nome;
+    try {
+        const resultado = await usuarioModel.pesquisar(nome);
+        console.log("PESQUISA:", resultado);
+        return res.status(200).json(resultado);
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({
+            message: "Erro ao pesquisar usuários"
+        });
+    }
+}
+
+
+async function atualizar(req, res) {
+
+    const id = req.params.id;
+    const { nome, email, cargo } = req.body;
+
+    try {
+
+        const resultado = await usuarioModel.atualizar(
+            id,
+            nome,
+            email,
+            cargo
+        );
+
+        if (resultado.affectedRows != 1) {
+            return res.status(400).json({
+                message: "Usuário não encontrado"
+            });
+        }
+
+        return res.status(200).json({
+            message: "Usuário atualizado com sucesso!"
+        });
+
+    } catch (e) {
+
+        console.error(e);
+
+        return res.status(500).json({
+            message: "Erro ao atualizar usuário"
+        });
+
+    }
+}
+
+
+async function excluir(req, res) {
+    const id = req.params.id;
+
+    try {
+        const resultado = await usuarioModel.excluir(id);
+        if (resultado.affectedRows != 1) {
+            return res.status(400).json({
+                message: "Usuário não encontrado"
+            });
+        }
+        return res.status(200).json({
+            message: "Usuário excluído com sucesso!"
+        });
+    } catch (e) {
+        console.error(e);
+
+        return res.status(500).json({
+            message: "Erro ao excluir usuário"
+        });
+    }
+}
+
+
 module.exports = {
   autenticar,
-  cadastrar
+  cadastrar,
+  buscarPorId,
+  listar,
+  pesquisar,
+  atualizar,
+  excluir
 }
