@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Microhub</title>
+  <link rel="stylesheet" href="../tailwind/output.css">
+  <link rel="stylesheet" href="../assets/img/logo/icon-128.ico" type="image/x-icon">
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./script.js"></script>
+    <script src="../js/session.js"></script>
+
+</head>
+
+<body onload="loadCharts(); fillUserInfos()" class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
+
+  <div class="flex min-h-screen">
+
+    <nav
+      class="w-72 fixed h-screen bg-slate-900 border-r border-slate-800 flex flex-col px-6 py-9 shrink-0 justify-between z-100">
+      <div class="flex items-center justify-center -ml-5">
+        <img src="/assets/img/logo/logo-light.svg" alt="Logo da Microhub" class="max-h-11">
+      </div>
+
+      <div class="flex flex-col gap-8">
+        <a
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
+          <i class="ph ph-house text-2xl"></i> Geral
+        </a>
+        <a href="#"
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
+          <i class="ph ph-hard-drives text-2xl"></i> Aplicações
+        </a>
+        <a href="#"
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
+          <i class="ph ph-bell text-2xl"></i> Histórico Alertas
+        </a>
+        <a href="./users/"
+          id="navItemUsers"
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors items-center gap-3 text-xl cursor-pointer hidden">
+          <i class="ph ph-user text-2xl"></i> Usuários
+        </a>
+        <a href="./codes"
+          id="navItemCodes"
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors items-center gap-3 text-xl cursor-pointer hidden">
+          <i class="ph ph-lock text-2xl"></i> Códigos
+        </a>
+      </div>
+      <div class="flex justify-around items-center bg-slate-800 py-3 rounded">
+        <div id="navUserIcon" class="rounded-full bg-slate-950 size-10 flex justify-center items-center font-bold">
+          US
+        </div>
+        <div id="navUserName" class="font-semibold">
+          Usuário
+        </div>
+        <div>
+          <a onclick="logout()"><i class="ph ph-sign-out text-2xl cursor-pointer"></i></a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="flex flex-col p-8 absolute right-0 top-0 w-[calc(100dvw-18rem)] min-h-dvh gap-12">
+
+      <div class="grid grid-cols-4 gap-6 w-full">
+        <div class="w-full h-48 rounded-md bg-slate-100 text-slate-900 flex flex-col items-center justify-center p-6 gap-4 relative overflow-hidden border-3 border-emerald-500">
+        <i class="ph-bold ph-trend-up absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
+
+        <h2 class="top-7 left-6 absolute text-lg font-semibold">Lorem</h2>
+        <p class="text-4xl font-semibold -mb-4">14%</p>
+      </div>
+
+      <div class="w-full h-48 rounded-md bg-slate-100 text-slate-900 flex flex-col items-center justify-center p-6 gap-4 relative overflow-hidden  border-3 border-amber-500">
+        <i class="ph-bold ph-receipt absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
+
+        <h2 class="top-7 left-6 absolute text-lg font-semibold">Ipsum</h2>
+        <p class="text-4xl font-semibold -mb-4">24%</p>
+      </div>
+
+      <div class="w-full h-48 rounded-md bg-slate-100 text-slate-900 flex flex-col items-center justify-center p-6 gap-4 relative overflow-hidden border-3 border-rose-500">
+        <i class="ph-bold ph-piggy-bank absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
+
+        <h2 class="top-7 left-6 absolute text-lg font-semibold">Dolor</h2>
+        <p class="text-4xl font-semibold -mb-4">85%</p>
+      </div>
+
+      <div class="w-full h-48 rounded-md bg-slate-100 text-slate-900 flex flex-col items-center justify-center p-6 gap-4 relative overflow-hidden border-3 border-emerald-500">
+        <i class="ph-bold ph-hand-coins absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
+
+        <h2 class="top-7 left-6 absolute text-lg font-semibold">Consectetur</h2>
+        <p class="text-4xl font-semibold -mb-4">R$4k</p>
+      </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6 w-full">
+
+        <div class="flex flex-col gap-6">
+          <canvas id="myChart1"></canvas>
+          <canvas id="myChart2"></canvas>
+        </div>
+
+        <div class="flex flex-col gap-6">
+          <canvas id="myChart3"></canvas>
+          <canvas id="myChart4"></canvas>
+        </div>
+
+      </div>
+
+      <div
+        class="absolute right-0 top-0 w-[calc(100dvw-18rem)] h-dvh backdrop-blur-lg bg-slate-950/10 flex flex-col justify-center items-center text-slate-900">
+        <i class="ph ph-barricade text-[16rem]"></i>
+        <h1 class="text-3xl font-bold">Em desenvolvimento</h1>
+      </div>
+
+    </main>
+
+  </div>
+
+</body>
+</html>

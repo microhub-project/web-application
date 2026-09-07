@@ -1,3 +1,4 @@
+// FAQ 
 const questionsAndAnswers = [
   {
     question: "O que é a plataforma?",
@@ -97,48 +98,72 @@ const faqHandler = (index) => {
   }
 }
 
+// MENU
 const toggleMenu = () => {
   const menuElement = document.getElementById("header-mobile")
 
-  if (menuElement.classList.contains("hidden")) {
-    menuElement.classList.add("flex")
-    menuElement.classList.remove("hidden")
+  if (menuElement.classList.contains("translate-x-full")) {
+    menuElement.classList.add("translate-x-0")
+    menuElement.classList.remove("translate-x-full")
   } else {
-    menuElement.classList.remove("flex")
-    menuElement.classList.add("hidden")
+    menuElement.classList.remove("translate-x-0")
+    menuElement.classList.add("translate-x-full")
   }
 }
 
+// CADASTRO DE USUÁRIO
 const openRegistration = () => {
   const cadastro = document.getElementById("registerUser");
 
   cadastro.classList.remove("hidden");
   cadastro.classList.add("flex");
+
+  setTimeout(() => {
+    cadastro.classList.remove("opacity-0");
+    cadastro.classList.add("opacity-100");
+
+  }, 10)
 }
 
 const closeRegistration = () => {
   const cadastro = document.getElementById("registerUser");
 
-  cadastro.classList.remove("flex");
-  cadastro.classList.add("hidden");
+  cadastro.classList.add("opacity-0");
+  cadastro.classList.remove("opacity-100");
+
+  setTimeout(() => {
+    cadastro.classList.remove("flex");
+    cadastro.classList.add("hidden");
+  }, 500)
+  
 }
 
 const openLogin = () => {
   const cadastro = document.getElementById("loginUser");
-
+  
   cadastro.classList.remove("hidden");
   cadastro.classList.add("flex");
+
+  setTimeout(() => {
+    cadastro.classList.remove("opacity-0");
+    cadastro.classList.add("opacity-100");
+
+  }, 10)
 }
 
 const closeLogin = () => {
   const cadastro = document.getElementById("loginUser");
 
-  cadastro.classList.remove("flex");
-  cadastro.classList.add("hidden");
+  cadastro.classList.add("opacity-0");
+  cadastro.classList.remove("opacity-100");
+
+  setTimeout(() => {
+    cadastro.classList.remove("flex");
+    cadastro.classList.add("hidden");
+  }, 500)
 }
 
 const validateRegistration = async () => {
-
   const evento = window.event;
   if (evento) evento.preventDefault();
 
@@ -153,128 +178,120 @@ const validateRegistration = async () => {
     .replaceAll(" ", "")
     .toUpperCase();
 
-  let validate = true;
-
   const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/;
   const regexNome = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
 
-  let message = "a";
-  let type = "error";
+  if (nome === "" || !regexNome.test(nome) || nome.length < 3)
+    return showToast("Formato do nome incorreto!", "warning")
 
-  if (nome === "" || !regexNome.test(nome) || nome.length < 3) {
-    validate = false;
-    message = "Formato do nome incorreto!";
-  }else if (email === "" || !regexEmail.test(email)) {
-    validate = false;
-    message = "Formato do email incorreto!";
-  }else if (senha === "" || senha.length < 8) {
-    validate = false;
-    message = "Formato da senha incorreta!";
-  }else if (senha2 === "" || senha2 !== senha) {
-    validate = false;
-    message = "Senha divergete!";
-  }else if (codigo === "") {  // falta verificar o codigo da empresa
-    validate = false;
-    message = "Código da empresa obrigatório!";
-  }
-  if(validate){
-    message = "Sucesso!";
-    type = "success"
-    console.log( JSON.stringify({
-        nome,
-        email,
-        senha,
-        codigo
-      }
-      ))
-    const cadastrar = await fetch("/usuarios/cadastrar", {
-      method: "POST",
+  else if (email === "" || !regexEmail.test(email))
+    return showToast("Formato do email incorreto!", "warning")
+
+  else if (senha === "" || senha.length < 8)
+    return showToast("Formato da senha incorreta!", "warning")
+
+  else if (senha2 === "" || senha2 !== senha)
+    return showToast("Senha divergete!", "warning")
+
+  else if (codigo === "")
+    return showToast("Código de ativação é obrigatório!", "warning")
+
+  const cadastrar = await fetch("/usuarios/cadastrar", {
+    method: "POST",
+
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      "name": nome,
+      "email": email,
+      "password": senha,
+      "code": codigo
+    })
+  })
+
+  const response = await cadastrar.json()
+
+  if (cadastrar.status == 400) 
+    return showToast(response.message, "warning");
+
+  else if (cadastrar.status != 201) 
+    return showToast(response.message, "error");
   
+
+  showToast(response.message, "success");
+  closeRegistration()
+
+  document.querySelector("#nome").value = "";
+  document.querySelector("#email").value = "";
+  document.querySelector("#senha").value = "";
+  document.querySelector("#senha2").value = "";
+  document.querySelector("#codigo").value = ""
+
+  openLogin()
+}
+
+//=====================================================
+
+const validarLogin = async () =>{
+  const evento = window.event;
+  if (evento) evento.preventDefault();
+
+  const email = document.querySelector("#emailLogin").value.trim();
+  const senha = document.querySelector("#senhaLogin").value;
+
+
+  if (!email) 
+    return showToast("Preencha o campo email", "warning")
+  
+  if (!senha) 
+    return showToast("Preencha o campo senha", "warning")
+  
+  try {
+    const authResponse = await fetch("/usuarios/autenticar", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        "name": nome,
-        "email": email,
-        "password": senha,
-        "code": codigo
+        email: email,
+        password: senha
       })
     })
-    const response = await cadastrar.json()
 
-    if (cadastrar.status == 400) 
-      return showToast(response.message, "warning");
-
-    else if (cadastrar.status != 201) 
-      return showToast(response.message, "error");
+    const authResponseJson = await authResponse.json()
+    console.log(authResponseJson)
     
+    if (authResponse.status == 500)
+      return showToast(authResponseJson.message, "error")
 
-    showToast(response.message, "success");
-    closeRegistration()
+    if (String(authResponse.status)[0] == "4") 
+      return showToast(authResponseJson.message, "warning");
 
-    document.querySelector("#nome").value = "";
-    document.querySelector("#email").value = "";
-    document.querySelector("#senha").value = "";
-    document.querySelector("#senha2").value = "";
-    document.querySelector("#codigo").value = ""
-
-    openLogin()
-  }
-  }
-//=====================================================
-  const validarLogin = async () =>{
-    const email = document.querySelector("#emailLogin").value.trim();
-    const senha = document.querySelector("#senhaLogin").value;
-
-
-    if (!email) 
-      return showToast("Preencha o campo email", "warning")
+    showToast(authResponseJson.message, "success")
     
-    if (!senha) 
-      return showToast("Preencha o campo senha", "warning")
-    
-    try {
-      const authResponse = await fetch("/usuarios/autenticar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email: email,
-          password: senha
-        })
-      })
+    sessionStorage.COMPANY_ID = authResponseJson.body.empresa_id
+    sessionStorage.COMPANY_NAME = authResponseJson.body.nome_fantasia
+    sessionStorage.USER_EMAIL = authResponseJson.body.email
+    sessionStorage.USER_NAME = authResponseJson.body.nome
+    sessionStorage.USER_ID = authResponseJson.body.id
+    sessionStorage.ROLE = authResponseJson.body.cargo
 
-      const authResponseJson = await authResponse.json()
-      console.log(authResponseJson, String(authResponse.status)[0]) 
-      if (authResponse.status == 500)
-        return showToast(authResponseJson.message, "error")
-
-      if (String(authResponse.status)[0] == "4") 
-        return showToast(authResponseJson.message, "warning");
-
-      showToast(authResponseJson.message, "success")
-      
-      // sessionStorage.EMAIL_USUARIO = authResponseJson[0].email;
-      // sessionStorage.NOME_USUARIO = authResponseJson[0].nome;
-      // sessionStorage.ID_USUARIO = authResponseJson[0].id;
-
-      setTimeout(() => { window.location = "./app/index.html" }, 2000)
-    } catch (e) {
-      console.error(e)
-      showToast("Algo deu errado. Tente novamente mais tarde", "error")
-    }
-    
+    setTimeout(() => { window.location = "./app/index.html" }, 2000)
+    document.querySelector("#emailLogin").value = ""
+    document.querySelector("#senhaLogin").value = ""
+  } catch (e) {
+    console.error(e)
+    showToast("Algo deu errado. Tente novamente mais tarde", "error")
   }
   
-
+}
 
 //=====================================================
 
-
-
+// CONTATO
 const contactForm = document.getElementById("contactForm");
-const validateAndSubmitForm = async () => {
+const contactValidateAndSubmitForm = async () => {
   const fields = [
     document.getElementById("contactName"), 
     document.getElementById("contactEmail"), 
@@ -367,44 +384,146 @@ const toggleLoadingContactButton = (button) => {
   }
 }
 
-let counter = 0
-const showToast = (message, type) => {
-  const types = {
-    "success": {
-      "color": "green",
-      "icon": "ph ph-check-fat"
-    },
-    "error": {
-      "color": "red",
-      "icon": "ph-bold ph-x"
-    },
-    "warning": {
-      "color": "yellow",
-      "icon": "ph ph-warning"
+// GSAP/ANIMAÇÕES
+const initAnimations = () => {
+  gsap.registerPlugin(ScrollTrigger)
+  
+  const navbar = document.getElementById('header-main')
+
+  const tlNavbar = gsap.timeline({ 
+    defaults: {
+      duration: 1.2,
+      ease: "power1.inOut"
     }
-  }
+  })
 
-  if (!["success", "error", "warning"].includes(type)) 
-    return alert(message)
+  tlNavbar.from(navbar, {
+    y: -100,
+    opacity: 0,
+    filter: "blur(16px)",
+  })
+  .to(navbar, {
+    y: 0,
+    blur: 0,
+    filter: "blur(0px)",
+    opacity: 100,
+  })
 
-  const toastContainer = document.getElementById("toast-container")
-  
-  const toastId = `toast-${counter}`
-  toastContainer.innerHTML += `
-    <div id="${toastId}" class="w-full bg-slate-800 flex p-4 gap-4 rounded border toast-${type}">
-      <i class="${types[type].icon} self-center text-3xl"></i>
-      <span>
-        <p>${message}</p>
-      </span>
-    </div>
-  `
-  
-  
-  setTimeout(() => cleanToast(toastId), 5000)
-  counter++
-}
+  const homeSection = document.getElementById('home')
 
-const cleanToast = (elementId) => {
-  const toastElement = document.getElementById(elementId)
-  toastElement.classList.add("hidden")
+  const tlHome = gsap.timeline({ 
+    defaults: {
+      duration: 1.5,
+      ease: "power1.inOut"
+    }
+  })
+
+  tlHome.from(homeSection, {
+    y: 200,
+    opacity: 0,
+    filter: "blur(16px)",
+  })
+  .to(homeSection, {
+    y: 0,
+    blur: 0,
+    filter: "blur(0px)",
+    opacity: 100,
+  })
+
+  const problemSection = document.getElementById('problem')
+
+  const tlProblem = gsap.timeline({ 
+    defaults: {
+      duration: 1.5,
+      ease: "power1.inOut",
+      delay: 1
+    },
+    scrollTrigger: {
+      trigger: problemSection
+    }
+  })
+
+  tlProblem.from(problemSection, {
+    y: 200,
+    opacity: 0,
+    filter: "blur(16px)",
+  })
+  .to(problemSection, {
+    y: 0,
+    blur: 0,
+    filter: "blur(0px)",
+    opacity: 100,
+  })
+
+  const solutionSection = document.getElementById('solution')
+
+  const tlSolutionSection = gsap.timeline({ 
+    defaults: {
+      duration: 1.5,
+      ease: "power1.inOut"
+    },
+    scrollTrigger: {
+      trigger: solutionSection,
+    }
+  })
+
+  tlSolutionSection.from(solutionSection, {
+    y: 200,
+    opacity: 0,
+    filter: "blur(16px)",
+  })
+  .to(solutionSection, {
+    y: 0,
+    blur: 0,
+    filter: "blur(0px)",
+    opacity: 100,
+  })
+  
+  const faqSection = document.getElementById('faq')
+
+  const tlFaqSection = gsap.timeline({ 
+    defaults: {
+      duration: 1.5,
+      ease: "power1.inOut"
+    },
+    scrollTrigger: {
+      trigger: faqSection,
+    }
+  })
+
+  tlFaqSection.from(faqSection, {
+    y: 200,
+    opacity: 0,
+    filter: "blur(16px)",
+  })
+  .to(faqSection, {
+    y: 0,
+    blur: 0,
+    filter: "blur(0px)",
+    opacity: 100,
+  })
+
+  const contactSection = document.getElementById('contact-us')
+
+  const tlContactSection = gsap.timeline({ 
+    defaults: {
+      duration: 1.5,
+      ease: "power1.inOut"
+    },
+    scrollTrigger: {
+      trigger: contactSection,
+    }
+  })
+
+  tlContactSection.from(contactSection, {
+    y: 200,
+    opacity: 0,
+    filter: "blur(16px)",
+  })
+  .to(contactSection, {
+    y: 0,
+    blur: 0,
+    filter: "blur(0px)",
+    opacity: 100,
+  })
 }
