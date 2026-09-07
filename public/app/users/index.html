@@ -21,8 +21,6 @@
 <body onload="fillUserInfos(); listarUsuarios(); loadCompanyName()"
   class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
 
-  <div id="toast-container" class="fixed top-5 right-5 z-100 w-80 space-y-2"></div>
-
   <div class="flex min-h-screen">
 
     <nav
@@ -214,6 +212,7 @@
   </div>
   </div>
   </main>
+  <div id="toast-container" class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden"></div>
 </body>
 
 </html>

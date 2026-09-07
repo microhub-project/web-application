@@ -228,7 +228,14 @@ const confirmarExclusao = async () => {
     })
 
     const resultado = await resposta.json()
-    alert(resultado.message)
+    if (resposta.status === 400) 
+      return showToast(resultado.message, "warning")
+
+    if (resposta.status === 500) 
+      return showToast(resultado.message, "error")
+    
+    showToast(resultado.message, "success")
+
     if (resposta.ok) {
         cancelarExcluir()
         Pesquisar()
