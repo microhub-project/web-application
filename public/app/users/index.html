@@ -18,52 +18,59 @@
 
 </head>
 
-<body class="bg-indigo-100 text-slate-950 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
+<body onload="fillUserInfos();" class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
 
     <div id="toast-container" class="fixed top-5 right-5 z-100 w-80 space-y-2"></div>
 
     <div class="flex min-h-screen">
 
-        <nav class="w-72 h-screen bg-slate-900 border-r border-slate-800 flex flex-col p-6 shrink-0 justify-between">
-            <div class="mb-8">
-                <span class="text-xl font-bold text-slate-100">Microhub</span>
-            </div>
+        <nav
+          class="w-72 fixed h-screen bg-slate-900 border-r border-slate-800 flex flex-col px-6 py-9 shrink-0 justify-between z-100">
+          <div class="flex items-center justify-center -ml-5">
+            <img src="/assets/img/logo/logo-light.svg" alt="Logo da Microhub" class="max-h-11">
+          </div>
 
-            <div class="flex flex-col gap-8">
-                <a href="index.html"
-                    class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-2xl">
-                    <i class="ph ph-house text-lg"></i> Geral
-                </a>
-                <a href="#"
-                    class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-2xl">
-                    <i class="ph ph-hard-drives text-lg"></i> Aplicações
-                </a>
-                <a href="#"
-                    class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-2xl">
-                    <i class="ph ph-bell text-2xl"></i> Histórico Alertas
-                </a>
-                <a href="#"
-                    class="bg-slate-950 rounded-2xl p-2 text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-2xl">
-                    <i class="ph ph-user text-xl"></i> Usuários
-                </a>
-                <a href="#"
-                    class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-2xl">
-                    <i class="ph ph-lock text-xl"></i> Codigos
-                </a>
+          <div class="flex flex-col gap-8">
+            <a href="../index.html"
+              class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
+              <i class="ph ph-house text-2xl"></i> Geral
+            </a>
+            <a href="#"
+              class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
+              <i class="ph ph-hard-drives text-2xl"></i> Aplicações
+            </a>
+            <a href="#"
+              class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
+              <i class="ph ph-bell text-2xl"></i> Histórico Alertas
+            </a>
+            <a href="#"
+              id="navItemUsers"
+              class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
+              <i class="ph ph-user text-2xl"></i> Usuários
+            </a>
+            <a
+              id="navItemCodes"
+              class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
+              <i class="ph ph-lock text-2xl"></i> Códigos
+            </a>
+          </div>
+          <div class="flex justify-around items-center bg-slate-800 py-3 rounded">
+            <div id="navUserIcon" class="rounded-full bg-slate-950 size-10 flex justify-center items-center font-bold">
+              US
             </div>
-            <div class="flex justify-around items-center">
-                <div class="rounded-full bg-slate-950 text-slate-300 size-10 flex justify-center items-center">
-                    sa
-                </div>
-                <div>
-                    <a href="../index.html"><i class="ph ph-sign-out text-slate-300"></i></a>
-                </div>
+            <div id="navUserName" class="font-semibold">
+              Usuário
             </div>
+            <div>
+              <a onclick="logout()"><i class="ph ph-sign-out text-2xl cursor-pointer"></i></a>
+            </div>
+          </div>
         </nav>
 
-        <main class="flex flex-col p-8 w-full relative">
+        <main class="text-slate-900 flex flex-col p-8 absolute right-0 top-0 w-[calc(100dvw-18rem)] min-h-dvh gap-12">
 
     <div>
+        <h1 class="text-2xl font-extrabold">Usuários</h1>
         <h1 class="text-5xl relative top-2 left-85">Empresa: <b>Mercado Livre</b></h1>
         <br>
         <hr class="border-t border-slate-400 my-5">
