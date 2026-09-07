@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../tailwind/output.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/img/logo/icon-128.ico" type="image/x-icon">
+    <title>Document</title>
+</head>
+
+<body class="min-h-screen bg-slate-950 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative overflow-hidden">
+
+    <header id="header-main"
+        class="w-full bg-slate-950 flex items-center justify-around py-6 max-md:px-1 px-8 border-y border-slate-700 z-40 fixed overflow-hidden h-24">
+        <div>
+            <img src="/assets/img/logo/logo-light.svg" alt="Logo da Microhub" class="max-h-11">
+        </div>
+        <div class="flex gap-4 *:cursor-pointer relative">
+            <button type="button"
+                class="min-w-32 py-2 border border-blue-600 rounded-lg hover:bg-blue-600 transition-colors duration-300">Inicio</button>
+        </div>
+    </header>
+    <header id="header-mobile"
+        class="w-full h-[calc(100%-2rem)] top-24 bg-slate-950 hidden flex-col items-center justify-center max-md:px-1 px-8 border-y border-slate-700 z-40 fixed overflow-hidden md:hidden gap-32">
+        <div class="flex gap-4 *:cursor-pointer relative">
+            <button type="button"
+                class="min-w-32 py-2 border border-blue-600 rounded-lg hover:bg-blue-600 transition-colors duration-300">Inicio</button>
+        </div>
+    </header>
+
+    <div class="w-xl h-40 bg-blue-800 absolute top-0 -left-56 blur-[10rem] rotate-45"></div>
+    <div class="w-xl h-40 bg-indigo-600 absolute bottom-0 -right-70 blur-[12rem] rotate-45"></div>
+    <div class="bg-noise"></div>
+
+    <div class="min-h-screen flex flex-col items-center justify-center">
+
+        <div
+            class="font-semibold text-6xl flex justify-center items-center bg-linear-120 from-blue-600 via-blue-400 to-indigo-600 bg-clip-text bg-size-[200%_auto] text-transparent animate-aurora-text mb-30 -mt-20">
+            Cadastre sua empresa!
+        </div>
+
+        <div class="w-full max-w-4xl bg-slate-900 p-8 rounded-2xl flex flex-col gap-4">
+
+
+            <div class="flex flex-col gap-1.5">
+                <label for="CNPJ" class="text-md text-slate-300">
+                    CNPJ
+                </label>
+                <input type="text" id="cnpj" placeholder="Digite seu CNPJ"
+                    class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <label for="nomeFantasia" class="text-md text-slate-300">
+                    Nome Fantasia
+                </label>
+                <input type="text" id="nomeFantasia" placeholder="Digite seu Nome Fantasia"
+                    class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <label for="razaoSocial" class="text-md text-slate-300">
+                    Razão Social
+                </label>
+                <input type="text" id="razaoSocial" placeholder="Digite sua Razão Social"
+                    class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <label for="razaoSocial" class="text-md text-slate-300">
+                    Código
+                </label>
+                <input type="text" id="codigo" placeholder="Digite seu código"
+                    class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
+            </div>
+
+            <button
+                class="w-full min-h-14 py-3 bg-blue-700 hover:bg-blue-600 hover:scale-101 rounded-lg font-medium transition-all cursor-pointer mt-4">
+                Cadastrar
+            </button>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
