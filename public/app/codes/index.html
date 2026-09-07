@@ -17,7 +17,7 @@
   <script src="../../js/session.js"></script>
 </head>
 
-<body onload="getCodes(); fillUserInfos()" class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
+<body onload="getCodes(); fillUserInfos(); fillRolesAtNewCode()" class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
   <div class="flex min-h-screen">
     <div id="popUpContainer" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-4">
       <div id="popUpContent" class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl px-8 py-6 shadow-2xl">
@@ -78,7 +78,7 @@
               <i class="ph-bold ph-briefcase text-2xl"></i>
               <select id="newRoleSelect" class="text-lg outline-none!">
                 <option value="" selected disabled>Selecione um cargo</option>
-                <option value="0">Novo parceiro</option>
+                <option value="0" id="newPartnerOpt" class="hidden">Novo parceiro</option>
                 <option value="1">Gerente TI</option>
                 <option value="2">FinOps</option>
                 <option value="3">DevOps</option>

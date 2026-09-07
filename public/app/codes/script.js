@@ -5,6 +5,17 @@ const roleHash = {
   3: "DevOps",
 }
 
+const fillRolesAtNewCode = () => {
+  const newPartnerOpt = document.getElementById("newPartnerOpt")
+
+  const userRole = sessionStorage.getItem("ROLE")
+  const userCompanyId = sessionStorage.getItem("COMPANY_ID")
+
+  if (userRole == 1 && userCompanyId == 1) 
+    newPartnerOpt.classList.remove("hidden")
+  
+}
+
 const getCodes = async () => {
   const userId = sessionStorage.getItem("USER_ID")
   const companyId = sessionStorage.getItem("COMPANY_ID")
@@ -27,6 +38,8 @@ const getCodes = async () => {
 
   const codesContainer = document.getElementById("codesContainer")
 
+  const userRole = sessionStorage.getItem("ROLE")
+  const userCompanyId = sessionStorage.getItem("COMPANY_ID")
   data.forEach(code => {
     const { atualizado_em, cargo, codigo, criado_em, deletado_em, expira_em, id, usado_em } = code
 
@@ -39,7 +52,7 @@ const getCodes = async () => {
           <div class="flex items-center gap-2 font-semibold">
             <i class="ph-bold ph-briefcase text-2xl"></i>
             <select id="roleSelect-${elementId}" class="text-lg outline-none!" onchange="editRole('${elementId}')">
-              <option value="0" ${cargo === 0 ? "selected" : ""}>Novo parceiro</option>
+              <option value="0" ${cargo === 0 ? "selected" : ""} ${userRole == 1 && userCompanyId == 1 ? "" : "hidden disabled"}>Novo parceiro</option>
               <option value="1" ${cargo === 1 ? "selected" : ""}>Gerente TI</option>
               <option value="2" ${cargo === 2 ? "selected" : ""}>FinOps</option>
               <option value="3" ${cargo === 3 ? "selected" : ""}>DevOps</option>
