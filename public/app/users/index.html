@@ -18,7 +18,7 @@
 
 </head>
 
-<body onload="fillUserInfos(); listarUsuarios()"
+<body onload="fillUserInfos(); listarUsuarios(); loadCompanyName()"
   class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
 
   <div id="toast-container" class="fixed top-5 right-5 z-100 w-80 space-y-2"></div>
@@ -72,7 +72,7 @@
       <div class="flex flex-col gap-4 w-full">
         <div class="">
           <h1 class="text-2xl font-extrabold">Usuários</h1>
-          <h1 class="text-3xl font-extrabold pl-4 text-blue-950">@ Empresa</h1>
+          <h1 class="text-3xl font-extrabold pl-4 text-blue-950" id="companyName">@ Empresa</h1>
         </div>
         <hr class="border-t border-slate-400 my-5">
 

@@ -1,5 +1,11 @@
 var idUsuarioSelecionado = null
 
+const loadCompanyName = () => {
+  const companyName = sessionStorage.getItem("COMPANY_NAME")
+  const companyNameElement = document.getElementById("companyName")
+
+  companyNameElement.innerText = `@ ${companyName}`
+}
 
 const listarUsuarios = async () => {
     console.log("ENTREI NO LISTAR")
