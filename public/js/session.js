@@ -25,3 +25,11 @@ const fillUserInfos = () => {
   iconElement.innerHTML = nameInitials
   nameElement.innerText = userName
 }
+
+const verifyIfUserCanAccess = () => {
+  const userRole = sessionStorage.getItem("ROLE")
+
+  if (userRole != 1)
+    window.location.href = "/app"
+    
+}
