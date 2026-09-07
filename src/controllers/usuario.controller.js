@@ -120,8 +120,13 @@ async function cadastrar(req, res) {
 
 
 async function listar(req, res) {
+  const userId = req.params.id
+
+  if (!userId)
+    return res.status(400).send()
+
     try {
-        const resultado = await usuarioModel.listar();
+        const resultado = await usuarioModel.listar(userId);
         console.log("RESULTADO:", resultado);
         return res.status(200).json(resultado);
     } catch (e) {

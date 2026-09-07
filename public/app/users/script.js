@@ -10,11 +10,14 @@ const loadCompanyName = () => {
 const listarUsuarios = async () => {
     console.log("ENTREI NO LISTAR")
 
-    const resposta = await fetch("/usuarios/listar")
-    console.log("STATUS:", resposta.status)
+    const userId = sessionStorage.getItem("USER_ID")
+
+    const resposta = await fetch(`/usuarios/listar/${userId}`)
+
+    if (resposta.status !== 200)
+      showToast("Algo deu errado. Tente novamentem mais tarde", "error")
 
     const usuarios = await resposta.json()
-    console.log("USUARIOS:", usuarios)
 
     mostrarUsuarios(usuarios)
 }

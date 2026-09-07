@@ -34,12 +34,19 @@ function buscarPorId(id) {
 }
 
 
-function listar() { 
+function listar(userId) { 
     var instrucaoSql = ` 
-        SELECT id, nome, cargo 
-        FROM usuario; 
+        SELECT u.id, u.nome, u.cargo 
+        FROM usuario u JOIN empresa e 
+        ON u.empresa_id = e.id
+        WHERE u.empresa_id = (
+          SELECT e2.id 
+          FROM empresa e2 JOIN usuario u2
+          ON u2.empresa_id = e2.id
+          WHERE u2.id = ? AND u2.cargo = 1 AND u2.deletado_em IS NULL AND e2.deletado_em IS NULL
+        ) AND u.deletado_em IS NULL
     `; 
-    return database.execute(instrucaoSql); 
+    return database.execute(instrucaoSql, [userId]); 
 }
 
 
