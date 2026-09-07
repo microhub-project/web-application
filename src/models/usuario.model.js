@@ -104,7 +104,8 @@ function atualizar(id, nome, email, cargo) {
 function excluir(id) {
 
     var instrucaoSql = `
-        DELETE FROM usuario
+        UPDATE usuario
+        SET deletado_em = current_timestamp()
         WHERE id = ?;
     `;
 
