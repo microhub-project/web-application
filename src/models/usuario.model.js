@@ -70,7 +70,7 @@ function atualizar(id, nome, email, cargo) {
 
         instrucaoSql = `
             UPDATE usuario
-            SET nome = ?
+            SET nome = ?, atualizado_em = current_timestamp()
             WHERE id = ?;
         `;
 
@@ -81,7 +81,7 @@ function atualizar(id, nome, email, cargo) {
 
         instrucaoSql = `
             UPDATE usuario
-            SET email = ?
+            SET email = ?, atualizado_em = current_timestamp()
             WHERE id = ?;
         `;
 
@@ -92,7 +92,7 @@ function atualizar(id, nome, email, cargo) {
 
         instrucaoSql = `
             UPDATE usuario
-            SET cargo = ?
+            SET cargo = ?, atualizado_em = current_timestamp()
             WHERE id = ?;
         `;
 
