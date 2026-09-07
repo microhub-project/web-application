@@ -5,6 +5,16 @@ const logout = () => {
 }
 
 const fillUserInfos = () => {
+  const admNavItems = [document.getElementById("navItemUsers"), document.getElementById("navItemCodes")]
+  const userRole = sessionStorage.getItem("ROLE")
+
+  if (userRole == 1) {
+    admNavItems.forEach(element => {
+      element.classList.remove("hidden")
+      element.classList.add("flex")
+    })
+  }
+
   const iconElement = document.getElementById("navUserIcon")
   const nameElement = document.getElementById("navUserName")
 
