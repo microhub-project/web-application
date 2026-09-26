@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background-noise: url("/assets/img/texture/noise.svg");
+}
+
+@theme inline {
+  --font-mono: "JetBrains Mono", monospace;
+  --font-sans: "Inter", sans-serif;
+
+  --animate-aurora-text: aurora-text 4s ease-in-out infinite alternate;
+  @keyframes aurora-text {
+    0% {
+      background-position: 0% 50%;
+    }
+    25% {
+      background-position: 50% 100%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    75% {
+      background-position: 50% 0%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
+
+@layer base {
+  .bg-noise {
+    position: fixed;
+    pointer-events: none;
+    opacity: 0.12;
+    z-index: 100;
+    background-image: var(--background-noise);
+    inset: 0;
+  }
+
+  .toast-success {
+    border-color: #10b981;
+    color: #10b981;
+  }
+
+  .toast-error {
+    border-color: #f43f5e;
+    color: #f43f5e;
+  }
+
+  .toast-warning {
+    border-color: #f59e0b;
+    color: #f59e0b;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+section {
+  scroll-margin-top: 6rem;
+}
