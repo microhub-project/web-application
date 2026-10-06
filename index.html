@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Microhub</title>
-  <link href="./tailwind/output.css" rel="stylesheet">
   <link rel="shortcut icon" href="/assets/img/logo/icon-128.ico" type="image/x-icon">
   <link rel="stylesheet" type="text/css"
     href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
@@ -13,8 +12,9 @@
     href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="./script.js"></script>
-  <script src="./js/toast.js"></script>
+  <script src="/script.js"></script>
+  <script src="/js/toast.js"></script>
+  <link rel="stylesheet" href="./src/index.css">
 </head>
 
 <body
@@ -69,6 +69,7 @@
         </div>
         
         <button 
+          type="button"
           onclick="validateRegistration()"
           class="w-full py-3 mt-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-colors cursor-pointer">
           Criar conta

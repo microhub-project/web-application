@@ -1,4 +1,4 @@
-const nodemailer = require("nodemailer");
+import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -188,7 +188,8 @@ const senderEmailBody = `
 </body>
 
 </html>
-`
+`;
+
 const receiverEmailBody = `
 <!DOCTYPE html>
 <html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -355,7 +356,8 @@ const receiverEmailBody = `
 </body>
 
 </html>
-`
+`;
+
 const codeUserEmailBody = `
 <!DOCTYPE html>
 <html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -539,21 +541,22 @@ const codeUserEmailBody = `
 </body>
 
 </html>
-`
+`;
 
 const send = async (req, res) => {
-  const { name, email, subject, message } = req.body
+  const { name, email, subject, message } = req.body;
 
   const responseBody = {
-    "isError": true,
-    "message": "Credenciais inválidas"
+    isError: true,
+    message: "Credenciais inválidas"
+  };
+
+  if (!name || !email || !subject || !message) {
+    return res.status(400).json(responseBody);
   }
 
-  if (!name || !email || !subject || !message)
-    res.status(400).json(responseBody)
-
   try {
-    const now = new Date()
+    const now = new Date();
     const dateFormated = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()} às ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 
     const infoSender = await transporter.sendMail({
@@ -583,24 +586,24 @@ const send = async (req, res) => {
     });
     
     if (infoReceiver.rejected.length + infoSender.rejected.length === 0) {
-      responseBody.isError = false
-      responseBody.message = "Email enviado com sucesso!"
-      res.status(200).json(responseBody)
+      responseBody.isError = false;
+      responseBody.message = "Email enviado com sucesso!";
+      return res.status(200).json(responseBody);
     } else {
-      responseBody.isError = true
-      responseBody.message = "Email não foi enviado. Tente novamente mais tarde"
-      res.status(500).json(responseBody)
+      responseBody.isError = true;
+      responseBody.message = "Email não foi enviado. Tente novamente mais tarde";
+      return res.status(500).json(responseBody);
     }
 
   } catch (e) {
-    console.error(e)
-    responseBody.message = "Algo deu errado. Tente novamente mais tarde"
-    res.status(500).json(responseBody)
+    console.error(e);
+    responseBody.message = "Algo deu errado. Tente novamente mais tarde";
+    return res.status(500).json(responseBody);
   }
-}
+};
 
 const sendVerificationCode = async (email, code, companyName, role) => {
-  const now = new Date()
+  const now = new Date();
   const expiresIn = 15;
   
   const roleHash = {
@@ -608,35 +611,34 @@ const sendVerificationCode = async (email, code, companyName, role) => {
     1: "Gerente TI",
     2: "FinOps",
     3: "DevOps",
-  }
+  };
 
   try {
     let bodyFormatted = codeUserEmailBody
         .replace("{{confirmation_code}}", code)
         .replace("{{message}}", `Olá. Seja bem-vindo a Microhub! Utilize o código abaixo para criar sua conta atrelada à empresa <strong style="color:#93c5fd;">${companyName}</strong> com cargo de <strong style="color:#93c5fd;">${roleHash[role]}</strong>.`)
         .replaceAll("{{expires_in}}", expiresIn)
-        .replace("{{year}}", now.getFullYear())
+        .replace("{{year}}", now.getFullYear());
 
-    for (let i = 0; i < 6; i++)
-      bodyFormatted = bodyFormatted.replace(`{{digit_${i +1}}}`, code[i])
+    for (let i = 0; i < 6; i++) {
+      bodyFormatted = bodyFormatted.replace(`{{digit_${i + 1}}}`, code[i]);
+    }
 
-      const infoEmail = await transporter.sendMail({
-        from: '"Microhub" <' + process.env.SMTP_USER +'>',
-        to: email,
-        subject: "Seu código de verificação - Microhub",
-        html: bodyFormatted
-      });
+    const infoEmail = await transporter.sendMail({
+      from: '"Microhub" <' + process.env.SMTP_USER + '>',
+      to: email,
+      subject: "Seu código de verificação - Microhub",
+      html: bodyFormatted
+    });
 
-      return infoEmail;
+    return infoEmail;
   } catch (e) {
-    console.error(e)
-    responseBody.message = "Algo deu errado. Tente novamente mais tarde"
-    res.status(500).json(responseBody)
+    console.error(e);
+    throw e;
   }
-  
 };
 
-module.exports = {
+export default {
   send,
   sendVerificationCode
-}
+};

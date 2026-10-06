@@ -1,24 +1,27 @@
+import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // var ambiente_processo = 'producao';
 var ambiente_processo = 'desenvolvimento';
 
 var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
-// Acima, temos o uso do operador ternário para definir o caminho do arquivo .env
-// A sintaxe do operador ternário é: condição ? valor_se_verdadeiro : valor_se_falso
 
-require("dotenv").config({ path: caminho_env });
+dotenv.config({ path: caminho_env });
 
-var express = require("express");
-var cors = require("cors");
-var path = require("path");
 var PORTA_APP = process.env.APP_PORT;
 var HOST_APP = process.env.APP_HOST;
 
 var app = express();
 
-var usuarioRouter = require("./src/routes/usuarios");
-const mailerRouter = require("./src/routes/mailer");
-const codeRouter = require("./src/routes/code");
-
+import usuarioRouter from "./src/routes/usuarios.js";
+import mailerRouter from "./src/routes/mailer.js";
+import codeRouter from "./src/routes/code.js";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -28,8 +31,7 @@ app.use(cors());
 
 app.use("/usuarios", usuarioRouter);
 app.use("/mailer", mailerRouter);
-app.use("/code", codeRouter)
-
+app.use("/code", codeRouter);
 
 app.listen(PORTA_APP, function () {
   console.log(`
