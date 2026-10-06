@@ -1,6 +1,6 @@
--- -----------------------------------------------------
--- Schema microhub
--- -----------------------------------------------------
+-- https://calculator.aws/#/estimate
+
+DROP DATABASE IF EXISTS `microhub`;
 CREATE DATABASE IF NOT EXISTS `microhub`;
 USE `microhub`;
 
@@ -13,18 +13,45 @@ CREATE TABLE IF NOT EXISTS `microhub`.`componente` (
   `unidade_medida` VARCHAR(20) NOT NULL,
   PRIMARY KEY (`id`));
 
+insert into microhub.componente (nome, unidade_medida) values 
+	('cpu_percent', '%'),
+    ('cpu_frequency', 'GHz'),
+    ('ram_percent', '%'),
+    ('swap_memory_percent', '%'),
+    ('upload_traffic', 'Mpbs'),
+    ('download_traffic', 'Mbps'),
+    ('disk', 'GiB'),
+    ('processes', 'processos'),
+    ('zombie_processes', '%');
 
 -- -----------------------------------------------------
 -- Table `microhub`.`tipo`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `microhub`.`tipo` (
-  `id` INT NOT NULL,
-  `familia` VARCHAR(45) NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(45) NOT NULL,
   `cpu` INT NOT NULL,
   `ram` INT NOT NULL,
   `custo_computacao` DECIMAL(10,2) NOT NULL,
   PRIMARY KEY (`id`));
 
+insert into `microhub`.`tipo` (`nome`, `cpu`, `ram`, `custo_computacao`) values
+	('t3.medium', 2, 4, 18.83),
+    ('t3.xlarge', 4, 16, 75.34),
+    ('m5.xlarge', 4, 16, 89.06),
+    ('c5d.xlarge', 4, 8, 84.68),
+    ('r5d.xlarge', 4, 32, 135.05),
+    ('m5.2xlarge', 8, 32, 177.39),
+    ('c5d.2xlarge', 8, 16, 169.36),
+    ('r5d.2xlarge', 8, 64, 270.83),
+    ('g4dn.2xlarge', 8, 32, 383.98),
+    ('m5.4xlarge', 16, 64, 355.51),
+    ('c5d.4xlarge', 16, 32, 338.71),
+    ('r5d.4xlarge', 16, 128, 541.66),
+    ('g4dn.4xlarge', 16, 64, 615.39),
+    ('m5.8xlarge', 32, 128, 711.02),
+    ('r5d.8xlarge', 32, 256, 1082.59),
+    ('c5d.12xlarge', 48, 96, 1015.43);
 
 -- -----------------------------------------------------
 -- Table `microhub`.`empresa`
@@ -40,6 +67,9 @@ CREATE TABLE IF NOT EXISTS `microhub`.`empresa` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `cnpj_unique` (`cnpj` ASC) VISIBLE);
 
+INSERT INTO `microhub`.`empresa` (`cnpj`, `razao_social`, `nome_fantasia`, `status`) VALUES
+  ('12345678000195', 'Tech Solutions Ltda', 'Tech Solutions', 1),
+  ('98765432000110', 'Inovacao Digital S.A.', 'Inovacao Tech', 1);
 
 -- -----------------------------------------------------
 -- Table `microhub`.`microsservico`
@@ -59,6 +89,10 @@ CREATE TABLE IF NOT EXISTS `microhub`.`microsservico` (
     FOREIGN KEY (`empresa_id`)
     REFERENCES `microhub`.`empresa` (`id`));
 
+INSERT INTO `microhub`.`microsservico` (`empresa_id`, `nome`, `descricao`, `status`) VALUES
+  (1, 'Autenticação', 'Serviço responsável por login e emissão de tokens JWT', 1),
+  (1, 'Pagamentos', 'Processamento de transações de cartão de crédito e PIX', 1),
+  (2, 'Notificações', 'Serviço para disparo de e-mails e SMS', 1);
 
 -- -----------------------------------------------------
 -- Table `microhub`.`instancia`
@@ -84,6 +118,10 @@ CREATE TABLE IF NOT EXISTS `microhub`.`instancia` (
     FOREIGN KEY (`microsservico_id`)
     REFERENCES `microhub`.`microsservico` (`id`));
 
+INSERT INTO `microhub`.`instancia` (`endereco_mac`, `tipo_id`, `custo_mensal`, `status`, `microsservico_id`) VALUES
+  ('00:1A:2B:3C:4D:5E', 1, 33.83, 1, 1),
+  ('00:1A:2B:3C:4D:5F', 2, 97.84, 1, 2),
+  ('00:1A:2B:3C:4D:60', 3, 111.56, 1, 3);
 
 -- -----------------------------------------------------
 -- Table `microhub`.`instancia_tem_componente`
@@ -95,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `microhub`.`instancia_tem_componente` (
   `limite_minimo` DECIMAL(10,2) NULL,
   `monitorado` BIT(1) NOT NULL,
   `status` TINYINT(1) NOT NULL,
-  `criado_em` DATETIME NOT NULL,
+  `criado_em` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `atualizado_em` DATETIME NULL,
   `deletado_em` DATETIME NULL,
   PRIMARY KEY (`componente_id`, `instancia_id`),
@@ -108,7 +146,11 @@ CREATE TABLE IF NOT EXISTS `microhub`.`instancia_tem_componente` (
     FOREIGN KEY (`instancia_id`)
     REFERENCES `microhub`.`instancia` (`id`));
 
-
+INSERT INTO `microhub`.`instancia_tem_componente` (`componente_id`, `instancia_id`, `limite_maximo`, `limite_minimo`, `monitorado`, `status`) VALUES
+  (1, 1, 80.00, 10.00, 1, 1),
+  (3, 1, 90.00, 15.00, 1, 1),
+  (1, 2, 85.00, 5.00, 1, 1);
+  
 -- -----------------------------------------------------
 -- Table `microhub`.`alerta`
 -- -----------------------------------------------------
@@ -128,6 +170,9 @@ CREATE TABLE IF NOT EXISTS `microhub`.`alerta` (
     FOREIGN KEY (`instancia_tem_componente_componente_id` , `instancia_tem_componente_instancia_id`)
     REFERENCES `microhub`.`instancia_tem_componente` (`componente_id` , `instancia_id`));
 
+INSERT INTO `microhub`.`alerta` (`prioridade`, `descricao`, `valor_detectado`, `status`, `instancia_tem_componente_componente_id`, `instancia_tem_componente_instancia_id`) VALUES
+  (3, 'Uso excessivo de CPU detectado', 92.50, 1, 1, 1),
+  (2, 'Consumo de RAM acima do limite', 91.20, 1, 3, 1);
 
 -- -----------------------------------------------------
 -- Table `microhub`.`codigo_ativacao`
@@ -150,6 +195,9 @@ CREATE TABLE IF NOT EXISTS `microhub`.`codigo_ativacao` (
     FOREIGN KEY (`empresa_id`)
     REFERENCES `microhub`.`empresa` (`id`));
 
+INSERT INTO `microhub`.`codigo_ativacao` (`empresa_id`, `codigo`, `cargo`, `status`, `expira_em`) VALUES
+  (1, 'ACT123', 1, 1, DATE_ADD(NOW(), INTERVAL 7 DAY)),
+  (2, 'ACT456', 2, 1, DATE_ADD(NOW(), INTERVAL 7 DAY));
 
 -- -----------------------------------------------------
 -- Table `microhub`.`usuario`
@@ -171,14 +219,16 @@ CREATE TABLE IF NOT EXISTS `microhub`.`usuario` (
   CONSTRAINT `fk_usuario_empresa`
     FOREIGN KEY (`empresa_id`)
     REFERENCES `microhub`.`empresa` (`id`));
-
-
+    
+INSERT INTO `microhub`.`usuario` (`empresa_id`, `nome`, `cargo`, `email`, `senha`, `status`) VALUES
+  (1, 'João Silva', 1, 'joao.silva@techsolutions.com', SHA2('senha123', 256), 1),
+  (2, 'Maria Oliveira', 2, 'maria@inovacao.com', SHA2('senha123', 256), 1);
 
 -- -----------------------------------------------------
 -- Table `microhub`.`volume`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `microhub`.`volume` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `armazenamento` DECIMAL(10,2) NOT NULL,
   `custo_giga` DECIMAL(10,2) NOT NULL,
   `instancia_id` INT NOT NULL,
@@ -191,3 +241,19 @@ CREATE TABLE IF NOT EXISTS `microhub`.`volume` (
   CONSTRAINT `fk_volume_instancia1`
     FOREIGN KEY (`instancia_id`)
     REFERENCES `microhub`.`instancia` (`id`));
+    
+INSERT INTO `microhub`.`volume` (`armazenamento`, `custo_giga`, `instancia_id`, `status`) VALUES
+  (100.00, 0.15, 1, 1),
+  (150.00, 0.15, 2, 1),
+  (200.00, 0.15, 3, 1);
+  
+  select * from alerta;
+  select * from codigo_ativacao;
+  select * from componente;
+  select * from empresa;
+  select * from instancia;
+  select * from instancia_tem_componente;
+  select * from microsservico;
+  select * from tipo;
+  select * from usuario;
+  select * from volume;
