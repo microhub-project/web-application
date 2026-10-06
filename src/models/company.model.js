@@ -1,11 +1,11 @@
-const database = require("../database/config")
+import database from "../database/config.js";
 
 const getNameById = async (id) => {
-  const query = "select nome_fantasia from empresa where id = ? and deletado_em is null"
+  const query = "select nome_fantasia from empresa where id = ? and deletado_em is null";
 
-  return await database.execute(query, [id])
-}
+  return await database.execute(query, [id]);
+};
 
-module.exports = {
+export default {
   getNameById
-}
+};

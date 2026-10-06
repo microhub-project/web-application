@@ -9,3 +9,8 @@ package-lock.json
 public/tailwind/output.css
 .DS_Store
 .vscode
+
+# Ignora a build do vite
+dist
+dist-ssr
+*.local

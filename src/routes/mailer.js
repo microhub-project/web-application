@@ -1,12 +1,12 @@
-const express = require("express");
-const router = express.Router();
+import express from "express";
+import mailerController from "../controllers/mailer.controller.js";
 
-const mailerController = require("../controllers/mailer.controller")
+const router = express.Router();
 
 router.post("/send", function (req, res) {
   mailerController.send(req, res);
-})
+});
 
 // [POST] /sendCode
 
-module.exports = router
+export default router;
