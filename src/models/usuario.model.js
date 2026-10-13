@@ -4,7 +4,7 @@ function autenticar(email, senha) {
   console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function entrar(): ", email, senha);
 
   const instrucaoSql = `
-        SELECT u.id, u.nome, u.email, u.cargo, u.empresa_id, e.nome_fantasia FROM usuario u JOIN empresa e ON u.empresa_id = e.id WHERE email = ? AND senha = SHA2(?, ?) AND u.deletado_em is NULL;
+        SELECT u.id, u.nome, u.email, u.cargo, u.empresa_id, e.nome_fantasia FROM usuario u JOIN empresa e ON u.empresa_id = e.id WHERE email = ? AND senha = SHA2(?, 256) AND u.deletado_em is NULL;
     `;
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
   return database.execute(instrucaoSql, [email, senha, process.env.SECRET_KEY]);
@@ -14,7 +14,7 @@ function cadastrar(nome, email, senha, cargo, empresaId) {
   console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():", nome, email, senha, cargo, empresaId);
 
   const instrucaoSql = `
-        INSERT INTO usuario (nome, email, cargo, empresa_id, senha) VALUES (?, ?, ?, ?, AES_ENCRYPT(?, ?));
+        INSERT INTO usuario (nome, email, cargo, empresa_id, senha, status) VALUES (?, ?, ?, ?, SHA2(?, 256), 1);
     `;
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
   return database.execute(instrucaoSql, [nome, email, cargo, empresaId, senha, process.env.SECRET_KEY]);
