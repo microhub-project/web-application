@@ -1,5 +1,6 @@
 import usuarioModel from "../models/usuario.model.js";
 import codeModel from "../models/code.model.js";
+import bcrypt from 'bcryptjs';
 
 async function autenticar(req, res) {
   const { password, email } = req.body;
@@ -12,20 +13,31 @@ async function autenticar(req, res) {
     responseBody.message = "Email inválido";
     return res.status(400).json(responseBody);
   } else if (!password) {
-    responseBody.message = "Senha inválido";
+    responseBody.message = "Senha inválida";
     return res.status(400).json(responseBody);
   } 
 
   try {
-    const responseUserModel = await usuarioModel.autenticar(email, password);
+    const usuarios = await usuarioModel.autenticar(email);
 
-    if (responseUserModel.length !== 1) {
+    if (!usuarios || usuarios.length !== 1) {
       responseBody.message = "Email e/ou senha inválido(s)";
-      return res.status(403).json(responseBody);
+      return res.status(401).json(responseBody);
     }
 
+    const usuario = usuarios[0];
+
+    const passwordValidation = await bcrypt.compare(password, usuario.senha);
+
+    if (!passwordValidation) {
+      responseBody.message = "Email e/ou senha inválido(s)";
+      return res.status(401).json(responseBody);
+    }
+
+    delete usuario.senha;
+
     responseBody.message = "Login realizado com sucesso! Redirecionando para dashboard...";
-    responseBody.body = responseUserModel[0];
+    responseBody.body = usuario;
 
     return res.status(200).json(responseBody);
 
@@ -72,7 +84,14 @@ async function cadastrar(req, res) {
       return res.status(401).json(responseBody);
     }
 
-    const responseUserModel = await usuarioModel.cadastrar(name, email, password, codeResponse[0].cargo, codeResponse[0].empresa_id);
+    const saltRounds = 10;
+   
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    console.log(password)
+    console.log(hashedPassword)
+
+    const responseUserModel = await usuarioModel.cadastrar(name, email, hashedPassword, codeResponse[0].cargo, codeResponse[0].empresa_id);
 
     if (responseUserModel.affectedRows !== 1) {
       responseBody.message = "Não foi possível cadastrar o usuário. Tente novamente mais tarde";

@@ -1,23 +1,23 @@
 import database from "../database/config.js";
 
-function autenticar(email, senha) {
-  console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function entrar(): ", email, senha);
+function autenticar(email) {
+  console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function autenticar(): ", email);
 
   const instrucaoSql = `
-        SELECT u.id, u.nome, u.email, u.cargo, u.empresa_id, e.nome_fantasia FROM usuario u JOIN empresa e ON u.empresa_id = e.id WHERE email = ? AND senha = SHA2(?, 256) AND u.deletado_em is NULL;
+        SELECT u.id, u.nome, u.email, u.cargo, u.senha, u.empresa_id, e.nome_fantasia FROM usuario u JOIN empresa e ON u.empresa_id = e.id WHERE u.email = ? AND u.deletado_em IS NULL;
     `;
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database.execute(instrucaoSql, [email, senha, process.env.SECRET_KEY]);
+  return database.execute(instrucaoSql, [email]);
 }
 
 function cadastrar(nome, email, senha, cargo, empresaId) {
   console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():", nome, email, senha, cargo, empresaId);
 
   const instrucaoSql = `
-        INSERT INTO usuario (nome, email, cargo, empresa_id, senha, status) VALUES (?, ?, ?, ?, SHA2(?, 256), 1);
+        INSERT INTO usuario (nome, email, cargo, empresa_id, senha, status) VALUES (?, ?, ?, ?, ?, 1);
     `;
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database.execute(instrucaoSql, [nome, email, cargo, empresaId, senha, process.env.SECRET_KEY]);
+  return database.execute(instrucaoSql, [nome, email, cargo, empresaId, senha]);
 }
 
 function buscarPorId(id) {
