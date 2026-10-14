@@ -270,11 +270,11 @@ const validarLogin = async () =>{
 
     showToast(authResponseJson.message, "success")
     
-    sessionStorage.COMPANY_ID = authResponseJson.body.empresa_id
+    sessionStorage.COMPANY_UUID = authResponseJson.body.empresa_uuid
     sessionStorage.COMPANY_NAME = authResponseJson.body.nome_fantasia
     sessionStorage.USER_EMAIL = authResponseJson.body.email
     sessionStorage.USER_NAME = authResponseJson.body.nome
-    sessionStorage.USER_ID = authResponseJson.body.id
+    sessionStorage.USER_UUID = authResponseJson.body.uuid
     sessionStorage.ROLE = authResponseJson.body.cargo
 
     setTimeout(() => { window.location = "./app/index.html" }, 2000)

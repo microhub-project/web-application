@@ -1,11 +1,11 @@
 import database from "../database/config.js";
 
-const getNameById = async (id) => {
-  const query = "select nome_fantasia from empresa where id = ? and deletado_em is null";
+const getNameByUUID = async (uuid) => {
+  const query = "SELECT nome_fantasia FROM empresa WHERE uuid = ? AND deletado_em IS NULL";
 
-  return await database.execute(query, [id]);
+  return await database.execute(query, [uuid]);
 };
 
 export default {
-  getNameById
+  getNameByUUID
 };

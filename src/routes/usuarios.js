@@ -11,7 +11,7 @@ router.post("/autenticar", function (req, res) {
   usuarioController.autenticar(req, res);
 });
 
-router.get("/listar/:id", function (req, res) {
+router.get("/listar/:uuid", function (req, res) {
   usuarioController.listar(req, res);
 });
 
@@ -19,15 +19,15 @@ router.get("/pesquisar/:nome", function (req, res) {
   usuarioController.pesquisar(req, res);
 });
 
-router.get("/:id", function (req, res) {
-  usuarioController.buscarPorId(req, res);
+router.get("/:uuid", function (req, res) {
+  usuarioController.buscarPorUUID(req, res);
 });
 
-router.put("/atualizar/:id", function (req, res) {
+router.put("/atualizar/:uuid", function (req, res) {
   usuarioController.atualizar(req, res);
 });
 
-router.delete("/excluir/:id", function (req, res) {
+router.delete("/excluir/:uuid", function (req, res) {
   usuarioController.excluir(req, res);
 });
 

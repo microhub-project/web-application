@@ -91,7 +91,9 @@ async function cadastrar(req, res) {
     console.log(password)
     console.log(hashedPassword)
 
-    const responseUserModel = await usuarioModel.cadastrar(name, email, hashedPassword, codeResponse[0].cargo, codeResponse[0].empresa_id);
+    const uuid = crypto.randomUUID();
+
+    const responseUserModel = await usuarioModel.cadastrar(uuid, name, email, hashedPassword, codeResponse[0].cargo, codeResponse[0].empresa_uuid);
 
     if (responseUserModel.affectedRows !== 1) {
       responseBody.message = "Não foi possível cadastrar o usuário. Tente novamente mais tarde";
@@ -115,10 +117,10 @@ async function cadastrar(req, res) {
   }
 }
 
-async function buscarPorId(req, res) {
-  const id = req.params.id;
+async function buscarPorUUID(req, res) {
+  const uuid = req.params.uuid;
   try {
-    const resultado = await usuarioModel.buscarPorId(id);
+    const resultado = await usuarioModel.buscarPorUUID(uuid);
     if (resultado[0].length !== 1) {
       return res.status(404).json({
         message: "Usuário não encontrado"
@@ -136,13 +138,13 @@ async function buscarPorId(req, res) {
 }
 
 async function listar(req, res) {
-  const userId = req.params.id;
+  const userUUID = req.params.uuid;
 
-  if (!userId)
+  if (!userUUID)
     return res.status(400).send();
 
   try {
-    const resultado = await usuarioModel.listar(userId);
+    const resultado = await usuarioModel.listar(userUUID);
     console.log("RESULTADO:", resultado);
     return res.status(200).json(resultado);
   } catch (e) {
@@ -168,12 +170,12 @@ async function pesquisar(req, res) {
 }
 
 async function atualizar(req, res) {
-  const id = req.params.id;
+  const uuid = req.params.uuid;
   const { nome, email, cargo } = req.body;
 
   try {
     const resultado = await usuarioModel.atualizar(
-      id,
+      uuid,
       nome,
       email,
       cargo
@@ -199,10 +201,10 @@ async function atualizar(req, res) {
 }
 
 async function excluir(req, res) {
-  const id = req.params.id;
+  const uuid = req.params.uuid;
 
   try {
-    const resultado = await usuarioModel.excluir(id);
+    const resultado = await usuarioModel.excluir(uuid);
     if (resultado.affectedRows !== 1) {
       return res.status(400).json({
         message: "Usuário não encontrado"
@@ -223,7 +225,7 @@ async function excluir(req, res) {
 export default {
   autenticar,
   cadastrar,
-  buscarPorId,
+  buscarPorUUID,
   excluir,
   atualizar,
   pesquisar,

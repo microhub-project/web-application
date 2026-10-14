@@ -4,49 +4,49 @@ function autenticar(email) {
   console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function autenticar(): ", email);
 
   const instrucaoSql = `
-        SELECT u.id, u.nome, u.email, u.cargo, u.senha, u.empresa_id, e.nome_fantasia FROM usuario u JOIN empresa e ON u.empresa_id = e.id WHERE u.email = ? AND u.deletado_em IS NULL;
+        SELECT u.uuid, u.nome, u.email, u.cargo, u.senha, u.empresa_uuid, e.nome_fantasia FROM usuario u JOIN empresa e ON u.empresa_uuid = e.uuid WHERE u.email = ? AND u.deletado_em IS NULL;
     `;
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
   return database.execute(instrucaoSql, [email]);
 }
 
-function cadastrar(nome, email, senha, cargo, empresaId) {
-  console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():", nome, email, senha, cargo, empresaId);
+function cadastrar(uuid, nome, email, senha, cargo, empresaUUID) {
+  console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():", uuid, nome, email, senha, cargo, empresaUUID);
 
   const instrucaoSql = `
-        INSERT INTO usuario (nome, email, cargo, empresa_id, senha, status) VALUES (?, ?, ?, ?, ?, 1);
+        INSERT INTO usuario (uuid, nome, email, senha, cargo, empresa_uuid, status) VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, ?, 1);
     `;
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database.execute(instrucaoSql, [nome, email, cargo, empresaId, senha]);
+  return database.execute(instrucaoSql, [uuid, nome, email, senha, cargo, empresaUUID]);
 }
 
-function buscarPorId(id) {
+function buscarPorUUID(uuid) {
   const instrucaoSql = `
-        SELECT id, nome, email, cargo
+        SELECT uuid, nome, email, cargo
         FROM usuario
-        WHERE id = ?;
+        WHERE uuid = ?;
     `;
-  return database.execute(instrucaoSql, [id]);
+  return database.execute(instrucaoSql, [uuid]);
 }
 
-function listar(userId) { 
+function listar(userUUID) { 
   const instrucaoSql = ` 
-        SELECT u.id, u.nome, u.cargo 
+        SELECT u.uuid, u.nome, u.cargo 
         FROM usuario u JOIN empresa e 
-        ON u.empresa_id = e.id
-        WHERE u.empresa_id = (
-          SELECT e2.id 
+        ON u.empresa_uuid = e.uuid
+        WHERE u.empresa_uuid = (
+          SELECT e2.uuid 
           FROM empresa e2 JOIN usuario u2
-          ON u2.empresa_id = e2.id
-          WHERE u2.id = ? AND u2.cargo = 1 AND u2.deletado_em IS NULL AND e2.deletado_em IS NULL
+          ON u2.empresa_uuid = e2.uuid
+          WHERE u2.uuid = ? AND u2.cargo = 1 AND u2.deletado_em IS NULL AND e2.deletado_em IS NULL
         ) AND u.deletado_em IS NULL
     `; 
-  return database.execute(instrucaoSql, [userId]); 
+  return database.execute(instrucaoSql, [userUUID]); 
 }
 
 function pesquisar(nome) {
   const instrucaoSql = `
-        SELECT id, nome, cargo
+        SELECT uuid, nome, cargo
         FROM usuario
         WHERE nome LIKE ?;
     `;
@@ -54,51 +54,51 @@ function pesquisar(nome) {
   return database.execute(instrucaoSql, [`%${nome}%`]);
 }
 
-function atualizar(id, nome, email, cargo) {
+function atualizar(uuid, nome, email, cargo) {
   let instrucaoSql = "";
 
   if (nome) {
     instrucaoSql = `
             UPDATE usuario
             SET nome = ?, atualizado_em = current_timestamp()
-            WHERE id = ?;
+            WHERE uuid = ?;
         `;
-    return database.execute(instrucaoSql, [nome, id]);
+    return database.execute(instrucaoSql, [nome, uuid]);
   }
 
   if (email) {
     instrucaoSql = `
             UPDATE usuario
             SET email = ?, atualizado_em = current_timestamp()
-            WHERE id = ?;
+            WHERE uuid = ?;
         `;
-    return database.execute(instrucaoSql, [email, id]);
+    return database.execute(instrucaoSql, [email, uuid]);
   }
 
   if (cargo !== undefined) {
     instrucaoSql = `
             UPDATE usuario
             SET cargo = ?, atualizado_em = current_timestamp()
-            WHERE id = ?;
+            WHERE uuid = ?;
         `;
-    return database.execute(instrucaoSql, [cargo, id]);
+    return database.execute(instrucaoSql, [cargo, uuid]);
   }
 }
 
-function excluir(id) {
+function excluir(uuid) {
   const instrucaoSql = `
         UPDATE usuario
         SET deletado_em = current_timestamp()
-        WHERE id = ?;
+        WHERE uuid = ?;
     `;
 
-  return database.execute(instrucaoSql, [id]);
+  return database.execute(instrucaoSql, [uuid]);
 }
 
 export default {
   autenticar,
   cadastrar,
-  buscarPorId,
+  buscarPorUUID,
   listar,
   pesquisar,
   atualizar,
