@@ -1,5 +1,7 @@
 import usuarioModel from "../models/usuario.model.js";
 import codeModel from "../models/code.model.js";
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 async function autenticar(req, res) {
   const { password, email } = req.body;
@@ -12,20 +14,48 @@ async function autenticar(req, res) {
     responseBody.message = "Email inválido";
     return res.status(400).json(responseBody);
   } else if (!password) {
-    responseBody.message = "Senha inválido";
+    responseBody.message = "Senha inválida";
     return res.status(400).json(responseBody);
-  } 
+  }
 
   try {
-    const responseUserModel = await usuarioModel.autenticar(email, password);
+    const usuarios = await usuarioModel.autenticar(email);
 
-    if (responseUserModel.length !== 1) {
+    if (!usuarios || usuarios.length !== 1) {
       responseBody.message = "Email e/ou senha inválido(s)";
-      return res.status(403).json(responseBody);
+      return res.status(401).json(responseBody);
     }
 
+    const usuario = usuarios[0];
+
+    const passwordValidation = await bcrypt.compare(password, usuario.senha);
+
+    if (!passwordValidation) {
+      responseBody.message = "Email e/ou senha inválido(s)";
+      return res.status(401).json(responseBody);
+    }
+
+    delete usuario.senha;
+    
+    const token = jwt.sign(
+      { 
+        userUUID: usuario.uuid, 
+        name: usuario.nome,
+        email: usuario.email,
+        companyUUID: usuario.empresa_uuid,
+        companyName: usuario.nome_fantasia,
+        cargo: usuario.cargo
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRATION }
+    );
+
     responseBody.message = "Login realizado com sucesso! Redirecionando para dashboard...";
-    responseBody.body = responseUserModel[0];
+    responseBody.body = {
+      usuario: usuario,
+      auth: true,
+      token: token
+    };
 
     return res.status(200).json(responseBody);
 
@@ -55,7 +85,7 @@ async function cadastrar(req, res) {
   } else if (!code) {
     responseBody.message = "Código inválido";
     return res.status(400).json(responseBody);
-  } 
+  }
 
   const isEmailValid = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/.test(email);
 
@@ -72,7 +102,16 @@ async function cadastrar(req, res) {
       return res.status(401).json(responseBody);
     }
 
-    const responseUserModel = await usuarioModel.cadastrar(name, email, password, codeResponse[0].cargo, codeResponse[0].empresa_id);
+    const saltRounds = 10;
+
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    console.log(password)
+    console.log(hashedPassword)
+
+    const uuid = crypto.randomUUID();
+
+    const responseUserModel = await usuarioModel.cadastrar(uuid, name, email, hashedPassword, codeResponse[0].cargo, codeResponse[0].empresa_uuid);
 
     if (responseUserModel.affectedRows !== 1) {
       responseBody.message = "Não foi possível cadastrar o usuário. Tente novamente mais tarde";
@@ -96,10 +135,10 @@ async function cadastrar(req, res) {
   }
 }
 
-async function buscarPorId(req, res) {
-  const id = req.params.id;
+async function buscarPorUUID(req, res) {
+  const uuid = req.params.uuid;
   try {
-    const resultado = await usuarioModel.buscarPorId(id);
+    const resultado = await usuarioModel.buscarPorUUID(uuid);
     if (resultado[0].length !== 1) {
       return res.status(404).json({
         message: "Usuário não encontrado"
@@ -117,13 +156,13 @@ async function buscarPorId(req, res) {
 }
 
 async function listar(req, res) {
-  const userId = req.params.id;
+  const userUUID = req.params.uuid;
 
-  if (!userId)
+  if (!userUUID)
     return res.status(400).send();
 
   try {
-    const resultado = await usuarioModel.listar(userId);
+    const resultado = await usuarioModel.listar(userUUID);
     console.log("RESULTADO:", resultado);
     return res.status(200).json(resultado);
   } catch (e) {
@@ -149,12 +188,12 @@ async function pesquisar(req, res) {
 }
 
 async function atualizar(req, res) {
-  const id = req.params.id;
+  const uuid = req.params.uuid;
   const { nome, email, cargo } = req.body;
 
   try {
     const resultado = await usuarioModel.atualizar(
-      id,
+      uuid,
       nome,
       email,
       cargo
@@ -180,10 +219,10 @@ async function atualizar(req, res) {
 }
 
 async function excluir(req, res) {
-  const id = req.params.id;
+  const uuid = req.params.uuid;
 
   try {
-    const resultado = await usuarioModel.excluir(id);
+    const resultado = await usuarioModel.excluir(uuid);
     if (resultado.affectedRows !== 1) {
       return res.status(400).json({
         message: "Usuário não encontrado"
@@ -204,7 +243,7 @@ async function excluir(req, res) {
 export default {
   autenticar,
   cadastrar,
-  buscarPorId,
+  buscarPorUUID,
   excluir,
   atualizar,
   pesquisar,

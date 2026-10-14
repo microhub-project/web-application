@@ -1,60 +1,52 @@
 import database from "../database/config.js";
 
-const create = async (code, companyId, role) => {
-  const query = "insert into codigo_ativacao (codigo, cargo, empresa_id, expira_em) values (?, ?, ?, date_add(current_timestamp(), interval 15 minute))";
-
-  return await database.execute(query, [code, role, companyId]);
+const create = async (uuid, code, companyUUID, role) => {
+  const query = "INSERT INTO codigo_ativacao (uuid, codigo, cargo, empresa_uuid, expira_em, status) VALUES (UUID_TO_BIN(?), ?, ?, UUID_TO_BIN(?), DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL 15 MINUTE), 1)";
+  return await database.execute(query, [uuid, code, role, companyUUID]);
 };
 
 const getCompanyAndRoleByCode = async (code) => {
-  const query = "select c.codigo, c.cargo, c.empresa_id, c.expira_em, e.nome_fantasia from codigo_ativacao c join empresa e on c.empresa_id = e.id where c.codigo = ? and c.expira_em > current_timestamp() and c.deletado_em is null and c.usado_em is null";
-
+  const query = "SELECT c.codigo, c.cargo, BIN_TO_UUID(c.empresa_uuid) AS empresa_uuid, c.expira_em, e.nome_fantasia FROM codigo_ativacao c JOIN empresa e ON c.empresa_uuid = e.uuid WHERE c.codigo = ? AND c.expira_em > CURRENT_TIMESTAMP() AND c.deletado_em IS NULL AND c.usado_em IS NULL";
   return await database.execute(query, [code]);
 };
 
 const setCodeUsedByCode = async (code) => {
-  const query = "update codigo_ativacao set usado_em = current_timestamp() where codigo = ?";
-
+  const query = "UPDATE codigo_ativacao SET usado_em = CURRENT_TIMESTAMP() WHERE codigo = ?";
   return await database.execute(query, [code]);
 };
 
-const updateRoleById = async (id, role) => {
-  const query = "update codigo_ativacao set cargo = ?, atualizado_em = current_timestamp() where id = ?";
-
-  return await database.execute(query, [role, id]);
+const updateRoleByUUID = async (uuid, role) => {
+  const query = "UPDATE codigo_ativacao SET cargo = ?, atualizado_em = CURRENT_TIMESTAMP() WHERE uuid = UUID_TO_BIN(?)";
+  return await database.execute(query, [role, uuid]);
 };
 
-const updateExpiresAtById = async (id) => {
-  const query = "update codigo_ativacao set expira_em = date_add(current_timestamp(), interval 15 minute), atualizado_em = current_timestamp() where id = ?";
-
-  return await database.execute(query, [id]);
+const updateExpiresAtByUUID = async (uuid) => {
+  const query = "UPDATE codigo_ativacao SET expira_em = DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL 15 MINUTE), atualizado_em = CURRENT_TIMESTAMP() WHERE uuid = UUID_TO_BIN(?)";
+  return await database.execute(query, [uuid]);
 };
 
-const getCodeDataByCodeId = async (id) => {
-  const query = "select e.nome_fantasia, ca.cargo, ca.codigo from empresa e join codigo_ativacao ca on ca.empresa_id = e.id where ca.id = ? and ca.expira_em > current_timestamp() and ca.deletado_em is null and ca.usado_em is null";
-
-  return await database.execute(query, [id]);
+const getCodeDataByCodeUUID = async (uuid) => {
+  const query = "SELECT e.nome_fantasia, ca.cargo, ca.codigo FROM empresa e JOIN codigo_ativacao ca ON ca.empresa_uuid = e.uuid WHERE ca.uuid = UUID_TO_BIN(?) AND ca.expira_em > CURRENT_TIMESTAMP() AND ca.deletado_em IS NULL AND ca.usado_em IS NULL";
+  return await database.execute(query, [uuid]);
 };
 
-const disableCodeById = async (id) => {
-  const query = "update codigo_ativacao set deletado_em = current_timestamp() where id = ? and deletado_em is null";
-
-  return await database.execute(query, [id]);
+const disableCodeByUUID = async (uuid) => {
+  const query = "UPDATE codigo_ativacao SET deletado_em = CURRENT_TIMESTAMP() WHERE uuid = UUID_TO_BIN(?) AND deletado_em IS NULL";
+  return await database.execute(query, [uuid]);
 };
 
-const getAllCodesByUserAndCompanyId = async (userId, companyId) => {
-  const query = "select c.id, c.codigo, c.cargo, c.criado_em, c.expira_em, c.usado_em, c.atualizado_em, c.deletado_em from codigo_ativacao c join empresa e on c.empresa_id = e.id join usuario u on u.empresa_id = e.id where u.id = ? and u.cargo = 1 and e.id = ? and c.deletado_em is null";
-
-  return await database.execute(query, [userId, companyId]);
+const getAllCodesByUserAndCompanyUUID = async (userUUID, companyUUID) => {
+  const query = "SELECT BIN_TO_UUID(c.uuid) AS uuid, c.codigo, c.cargo, c.criado_em, c.expira_em, c.usado_em, c.atualizado_em, c.deletado_em FROM codigo_ativacao c JOIN empresa e ON c.empresa_uuid = e.uuid JOIN usuario u ON u.empresa_uuid = e.uuid WHERE u.uuid = UUID_TO_BIN(?) AND u.cargo = 1 AND e.uuid = UUID_TO_BIN(?) AND c.deletado_em IS NULL";
+  return await database.execute(query, [userUUID, companyUUID]);
 };
 
 export default {
   create,
   getCompanyAndRoleByCode,
   setCodeUsedByCode,
-  updateRoleById,
-  updateExpiresAtById,
-  getCodeDataByCodeId,
-  disableCodeById,
-  getAllCodesByUserAndCompanyId
+  updateRoleByUUID,
+  updateExpiresAtByUUID,
+  getCodeDataByCodeUUID,
+  disableCodeByUUID,
+  getAllCodesByUserAndCompanyUUID
 };

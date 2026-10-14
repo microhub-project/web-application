@@ -1,35 +1,63 @@
-const logout = () => {
-  sessionStorage.clear()
+import { getUserSession } from "./utils.js";
 
+export const logout = () => {
+  sessionStorage.clear()
   window.location.href = "/"
 }
 
-const fillUserInfos = () => {
-  const admNavItems = [document.getElementById("navItemUsers"), document.getElementById("navItemCodes")]
-  const userRole = sessionStorage.getItem("ROLE")
+const capitalizeName = (str) => {
+  if (!str) return ""
+  return str
+    .trim()
+    .toLowerCase()
+    .split(/\s+/)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ")
+}
 
-  if (userRole == 1) {
+export const fillUserInfos = () => {
+  const userData = getUserSession()
+
+  if (!userData) {
+    return logout()
+  }
+
+  const admNavItems = [document.getElementById("navItemUsers"), document.getElementById("navItemCodes")]
+  if (userData.cargo == 1) {
     admNavItems.forEach(element => {
-      element.classList.remove("hidden")
-      element.classList.add("flex")
+      if (element) {
+        element.classList.remove("hidden")
+        element.classList.add("flex")
+      }
     })
   }
 
   const iconElement = document.getElementById("navUserIcon")
   const nameElement = document.getElementById("navUserName")
 
-  const userName = sessionStorage.getItem("USER_NAME")
-  const nameSplited = userName.toUpperCase().split(" ")
-  const nameInitials = nameSplited.length >= 2 ? nameSplited[0][0] + nameSplited[1][0] : nameSplited[0][0] + nameSplited[0][1]
+  const formattedName = capitalizeName(userData.name || userData.email || "Usuário")
 
-  iconElement.innerHTML = nameInitials
-  nameElement.innerText = userName
+  const nameSplited = formattedName.toUpperCase().split(" ")
+  const nameInitials = nameSplited.length >= 2 
+    ? nameSplited[0][0] + nameSplited[1][0] 
+    : nameSplited[0].slice(0, 2)
+
+  if (iconElement) iconElement.innerHTML = nameInitials
+  if (nameElement) nameElement.innerText = formattedName
 }
 
-const verifyIfUserCanAccess = () => {
-  const userRole = sessionStorage.getItem("ROLE")
+export const verifyIfUserCanAccess = () => {
+  const userData = getUserSession()
 
-  if (userRole != 1)
+  if (!userData) {
+    return logout()
+  }
+
+  if (userData.cargo != 1) {
     window.location.href = "/app"
-    
+  }
 }
+
+window.logout = logout;
+window.fillUserInfos = fillUserInfos;
+window.verifyIfUserCanAccess = verifyIfUserCanAccess;
