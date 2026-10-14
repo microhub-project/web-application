@@ -42,7 +42,9 @@ const sendCode = async (req, res) => {
       return res.status(500).json(responseBody);
     }
 
-    await codeModel.create(code, companyUUID, role);
+    const uuid = crypto.randomUUID();
+
+    await codeModel.create(uuid, code, companyUUID, role);
 
     responseBody.isError = false;
     responseBody.message = "Código enviado com sucesso!";

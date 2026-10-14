@@ -405,7 +405,7 @@ const sendCodeConfirmed = async () => {
   toggleDisableButton(button)
 
   const body = {
-    "companyUUID": userData?.companyUUID,
+    "companyUUID": userData.companyUUID,
     "role": roleSelected,
     "email": newEmailReceiver
   }

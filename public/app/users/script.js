@@ -5,7 +5,7 @@ const loadCompanyName = () => {
   const companyNameElement = document.getElementById("companyName")
 
   if (userData && companyNameElement) {
-    companyNameElement.innerText = `@ ${userData.nome_fantasia || userData.companyUUID}`
+    companyNameElement.innerText = `@ ${userData.companyName}`
   }
 }
 

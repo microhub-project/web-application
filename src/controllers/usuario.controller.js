@@ -43,6 +43,7 @@ async function autenticar(req, res) {
         name: usuario.nome,
         email: usuario.email,
         companyUUID: usuario.empresa_uuid,
+        companyName: usuario.nome_fantasia,
         cargo: usuario.cargo
       },
       process.env.JWT_SECRET,

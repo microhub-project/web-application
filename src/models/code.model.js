@@ -1,8 +1,8 @@
 import database from "../database/config.js";
 
-const create = async (code, companyUUID, role) => {
-  const query = "INSERT INTO codigo_ativacao (codigo, cargo, empresa_uuid, expira_em) VALUES (?, ?, UUID_TO_BIN(?), DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL 15 MINUTE))";
-  return await database.execute(query, [code, role, companyUUID]);
+const create = async (uuid, code, companyUUID, role) => {
+  const query = "INSERT INTO codigo_ativacao (uuid, codigo, cargo, empresa_uuid, expira_em, status) VALUES (UUID_TO_BIN(?), ?, ?, UUID_TO_BIN(?), DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL 15 MINUTE), 1)";
+  return await database.execute(query, [uuid, code, role, companyUUID]);
 };
 
 const getCompanyAndRoleByCode = async (code) => {
