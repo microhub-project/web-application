@@ -1,6 +1,7 @@
 import usuarioModel from "../models/usuario.model.js";
 import codeModel from "../models/code.model.js";
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 async function autenticar(req, res) {
   const { password, email } = req.body;
@@ -15,7 +16,7 @@ async function autenticar(req, res) {
   } else if (!password) {
     responseBody.message = "Senha inválida";
     return res.status(400).json(responseBody);
-  } 
+  }
 
   try {
     const usuarios = await usuarioModel.autenticar(email);
@@ -35,9 +36,25 @@ async function autenticar(req, res) {
     }
 
     delete usuario.senha;
+    
+    const token = jwt.sign(
+      { 
+        userUUID: usuario.uuid, 
+        name: usuario.nome,
+        email: usuario.email,
+        companyUUID: usuario.empresa_uuid,
+        cargo: usuario.cargo
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRATION }
+    );
 
     responseBody.message = "Login realizado com sucesso! Redirecionando para dashboard...";
-    responseBody.body = usuario;
+    responseBody.body = {
+      usuario: usuario,
+      auth: true,
+      token: token
+    };
 
     return res.status(200).json(responseBody);
 
@@ -67,7 +84,7 @@ async function cadastrar(req, res) {
   } else if (!code) {
     responseBody.message = "Código inválido";
     return res.status(400).json(responseBody);
-  } 
+  }
 
   const isEmailValid = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/.test(email);
 
@@ -85,7 +102,7 @@ async function cadastrar(req, res) {
     }
 
     const saltRounds = 10;
-   
+
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     console.log(password)

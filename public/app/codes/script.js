@@ -7,44 +7,53 @@ const roleHash = {
 
 const fillRolesAtNewCode = () => {
   const newPartnerOpt = document.getElementById("newPartnerOpt")
+  const userData = getUserSession()
 
-  const userRole = sessionStorage.getItem("ROLE")
-  const userCompanyId = sessionStorage.getItem("COMPANY_ID")
+  if (!userData) return
 
-  if (userRole == 1 && userCompanyId == 1) 
+  if (userData.cargo == 1 && userData.companyUUID === "61983115-a071-4cec-8bb7-d5e45e126c66") {
     newPartnerOpt.classList.remove("hidden")
-  
+  }
 }
 
 const getCodes = async () => {
-  const userId = sessionStorage.getItem("USER_ID")
-  const companyId = sessionStorage.getItem("COMPANY_ID")
-
-  if (!userId || !companyId) 
+  const token = sessionStorage.getItem('JWT_TOKEN');
+  const userData = getUserSession();
+  
+  if (!token || !userData) {
+    logout();
     return showToast("Sessão inválida, faça login novamente", "warning")
+  }
 
-  const response = await fetch(`/code/getAll?userId=${userId}&companyId=${companyId}`)
+  const response = await fetch('/code/getAll', {
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  })
+
+  if (response.status === 401 || response.status === 403) {
+    logout();
+    return;
+  }
 
   if (response.status === 204)
     return showToast("Não há nenhum código de ativação", "warning")
 
   const { message, data } = await response.json()
-  
+
   if (response.status === 400)
     return showToast(message, "warning")
-  
+
   if (response.status === 500)
     return showToast(message, "error")
 
   const codesContainer = document.getElementById("codesContainer")
 
-  const userRole = sessionStorage.getItem("ROLE")
-  const userCompanyId = sessionStorage.getItem("COMPANY_ID")
   data.forEach(code => {
-    const { atualizado_em, cargo, codigo, criado_em, deletado_em, expira_em, id, usado_em } = code
-
-    console.log(atualizado_em, cargo, codigo, criado_em, deletado_em, expira_em, id, usado_em)
-    const elementId = `${codigo}-${id}`
+    const { atualizado_em, cargo, codigo, criado_em, deletado_em, expira_em, uuid, usado_em } = code
+    const elementId = `${codigo}-${uuid}`
 
     const element = `
       <div id="${elementId}" class="bg-slate-100 p-6 rounded-lg flex flex-col gap-4 shadow">
@@ -52,7 +61,7 @@ const getCodes = async () => {
           <div class="flex items-center gap-2 font-semibold">
             <i class="ph-bold ph-briefcase text-2xl"></i>
             <select id="roleSelect-${elementId}" class="text-lg outline-none!" onchange="editRole('${elementId}')">
-              <option value="0" ${cargo === 0 ? "selected" : ""} ${userRole == 1 && userCompanyId == 1 ? "" : "hidden disabled"}>Novo parceiro</option>
+              <option value="0" ${cargo === 0 ? "selected" : ""} ${userData.cargo == 1 && userData.companyUUID === "61983115-a071-4cec-8bb7-d5e45e126c66" ? "" : "hidden disabled"}>Novo parceiro</option>
               <option value="1" ${cargo === 1 ? "selected" : ""}>Gerente TI</option>
               <option value="2" ${cargo === 2 ? "selected" : ""}>FinOps</option>
               <option value="3" ${cargo === 3 ? "selected" : ""}>DevOps</option>
@@ -71,7 +80,7 @@ const getCodes = async () => {
             <i class="ph ph-calendar-dot text-2xl"></i>
             <p>Criado há ${dateToTime(criado_em)} atrás</p>
           </span>
-          ${ usado_em ? `
+          ${usado_em ? `
             <span class="flex items-center gap-2 font-medium pt-1 text-green-700">
               <i class="ph ph-calendar-check text-2xl"></i>
               <p>Usado há ${dateToTime(usado_em)} atrás</p>
@@ -87,7 +96,7 @@ const getCodes = async () => {
                 <p>Expirou há ${dateToTime(expira_em)} atrás</p> 
               </span>
             `}
-          ${ !atualizado_em ? "" : `
+          ${!atualizado_em ? "" : `
             <span class="flex items-center gap-2 font-medium pt-1">
               <i class="ph ph-calendar-plus text-2xl"></i>
               <p>Última atualização há ${dateToTime(atualizado_em)} atrás</p>
@@ -99,10 +108,8 @@ const getCodes = async () => {
 
     codesContainer.innerHTML += element
   })
-  
 }
 
-// parte da função abaixo foi reutilizada do meu projeto passado (CompostEco)
 const dateToTime = (date) => {
   const incomingDate = new Date(date)
   const nowDate = new Date()
@@ -114,13 +121,13 @@ const dateToTime = (date) => {
   const hours = (diferenceMs / (1000 * 60 * 60)).toFixed(0)
   const days = (diferenceMs / (1000 * 60 * 60 * 24)).toFixed(0)
 
-  if (seconds < 60) 
+  if (seconds < 60)
     return seconds + " segundo" + (seconds > 1 ? "s" : "")
-  else if (minutes < 60) 
+  else if (minutes < 60)
     return minutes + " minuto" + (minutes > 1 ? "s" : "")
-  else if (hours < 24) 
+  else if (hours < 24)
     return hours + " hora" + (hours > 1 ? "s" : "")
-  else 
+  else
     return days + " dia" + (days > 1 ? "s" : "")
 }
 
@@ -156,41 +163,53 @@ const resendCode = async (elementId) => {
   if (!emailReceiver || !emailRegex.test(emailReceiver))
     return showToast("Email inválido", "warning")
 
-  const codeId = elementId.split("-")[1]
-  const body = { 
-    id: codeId, 
-    role: null, 
-    email: emailReceiver, 
+  const codeId = elementId.substring(elementId.indexOf("-") + 1);
+  const body = {
+    uuid: codeId,
+    role: null,
+    email: emailReceiver,
     isRenewal: true
   }
 
   const resendCodeButton = document.getElementById("resendCodeButton")
+  const token = sessionStorage.getItem('JWT_TOKEN');
+
+  if (!token) {
+    logout();
+    return showToast("Sessão inválida, faça login novamente", "warning")
+  }
+
   try {
     toggleLoadingSendButton(resendCodeButton)
     const response = await fetch("/code/edit", {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(body)
     })
-    
+
+    if (response.status === 401 || response.status === 403) {
+      logout();
+      return;
+    }
+
     const responseJson = await response.json()
-    console.log(responseJson)
-  
+
     toggleLoadingSendButton(resendCodeButton)
-    if (response.status === 500) 
-      return showToast(responseJson.message, "error")
-  
-    if (response.status === 400) 
-      return showToast(responseJson.message, "warning")
-  
-    if (response.status !== 200) 
+    if (response.status === 500)
       return showToast(responseJson.message, "error")
 
-    emailReceiverElement.innerHTML = ""
+    if (response.status === 400)
+      return showToast(responseJson.message, "warning")
+
+    if (response.status !== 200)
+      return showToast(responseJson.message, "error")
+
+    emailReceiverElement.value = ""
     showToast(responseJson.message, "success")
-    
+
     closePopUp()
   } catch (e) {
     console.error(e)
@@ -222,28 +241,41 @@ const disableCodeConfirmed = async (elementId) => {
   const button = document.getElementById("disableCodeConfirmedButton")
   toggleDisableButton(button)
 
-  const codeId = elementId.split("-")[1]
-  const body = { 
-    id: codeId
+  const codeId = elementId.substring(elementId.indexOf("-") + 1);
+  const body = {
+    uuid: codeId
+  }
+
+  const token = sessionStorage.getItem('JWT_TOKEN');
+
+  if (!token) {
+    logout();
+    return showToast("Sessão inválida, faça login novamente", "warning")
   }
 
   try {
     const response = await fetch("/code/disable", {
       method: "DELETE",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(body)
     })
-    
+
+    if (response.status === 401 || response.status === 403) {
+      logout();
+      return;
+    }
+
     const responseJson = await response.json()
-  
+
     toggleDisableButton(button)
-    if (response.status !== 200) 
+    if (response.status !== 200)
       return showToast(responseJson.message, "error")
 
     showToast(responseJson.message, "success")
-    
+
     closePopUp()
   } catch (e) {
     console.error(e)
@@ -273,42 +305,54 @@ const editRole = (elementId) => {
 }
 
 const editRoleConfirmed = async (elementId) => {
-  const button = document.getElementById("disableCodeConfirmedButton")
+  const button = document.getElementById("editRoleConfirmedButton")
   const roleSelected = document.getElementById(`roleSelect-${elementId}`).value
   toggleDisableButton(button)
 
-  const codeId = elementId.split("-")[1]
-
-  const body ={ 
-    "id": codeId, 
-    "role": roleSelected, 
-    "email": null, 
+  const codeId = elementId.substring(elementId.indexOf("-") + 1);
+  const body = {
+    "uuid": codeId,
+    "role": roleSelected,
+    "email": null,
     "isRenewal": false
+  }
+
+  const token = sessionStorage.getItem('JWT_TOKEN');
+
+  if (!token) {
+    logout();
+    return showToast("Sessão inválida, faça login novamente", "warning")
   }
 
   try {
     const response = await fetch("/code/edit", {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(body)
     })
-    
+
+    if (response.status === 401 || response.status === 403) {
+      logout();
+      return;
+    }
+
     const responseJson = await response.json()
-  
+
     toggleDisableButton(button)
-    if (response.status === 500) 
+    if (response.status === 500)
       return showToast(responseJson.message, "error")
-  
-    if (response.status === 400) 
+
+    if (response.status === 400)
       return showToast(responseJson.message, "warning")
-  
-    if (response.status !== 200) 
+
+    if (response.status !== 200)
       return showToast(responseJson.message, "error")
 
     showToast(responseJson.message, "success")
-    
+
     closePopUp()
   } catch (e) {
     console.error(e)
@@ -353,41 +397,55 @@ const sendCode = () => {
 }
 
 const sendCodeConfirmed = async () => {
-  const button = document.getElementById("sendCodeConfirmed")
+  const button = document.getElementById("sendCodeConfirmedButton")
   const roleSelected = document.getElementById(`newRoleSelect`).value
   const newEmailReceiver = document.getElementById("newEmailReceiver").value.trim()
+  const userData = getUserSession()
 
   toggleDisableButton(button)
 
-  const body = { 
-    "companyId": sessionStorage.getItem("COMPANY_ID"), 
-    "role": roleSelected, 
+  const body = {
+    "companyUUID": userData?.companyUUID,
+    "role": roleSelected,
     "email": newEmailReceiver
+  }
+
+  const token = sessionStorage.getItem('JWT_TOKEN');
+
+  if (!token) {
+    logout();
+    return showToast("Sessão inválida, faça login novamente", "warning")
   }
 
   try {
     const response = await fetch("/code/send", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(body)
     })
-    
+
+    if (response.status === 401 || response.status === 403) {
+      logout();
+      return;
+    }
+
     const responseJson = await response.json()
-  
+
     toggleDisableButton(button)
-    if (response.status === 500) 
+    if (response.status === 500)
       return showToast(responseJson.message, "error")
-  
-    if (response.status === 400) 
+
+    if (response.status === 400)
       return showToast(responseJson.message, "warning")
-  
-    if (response.status !== 200) 
+
+    if (response.status !== 200)
       return showToast(responseJson.message, "error")
 
     showToast(responseJson.message, "success")
-    
+
     closePopUp()
   } catch (e) {
     console.error(e)
@@ -420,7 +478,7 @@ const closePopUp = () => {
 }
 
 const toggleLoadingSendButton = (button) => {
-  if(!button) return
+  if (!button) return
 
   if (button.disabled) {
     button.disabled = false
@@ -432,7 +490,7 @@ const toggleLoadingSendButton = (button) => {
 }
 
 const toggleDisableButton = (button) => {
-  if(!button) return
+  if (!button) return
 
   button.disabled = !button.disabled
 }

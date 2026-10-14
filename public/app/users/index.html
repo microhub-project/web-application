@@ -6,20 +6,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Microhub</title>
   <link rel="stylesheet" href="../../tailwind/output.css">
-  <link rel="stylesheet" href="../assets/img/logo/icon-128.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/assets/img/logo/icon-128.ico" type="image/x-icon">
   <link rel="stylesheet" type="text/css"
     href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
   <link rel="stylesheet" type="text/css"
     href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css" />
 
+  <script type="module">
+    import { fillUserInfos, verifyIfUserCanAccess } from "../../js/session.js";
+
+    window.addEventListener("DOMContentLoaded", () => {
+      fillUserInfos();
+      verifyIfUserCanAccess();
+      if (typeof listarUsuarios === "function") listarUsuarios();
+      if (typeof loadCompanyName === "function") loadCompanyName();
+    });
+  </script>
   <script src="./script.js"></script>
-  <script src="../../js/session.js"></script>
   <script src="../../js/toast.js"></script>
 
 </head>
 
-<body onload="fillUserInfos(); listarUsuarios(); loadCompanyName(); verifyIfUserCanAccess()"
-  class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
+<body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
 
   <div class="flex min-h-screen">
 
@@ -47,7 +55,7 @@
           <i class="ph ph-user text-2xl"></i> Usuários
         </a>
         <a id="navItemCodes"
-          href="../codes/"
+          href="../codes/index.html"
           class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
           <i class="ph ph-lock text-2xl"></i> Códigos
         </a>

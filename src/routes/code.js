@@ -1,22 +1,17 @@
 import express from "express";
 import codeController from "../controllers/code.controller.js";
+import verifyJWT from "../authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/getAll", (req, res) => {
-  codeController.getAllCodes(req, res);
-});
+router.use(verifyJWT);
 
-router.post("/send", (req, res) => {
-  codeController.sendCode(req, res);
-});
+router.get("/getAll", codeController.getAllCodes);
 
-router.put("/edit", (req, res) => {
-  codeController.editCode(req, res);
-});
+router.post("/send", codeController.sendCode);
 
-router.delete("/disable", (req, res) => {
-  codeController.disableCode(req, res);
-});
+router.put("/edit", codeController.editCode);
+
+router.delete("/disable", codeController.disableCode);
 
 export default router;

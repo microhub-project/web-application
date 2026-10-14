@@ -6,21 +6,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Códigos de Ativação</title>
   <link rel="stylesheet" href="../../tailwind/output.css">
-  <link rel="stylesheet" href="../../assets/img/logo/icon-128.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/assets/img/logo/icon-128.ico" type="image/x-icon">
   <link rel="stylesheet" type="text/css"
     href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
   <link rel="stylesheet" type="text/css"
     href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css" />
 
+  <script type="module">
+    import { fillUserInfos, verifyIfUserCanAccess } from "../../js/session.js";
+
+    window.addEventListener("DOMContentLoaded", () => {
+      fillUserInfos();
+      verifyIfUserCanAccess();
+
+      if (typeof fillRolesAtNewCode === "function") fillRolesAtNewCode();
+      if (typeof getCodes === "function") getCodes();
+      if (typeof listarUsuarios === "function") listarUsuarios();
+      if (typeof loadCompanyName === "function") loadCompanyName();
+    });
+  </script>
   <script src="./script.js"></script>
   <script src="../../js/toast.js"></script>
-  <script src="../../js/session.js"></script>
 </head>
 
-<body onload="getCodes(); fillUserInfos(); fillRolesAtNewCode(); verifyIfUserCanAccess()" class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
+<body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
   <div class="flex min-h-screen">
-    <div id="popUpContainer" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-4">
-      <div id="popUpContent" class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl px-8 py-6 shadow-2xl">
+    <div id="popUpContainer"
+      class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-4">
+      <div id="popUpContent"
+        class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl px-8 py-6 shadow-2xl">
 
       </div>
     </div>
@@ -43,13 +57,11 @@
           class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
           <i class="ph ph-bell text-2xl"></i> Histórico Alertas
         </a>
-        <a href="../users/"
-          id="navItemUsers"
+        <a href="../users/index.html" id="navItemUsers"
           class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
           <i class="ph ph-user text-2xl"></i> Usuários
         </a>
-        <a
-          id="navItemCodes"
+        <a id="navItemCodes"
           class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
           <i class="ph ph-lock text-2xl"></i> Códigos
         </a>
@@ -84,9 +96,11 @@
                 <option value="3">DevOps</option>
               </select>
             </div>
-            <input type="email" id="newEmailReceiver" placeholder="Digite o email a receber o código" class="w-full px-4 py-3 bg-slate-100 border-2 border-slate-800 rounded-lg outline-none focus:border-blue-500 transition-colors">
+            <input type="email" id="newEmailReceiver" placeholder="Digite o email a receber o código"
+              class="w-full px-4 py-3 bg-slate-100 border-2 border-slate-800 rounded-lg outline-none focus:border-blue-500 transition-colors">
             <div class="flex *:cursor-pointer items-center gap-5">
-              <i onclick="sendCode()" tabindex="0" class="ph-bold ph-paper-plane-tilt text-3xl hover:text-blue-600 duration-150 transition-all pr-4"></i>
+              <i onclick="sendCode()" tabindex="0"
+                class="ph-bold ph-paper-plane-tilt text-3xl hover:text-blue-600 duration-150 transition-all pr-4"></i>
             </div>
           </div>
         </div>
@@ -94,7 +108,9 @@
     </main>
 
   </div>
-  <div id="toast-container" class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden"></div>
+  <div id="toast-container"
+    class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">
+  </div>
 </body>
 
 </html>

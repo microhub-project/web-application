@@ -3,7 +3,7 @@ import codeModel from "../models/code.model.js";
 import companyModel from "../models/company.model.js";
 
 const sendCode = async (req, res) => {
-  const { email, companyId, role } = req.body;
+  const { email, companyUUID, role } = req.body;
 
   const code = generateCode();
 
@@ -11,9 +11,9 @@ const sendCode = async (req, res) => {
     isError: true,
     message: "Não foi possível enviar o código."
   };
-  console.log(email, companyId, role);
+  console.log(email, companyUUID, role);
 
-  if (!email || !companyId || role == null) {
+  if (!email || !companyUUID || role == null) {
     responseBody.message = "Credenciais inválidas.";
     return res.status(400).json(responseBody);
   }
@@ -26,7 +26,7 @@ const sendCode = async (req, res) => {
   }
 
   try {
-    const dbResponse = await companyModel.getNameById(companyId);
+    const dbResponse = await companyModel.getNameByUUID(companyUUID);
 
     if (dbResponse.length !== 1) {
       responseBody.message = "Não foi possível encontrar a empresa.";
@@ -42,7 +42,7 @@ const sendCode = async (req, res) => {
       return res.status(500).json(responseBody);
     }
 
-    await codeModel.create(code, companyId, role);
+    await codeModel.create(code, companyUUID, role);
 
     responseBody.isError = false;
     responseBody.message = "Código enviado com sucesso!";
@@ -69,14 +69,14 @@ const generateCode = () => {
 };
 
 const editCode = async (req, res) => {
-  const { id, role, email, isRenewal } = req.body;
+  const { uuid, role, email, isRenewal } = req.body;
 
   const responseBody = {
     message: ""
   };
 
-  if (!id) {
-    responseBody.message = "Id do código está inválido";
+  if (!uuid) {
+    responseBody.message = "UUID do código está inválido";
     return res.status(400).json(responseBody);
   }
 
@@ -95,7 +95,7 @@ const editCode = async (req, res) => {
   try {
     if (role !== null && typeof role !== "undefined") {
       console.log("cargo: " + role);
-      const response = await codeModel.updateRoleById(id, role);
+      const response = await codeModel.updateRoleByUUID(uuid, role);
 
       if (response.affectedRows !== 1) {
         responseBody.message = "Não foi possível alterar o cargo relacionado ao código. Tente novamente mais tarde";
@@ -108,14 +108,14 @@ const editCode = async (req, res) => {
     else if (isEmailValid && email !== null && typeof email !== "undefined" && email !== "") {
       console.log("email: " + email);
 
-      const response = await codeModel.updateExpiresAtById(id);
+      const response = await codeModel.updateExpiresAtByUUID(uuid);
 
       if (response.affectedRows !== 1) {
         responseBody.message = "Não foi possível renovar data de expiração do código. Tente novamente mais tarde";
         return res.status(500).json(responseBody);
       } 
 
-      const dbResponse = await codeModel.getCodeDataByCodeId(id);
+      const dbResponse = await codeModel.getCodeDataByCodeUUID(uuid);
       if (dbResponse.length !== 1) {
         responseBody.message = "Não foi possível encontrar o código de ativação";
         return res.status(500).json(responseBody);
@@ -145,17 +145,17 @@ const editCode = async (req, res) => {
 };
 
 const disableCode = async (req, res) => {
-  const { id } = req.body;
+  const { uuid } = req.body;
 
   const responseBody = {
-    message: "Id do código de ativação inválido"
+    message: "UUID do código de ativação inválido"
   };
 
-  if (!id) 
+  if (!uuid) 
     return res.status(400).json(responseBody);
 
   try {
-    const dbResponse = await codeModel.disableCodeById(id);
+    const dbResponse = await codeModel.disableCodeByUUID(uuid);
     console.log(dbResponse);
   
     if (dbResponse.affectedRows !== 1) {
@@ -174,18 +174,19 @@ const disableCode = async (req, res) => {
 };
 
 const getAllCodes = async (req, res) => {
-  const { userId, companyId } = req.query;
+  const userUUID = req.userUUID;
+  const companyUUID = req.companyUUID;
 
   const responseBody = {
     message: "Credenciais inválidas",
     data: {}
   };
 
-  if (!userId || !companyId)
+  if (!userUUID || !companyUUID)
     return res.status(400).json(responseBody);
 
   try {
-    const dbResponse = await codeModel.getAllCodesByUserAndCompanyId(userId, companyId);
+    const dbResponse = await codeModel.getAllCodesByUserAndCompanyUUID(userUUID, companyUUID);
 
     if (dbResponse.length === 0) 
       return res.status(204).json(responseBody);
