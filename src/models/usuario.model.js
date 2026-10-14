@@ -46,7 +46,8 @@ function pesquisar(nome) {
   const instrucaoSql = `
     SELECT BIN_TO_UUID(uuid) AS uuid, nome, cargo
     FROM usuario
-    WHERE nome LIKE ?;
+    WHERE nome LIKE ?
+    AND deletado_em IS NULL;
   `;
   return database.execute(instrucaoSql, [`%${nome}%`]);
 }
