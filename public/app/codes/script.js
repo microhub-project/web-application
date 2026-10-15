@@ -405,6 +405,7 @@ const sendCode = () => {
 }
 
 const sendCodeConfirmed = async () => {
+  closePopUp()
   const button = document.getElementById("sendCodeConfirmedButton")
   const roleSelected = document.getElementById(`newRoleSelect`).value
   const newEmailReceiver = document.getElementById("newEmailReceiver").value.trim()
