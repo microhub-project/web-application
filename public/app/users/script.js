@@ -4,6 +4,11 @@ const loadCompanyName = () => {
   const userData = getUserSession()
   const companyNameElement = document.getElementById("companyName")
 
+  if (!userData) {
+    logout()
+    return showToast("Sessão inválida, faça login novamente", "warning")
+  }
+
   if (userData && companyNameElement) {
     companyNameElement.innerText = `@ ${userData.companyName}`
   }
@@ -19,7 +24,7 @@ const listarUsuarios = async () => {
   }
 
   try {
-    const resposta = await fetch(`/usuarios/listar/${userData.userUUID}`, {
+    const resposta = await fetch(`/usuarios/listar/${userData.companyUUID}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -102,6 +107,8 @@ const mostrarUsuarios = (usuarios) => {
 
 const Pesquisar = async () => {
   const nome = document.getElementById("input_pesquisa").value.trim()
+  const userData = getUserSession()
+
   if (nome === "") {
     listarUsuarios()
     return
@@ -109,13 +116,18 @@ const Pesquisar = async () => {
 
   const token = sessionStorage.getItem("JWT_TOKEN")
 
-  if (!token) {
+  if (!token || !userData) {
     logout()
     return showToast("Sessão inválida, faça login novamente", "warning")
   }
 
   try {
-    const resposta = await fetch("/usuarios/pesquisar/" + encodeURIComponent(nome), {
+    const nomeEncoded = encodeURIComponent(nome)
+    
+    const url = `/usuarios/pesquisar?nome=${nomeEncoded}&companyUUID=${userData.companyUUID}`
+
+    const resposta = await fetch(url, {
+      method: "GET",
       headers: {
         'Authorization': `Bearer ${token}`
       }

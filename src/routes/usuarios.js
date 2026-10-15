@@ -10,7 +10,7 @@ router.post("/autenticar", usuarioController.autenticar);
 
 router.get("/listar/:uuid", verifyJWT, usuarioController.listar);
 
-router.get("/pesquisar/:nome", verifyJWT, usuarioController.pesquisar);
+router.get("/pesquisar", verifyJWT, usuarioController.pesquisar);
 
 router.get("/:uuid", verifyJWT, usuarioController.buscarPorUUID);
 

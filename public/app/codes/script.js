@@ -9,7 +9,10 @@ const fillRolesAtNewCode = () => {
   const newPartnerOpt = document.getElementById("newPartnerOpt")
   const userData = getUserSession()
 
-  if (!userData) return
+  if (!userData) {
+    logout();
+    return showToast("Sessão inválida, faça login novamente", "warning")
+  }
 
   if (userData.cargo == 1 && userData.companyUUID === "61983115-a071-4cec-8bb7-d5e45e126c66") {
     newPartnerOpt.classList.remove("hidden")
@@ -25,89 +28,94 @@ const getCodes = async () => {
     return showToast("Sessão inválida, faça login novamente", "warning")
   }
 
-  const response = await fetch('/code/getAll', {
-    method: "GET",
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+  try {
+    const response = await fetch('/code/getAll', {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    })
+
+    if (response.status === 401 || response.status === 403) {
+      logout();
+      return;
     }
-  })
 
-  if (response.status === 401 || response.status === 403) {
-    logout();
-    return;
-  }
+    if (response.status === 204)
+      return showToast("Não há nenhum código de ativação", "warning")
 
-  if (response.status === 204)
-    return showToast("Não há nenhum código de ativação", "warning")
+    const { message, data } = await response.json()
 
-  const { message, data } = await response.json()
+    if (response.status === 400)
+      return showToast(message, "warning")
 
-  if (response.status === 400)
-    return showToast(message, "warning")
+    if (response.status === 500)
+      return showToast(message, "error")
 
-  if (response.status === 500)
-    return showToast(message, "error")
+    const codesContainer = document.getElementById("codesContainer")
 
-  const codesContainer = document.getElementById("codesContainer")
+    data.forEach(code => {
+      const { atualizado_em, cargo, codigo, criado_em, deletado_em, expira_em, uuid, usado_em } = code
+      const elementId = `${codigo}-${uuid}`
 
-  data.forEach(code => {
-    const { atualizado_em, cargo, codigo, criado_em, deletado_em, expira_em, uuid, usado_em } = code
-    const elementId = `${codigo}-${uuid}`
-
-    const element = `
-      <div id="${elementId}" class="bg-slate-100 p-6 rounded-lg flex flex-col gap-4 shadow">
-        <div class="flex justify-between items-center">
-          <div class="flex items-center gap-2 font-semibold">
-            <i class="ph-bold ph-briefcase text-2xl"></i>
-            <select id="roleSelect-${elementId}" class="text-lg outline-none!" onchange="editRole('${elementId}')">
-              <option value="0" ${cargo === 0 ? "selected" : ""} ${userData.cargo == 1 && userData.companyUUID === "61983115-a071-4cec-8bb7-d5e45e126c66" ? "" : "hidden disabled"}>Novo parceiro</option>
-              <option value="1" ${cargo === 1 ? "selected" : ""}>Gerente TI</option>
-              <option value="2" ${cargo === 2 ? "selected" : ""}>FinOps</option>
-              <option value="3" ${cargo === 3 ? "selected" : ""}>DevOps</option>
-            </select>
+      const element = `
+        <div id="${elementId}" class="bg-slate-100 p-6 rounded-lg flex flex-col gap-4 shadow">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center gap-2 font-semibold">
+              <i class="ph-bold ph-briefcase text-2xl"></i>
+              <select id="roleSelect-${elementId}" class="text-lg outline-none!" onchange="editRole('${elementId}')">
+                <option value="0" ${cargo === 0 ? "selected" : ""} ${userData.cargo == 1 && userData.companyUUID === "61983115-a071-4cec-8bb7-d5e45e126c66" ? "" : "hidden disabled"}>Novo parceiro</option>
+                <option value="1" ${cargo === 1 ? "selected" : ""}>Gerente TI</option>
+                <option value="2" ${cargo === 2 ? "selected" : ""}>FinOps</option>
+                <option value="3" ${cargo === 3 ? "selected" : ""}>DevOps</option>
+              </select>
+            </div>
+            <h1 class="text-3xl font-bold tracking-widest text-slate-800">${codigo}</h1>
+            <div class="flex *:cursor-pointer items-center gap-5">
+              <i onclick="copyCode('${elementId}')" tabindex="0" class="ph-bold ph-copy-simple text-2xl hover:text-blue-600 duration-150 transition-all ${usado_em ? "pointer-events-none opacity-25" : ""}"></i>
+              <i onclick="refreshCode('${elementId}')" tabindex="0" class="ph-bold ph-arrows-clockwise text-2xl hover:text-green-600 duration-150 transition-all ${usado_em ? "pointer-events-none opacity-25" : ""}"></i>
+              <i onclick="disableCode('${elementId}')" tabindex="0" class="ph-bold ph-trash-simple text-2xl hover:text-red-600 duration-150 transition-all"></i>
+            </div>
           </div>
-          <h1 class="text-3xl font-bold tracking-widest text-slate-800">${codigo}</h1>
-          <div class="flex *:cursor-pointer items-center gap-5">
-            <i onclick="copyCode('${elementId}')" tabindex="0" class="ph-bold ph-copy-simple text-2xl hover:text-blue-600 duration-150 transition-all ${usado_em ? "pointer-events-none opacity-25" : ""}"></i>
-            <i onclick="refreshCode('${elementId}')" tabindex="0" class="ph-bold ph-arrows-clockwise text-2xl hover:text-green-600 duration-150 transition-all ${usado_em ? "pointer-events-none opacity-25" : ""}"></i>
-            <i onclick="disableCode('${elementId}')" tabindex="0" class="ph-bold ph-trash-simple text-2xl hover:text-red-600 duration-150 transition-all"></i>
-          </div>
-        </div>
-        <div class="border border-slate-950/50"></div>
-        <div>
-          <span class="flex items-center gap-2 font-medium pt-1">
-            <i class="ph ph-calendar-dot text-2xl"></i>
-            <p>Criado há ${dateToTime(criado_em)} atrás</p>
-          </span>
-          ${usado_em ? `
-            <span class="flex items-center gap-2 font-medium pt-1 text-green-700">
-              <i class="ph ph-calendar-check text-2xl"></i>
-              <p>Usado há ${dateToTime(usado_em)} atrás</p>
+          <div class="border border-slate-950/50"></div>
+          <div>
+            <span class="flex items-center gap-2 font-medium pt-1">
+              <i class="ph ph-calendar-dot text-2xl"></i>
+              <p>Criado há ${dateToTime(criado_em)} atrás</p>
             </span>
-            ` : new Date(expira_em) > new Date() ? `
-              <span class="flex items-center gap-2 font-medium pt-1 text-blue-700">
-                <i class="ph ph-calendar-x text-2xl"></i>
-                <p>Expirará em ${dateToTime(expira_em)}</p> 
+            ${usado_em ? `
+              <span class="flex items-center gap-2 font-medium pt-1 text-green-700">
+                <i class="ph ph-calendar-check text-2xl"></i>
+                <p>Usado há ${dateToTime(usado_em)} atrás</p>
               </span>
-            ` : `
-              <span class="flex items-center gap-2 font-medium pt-1 text-red-700">
-                <i class="ph ph-calendar-x text-2xl"></i>
-                <p>Expirou há ${dateToTime(expira_em)} atrás</p> 
+              ` : new Date(expira_em) > new Date() ? `
+                <span class="flex items-center gap-2 font-medium pt-1 text-blue-700">
+                  <i class="ph ph-calendar-x text-2xl"></i>
+                  <p>Expirará em ${dateToTime(expira_em)}</p> 
+                </span>
+              ` : `
+                <span class="flex items-center gap-2 font-medium pt-1 text-red-700">
+                  <i class="ph ph-calendar-x text-2xl"></i>
+                  <p>Expirou há ${dateToTime(expira_em)} atrás</p> 
+                </span>
+              `}
+            ${!atualizado_em ? "" : `
+              <span class="flex items-center gap-2 font-medium pt-1">
+                <i class="ph ph-calendar-plus text-2xl"></i>
+                <p>Última atualização há ${dateToTime(atualizado_em)} atrás</p>
               </span>
             `}
-          ${!atualizado_em ? "" : `
-            <span class="flex items-center gap-2 font-medium pt-1">
-              <i class="ph ph-calendar-plus text-2xl"></i>
-              <p>Última atualização há ${dateToTime(atualizado_em)} atrás</p>
-            </span>
-          `}
+          </div>
         </div>
-      </div>
-    `
+      `
 
-    codesContainer.innerHTML += element
-  })
+      codesContainer.innerHTML += element
+    })
+  } catch (e) {
+    console.error(e)
+    showToast("Algo deu errado ao carregar os códigos.", "error")
+  }
 }
 
 const dateToTime = (date) => {

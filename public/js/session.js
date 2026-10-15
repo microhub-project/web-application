@@ -54,7 +54,7 @@ export const verifyIfUserCanAccess = () => {
   }
 
   if (userData.cargo != 1) {
-    window.location.href = "/app"
+    window.location.href = "/app/index.html"
   }
 }
 

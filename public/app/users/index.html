@@ -19,6 +19,7 @@
     window.addEventListener("DOMContentLoaded", () => {
       fillUserInfos();
       verifyIfUserCanAccess();
+      
       if (typeof listarUsuarios === "function") listarUsuarios();
       if (typeof loadCompanyName === "function") loadCompanyName();
     });
