@@ -176,7 +176,6 @@ const disableCode = async (req, res) => {
 };
 
 const getAllCodes = async (req, res) => {
-  const userUUID = req.userUUID;
   const companyUUID = req.companyUUID;
 
   const responseBody = {
@@ -184,11 +183,11 @@ const getAllCodes = async (req, res) => {
     data: {}
   };
 
-  if (!userUUID || !companyUUID)
+  if (!companyUUID)
     return res.status(400).json(responseBody);
 
   try {
-    const dbResponse = await codeModel.getAllCodesByUserAndCompanyUUID(userUUID, companyUUID);
+    const dbResponse = await codeModel.getAllCodesByCompanyUUID(companyUUID);
 
     if (dbResponse.length === 0) 
       return res.status(204).json(responseBody);

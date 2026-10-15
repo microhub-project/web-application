@@ -5,7 +5,7 @@ function autenticar(email) {
     SELECT BIN_TO_UUID(u.uuid) AS uuid, u.nome, u.email, u.cargo, u.senha, BIN_TO_UUID(u.empresa_uuid) AS empresa_uuid, e.nome_fantasia 
     FROM usuario u 
     JOIN empresa e ON u.empresa_uuid = e.uuid 
-    WHERE u.email = ? AND u.deletado_em IS NULL;
+    WHERE u.email = ? AND u.deletado_em IS NULL AND u.status = 1;
   `;
   return database.execute(instrucaoSql, [email]);
 }
@@ -22,34 +22,27 @@ function buscarPorUUID(uuid) {
   const instrucaoSql = `
     SELECT BIN_TO_UUID(uuid) AS uuid, nome, email, cargo
     FROM usuario
-    WHERE uuid = UUID_TO_BIN(?);
+    WHERE uuid = UUID_TO_BIN(?) AND deletado_em IS NULL;
   `;
   return database.execute(instrucaoSql, [uuid]);
 }
 
-function listar(userUUID) { 
+function listar(empresaUUID) { 
   const instrucaoSql = ` 
-    SELECT BIN_TO_UUID(u.uuid) AS uuid, u.nome, u.cargo, BIN_TO_UUID(u.empresa_uuid) AS empresa_uuid
+    SELECT BIN_TO_UUID(u.uuid) AS uuid, u.nome, u.cargo, u.email, BIN_TO_UUID(u.empresa_uuid) AS empresa_uuid
     FROM usuario u 
-    JOIN empresa e ON u.empresa_uuid = e.uuid
-    WHERE u.empresa_uuid = (
-      SELECT e2.uuid 
-      FROM empresa e2 
-      JOIN usuario u2 ON u2.empresa_uuid = e2.uuid
-      WHERE u2.uuid = UUID_TO_BIN(?) AND u2.cargo = 1 AND u2.deletado_em IS NULL
-    ) AND u.deletado_em IS NULL;
-  `; 
-  return database.execute(instrucaoSql, [userUUID]); 
+    WHERE u.empresa_uuid = UUID_TO_BIN(?) AND u.deletado_em IS NULL;
+  `;
+  return database.execute(instrucaoSql, [empresaUUID]); 
 }
 
-function pesquisar(nome) {
+function pesquisar(nome, empresaUUID) {
   const instrucaoSql = `
-    SELECT BIN_TO_UUID(uuid) AS uuid, nome, cargo
+    SELECT BIN_TO_UUID(uuid) AS uuid, nome, cargo, email
     FROM usuario
-    WHERE nome LIKE ?
-    AND deletado_em IS NULL;
+    WHERE nome LIKE ? AND empresa_uuid = UUID_TO_BIN(?) AND deletado_em IS NULL;
   `;
-  return database.execute(instrucaoSql, [`%${nome}%`]);
+  return database.execute(instrucaoSql, [`%${nome}%`, empresaUUID]);
 }
 
 function atualizar(uuid, nome, email, cargo) {
@@ -85,7 +78,7 @@ function excluir(uuid) {
   const instrucaoSql = `
     UPDATE usuario
     SET deletado_em = CURRENT_TIMESTAMP()
-    WHERE uuid = UUID_TO_BIN(?);
+    WHERE uuid = UUID_TO_BIN(?) AND deletado_em IS NULL;
   `;
   return database.execute(instrucaoSql, [uuid]);
 }

@@ -174,9 +174,11 @@ async function listar(req, res) {
 }
 
 async function pesquisar(req, res) {
-  const nome = req.params.nome;
+  const nome = req.query.nome;
+  const empresaUUID = req.query.companyUUID;
+
   try {
-    const resultado = await usuarioModel.pesquisar(nome);
+    const resultado = await usuarioModel.pesquisar(nome, empresaUUID);
     console.log("PESQUISA:", resultado);
     return res.status(200).json(resultado);
   } catch (e) {
