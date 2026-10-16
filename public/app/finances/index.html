@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microhub</title>
+    <link rel="stylesheet" href="../../tailwind/output.css">
+    <link rel="shortcut icon" href="/assets/img/logo/icon-128.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+
+    <script type="module">
+        import { fillUserInfos, verifyIfUserCanAccess } from "../../js/session.js";
+
+        window.addEventListener("DOMContentLoaded", () => {
+            fillUserInfos();
+            verifyIfUserCanAccess();
+        });
+    </script>
+    <script src="./script.js"></script>
+    <script src="../../js/toast.js"></script>
+
+</head>
+
+<body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
+
+    <div class="flex min-h-screen">
+
+        <nav
+            class="w-72 fixed h-screen bg-slate-900 border-r border-slate-800 flex flex-col px-6 py-9 shrink-0 justify-between z-100">
+            <div class="flex items-center justify-center -ml-5">
+                <img src="/assets/img/logo/logo-light.svg" alt="Logo da Microhub" class="max-h-11">
+            </div>
+
+            <div class="flex flex-col gap-8">
+                <a href="../index.html" id="navItemGeneral"
+                    class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
+                    <i class="ph ph-house text-2xl"></i> Geral
+                </a>
+                <a href="../alerts/index.html" id="navItemAlerts"
+                    class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
+                    <i class="ph ph-warning text-2xl"></i> Alertas
+                </a>
+                <a href="#" id="navItemFinances"
+                    class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
+                    <i class="ph ph-money text-2xl"></i> Finanças
+                </a>
+                <a href="../microservices/index.html" id="navItemMicroservices"
+                    class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
+                    <i class="ph ph-cube text-2xl"></i> Microsserviços
+                </a>
+                <a href="../instances/index.html" id="navItemInstances"
+                    class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
+                    <i class="ph ph-computer-tower text-2xl"></i> Instâncias
+                </a>
+                <a href="../users/index.html" id="navItemUsers"
+                    class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
+                    <i class="ph ph-user text-2xl"></i> Usuários
+                </a>
+                <a href="../codes/index.html" id="navItemCodes"
+                    class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
+                    <i class="ph ph-lock text-2xl"></i> Códigos
+                </a>
+            </div>
+            <div class="flex justify-around items-center bg-slate-800 py-3 rounded">
+                <div id="navUserIcon"
+                    class="rounded-full bg-slate-950 size-10 flex justify-center items-center font-bold">
+                    US
+                </div>
+                <div id="navUserName" class="font-semibold">
+                    Usuário
+                </div>
+                <div>
+                    <a onclick="logout()"><i class="ph ph-sign-out text-2xl cursor-pointer"></i></a>
+                </div>
+            </div>
+        </nav>
+
+        <main class="text-slate-900 flex flex-col p-8 absolute right-0 top-0 w-[calc(100dvw-18rem)] min-h-dvh gap-12">
+
+            <div class="flex flex-col gap-4 w-full">
+                <div class="">
+                    <h1 class="text-2xl font-extrabold">Finanças</h1>
+                </div>
+                <hr class="border-t border-slate-400 my-5">
+            </div>
+        </main>
+        <div id="toast-container"
+            class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">
+        </div>
+</body>
+
+</html>

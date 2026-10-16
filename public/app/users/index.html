@@ -19,7 +19,7 @@
     window.addEventListener("DOMContentLoaded", () => {
       fillUserInfos();
       verifyIfUserCanAccess();
-      
+
       if (typeof listarUsuarios === "function") listarUsuarios();
       if (typeof loadCompanyName === "function") loadCompanyName();
     });
@@ -40,24 +40,31 @@
       </div>
 
       <div class="flex flex-col gap-8">
-        <a href="../index.html"
+        <a href="../index.html" id="navItemGeneral"
           class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
           <i class="ph ph-house text-2xl"></i> Geral
         </a>
-        <a href="#"
+        <a href="../alerts/index.html" id="navItemAlerts"
           class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
-          <i class="ph ph-hard-drives text-2xl"></i> Aplicações
+          <i class="ph ph-warning text-2xl"></i> Alertas
         </a>
-        <a href="#"
+        <a href="../finances/index.html" id="navItemFinances"
           class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
-          <i class="ph ph-bell text-2xl"></i> Histórico Alertas
+          <i class="ph ph-money text-2xl"></i> Finanças
+        </a>
+        <a href="../microservices/index.html" id="navItemMicroservices"
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
+          <i class="ph ph-cube text-2xl"></i> Microsserviços
+        </a>
+        <a href="../instances/index.html" id="navItemInstances"
+          class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
+          <i class="ph ph-computer-tower text-2xl"></i> Instâncias
         </a>
         <a href="#" id="navItemUsers"
           class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
           <i class="ph ph-user text-2xl"></i> Usuários
         </a>
-        <a id="navItemCodes"
-          href="../codes/index.html"
+        <a href="../codes/index.html" id="navItemCodes"
           class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
           <i class="ph ph-lock text-2xl"></i> Códigos
         </a>
@@ -222,7 +229,9 @@
   </div>
   </div>
   </main>
-  <div id="toast-container" class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden"></div>
+  <div id="toast-container"
+    class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">
+  </div>
 </body>
 
 </html>
