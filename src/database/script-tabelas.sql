@@ -1,5 +1,3 @@
--- https://calculator.aws/#/estimate
-
 DROP DATABASE IF EXISTS `microhub`;
 CREATE DATABASE IF NOT EXISTS `microhub`;
 USE `microhub`;
@@ -21,8 +19,8 @@ INSERT INTO `microhub`.`componente` (`uuid`, `nome`, `unidade_medida`) VALUES
     (UUID_TO_BIN('83589fb2-dfee-484a-bc53-4ed0c5b1777d'), 'upload_traffic', 'Mpbs'),
     (UUID_TO_BIN('40a9de89-d427-4c6d-a7d2-1e4f4889b661'), 'download_traffic', 'Mbps'),
     (UUID_TO_BIN('5acf74f9-7e8f-46a2-853a-56fa6c6ec1e2'), 'disk', 'GiB'),
-    (UUID_TO_BIN('3eef27b6-b3e3-46b3-9a2a-df7c1ce09037'), 'processes', 'processos'),
-    (UUID_TO_BIN('f80ca86d-d17e-4b8c-aa52-b2261b0fe643'), 'zombie_processes', '%');
+    (UUID_TO_BIN('3eef27b6-b3e3-46b3-9a2a-df7c1ce09037'), 'processes_qtd', 'processos'),
+    (UUID_TO_BIN('f80ca86d-d17e-4b8c-aa52-b2261b0fe643'), 'zombie_processes_percent', '%');
 
 -- -----------------------------------------------------
 -- Table `microhub`.`tipo`
@@ -68,8 +66,7 @@ CREATE TABLE IF NOT EXISTS `microhub`.`empresa` (
   UNIQUE INDEX `cnpj_unique` (`cnpj` ASC) VISIBLE);
 
 INSERT INTO `microhub`.`empresa` (`uuid`, `cnpj`, `razao_social`, `nome_fantasia`, `status`) VALUES
-  (UUID_TO_BIN('61983115-a071-4cec-8bb7-d5e45e126c66'), '12345678000195', 'Tech Solutions Ltda', 'Tech Solutions', 1),
-  (UUID_TO_BIN('9e4e3a73-1721-48bd-9f90-7c1da7a5005e'), '98765432000110', 'Inovacao Digital S.A.', 'Inovacao Tech', 1);
+  (UUID_TO_BIN('61983115-a071-4cec-8bb7-d5e45e126c66'), '12345678000195', 'MicroHub Digital Solutions', 'MicroHub', 1);
 
 -- -----------------------------------------------------
 -- Table `microhub`.`microsservico`
@@ -92,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `microhub`.`microsservico` (
 INSERT INTO `microhub`.`microsservico` (`uuid`, `empresa_uuid`, `nome`, `descricao`, `status`) VALUES
   (UUID_TO_BIN('9f23000f-8c6b-43bd-9d91-566b8c2a34f9'), UUID_TO_BIN('61983115-a071-4cec-8bb7-d5e45e126c66'), 'Autenticação', 'Serviço responsável por login e emissão de tokens JWT', 1),
   (UUID_TO_BIN('b762054b-d0eb-44dc-b2ce-61b62776accd'), UUID_TO_BIN('61983115-a071-4cec-8bb7-d5e45e126c66'), 'Pagamentos', 'Processamento de transações de cartão de crédito e PIX', 1),
-  (UUID_TO_BIN('c497fcfe-c4a4-45f3-a3d7-5e36e1a8d5fe'), UUID_TO_BIN('9e4e3a73-1721-48bd-9f90-7c1da7a5005e'), 'Notificações', 'Serviço para disparo de e-mails e SMS', 1);
+  (UUID_TO_BIN('c497fcfe-c4a4-45f3-a3d7-5e36e1a8d5fe'), UUID_TO_BIN('61983115-a071-4cec-8bb7-d5e45e126c66'), 'Notificações', 'Serviço para disparo de e-mails e SMS', 1);
 
 -- -----------------------------------------------------
 -- Table `microhub`.`instancia`
@@ -196,8 +193,7 @@ CREATE TABLE IF NOT EXISTS `microhub`.`codigo_ativacao` (
     REFERENCES `microhub`.`empresa` (`uuid`));
 
 INSERT INTO `microhub`.`codigo_ativacao` (`uuid`, `empresa_uuid`, `codigo`, `cargo`, `status`, `expira_em`) VALUES
-  (UUID_TO_BIN('32cd2ab8-940c-452b-bc02-a439bfe01eaa'), UUID_TO_BIN('61983115-a071-4cec-8bb7-d5e45e126c66'), 'ACT123', 1, 1, DATE_ADD(NOW(), INTERVAL 7 DAY)),
-  (UUID_TO_BIN('7fa0dc8b-4e23-40df-a997-56fe0c6e0250'), UUID_TO_BIN('9e4e3a73-1721-48bd-9f90-7c1da7a5005e'), 'ACT456', 2, 1, DATE_ADD(NOW(), INTERVAL 7 DAY));
+  (UUID_TO_BIN('32cd2ab8-940c-452b-bc02-a439bfe01eaa'), UUID_TO_BIN('61983115-a071-4cec-8bb7-d5e45e126c66'), 'ACT123', 1, 1, DATE_ADD(NOW(), INTERVAL 15 MINUTE));
 
 -- -----------------------------------------------------
 -- Table `microhub`.`usuario`
@@ -219,14 +215,6 @@ CREATE TABLE IF NOT EXISTS `microhub`.`usuario` (
   CONSTRAINT `fk_usuario_empresa`
     FOREIGN KEY (`empresa_uuid`)
     REFERENCES `microhub`.`empresa` (`uuid`));
-
-INSERT INTO `microhub`.`usuario` (`uuid`, `empresa_uuid`, `nome`, `cargo`, `email`, `senha`, `status`) VALUES
-  (UUID_TO_BIN('e8a71dbf-bb68-4b7f-920c-5e54ab123b91'), UUID_TO_BIN('61983115-a071-4cec-8bb7-d5e45e126c66'), 'Usuário Teste', 1, 'teste@gmail.com', 'hash_senha_aqui', 1);
-
-SELECT u.uuid, u.nome, u.email, u.cargo, u.senha, u.empresa_uuid, e.nome_fantasia 
-FROM usuario u 
-JOIN empresa e ON u.empresa_uuid = e.uuid 
-WHERE email = 'teste@gmail.com' AND u.deletado_em IS NULL;
 
 -- -----------------------------------------------------
 -- Table `microhub`.`volume`
