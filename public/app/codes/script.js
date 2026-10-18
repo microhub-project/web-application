@@ -54,13 +54,14 @@ const getCodes = async () => {
       return showToast(message, "error");
 
     const codesContainer = document.getElementById("codesContainer");
+    codesContainer.innerHTML = "";
 
     data.forEach(code => {
       const { atualizado_em, cargo, codigo, criado_em, deletado_em, expira_em, uuid, usado_em } = code;
       const elementId = `${codigo}-${uuid}`;
 
       const element = `
-        <div id="${elementId}" class="bg-slate-100 p-4 sm:p-6 rounded-lg flex flex-col gap-3 sm:gap-4 shadow">
+        <div id="${elementId}" class="bg-slate-100 p-4 sm:p-6 rounded-lg flex flex-col justify-between gap-3 sm:gap-4 shadow w-full">
           <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
             <div class="flex items-center gap-2 font-normal sm:font-semibold">
               <i class="ph-bold ph-briefcase text-xl sm:text-2xl"></i>
@@ -73,7 +74,7 @@ const getCodes = async () => {
             </div>
 
             <div class="flex justify-between items-center sm:gap-6 w-full sm:w-auto">
-              <h1 class="text-xl sm:text-3xl font-normal sm:font-bold tracking-widest text-slate-800">${codigo}</h1>
+              <h1 class="text-xl sm:text-2xl lg:text-3xl font-normal sm:font-bold tracking-widest text-slate-800">${codigo}</h1>
               <div class="flex *:cursor-pointer items-center gap-3 sm:gap-5">
                 <i onclick="copyCode('${elementId}')" tabindex="0" class="ph-bold ph-copy-simple text-xl sm:text-2xl hover:text-blue-600 duration-150 transition-all ${usado_em ? "pointer-events-none opacity-25" : ""}"></i>
                 <i onclick="refreshCode('${elementId}')" tabindex="0" class="ph-bold ph-arrows-clockwise text-xl sm:text-2xl hover:text-green-600 duration-150 transition-all ${usado_em ? "pointer-events-none opacity-25" : ""}"></i>
@@ -84,7 +85,7 @@ const getCodes = async () => {
 
           <div class="border-b border-slate-950/20"></div>
 
-          <div class="text-xs sm:text-base">
+          <div class="text-xs sm:text-sm lg:text-base">
             <span class="flex items-center gap-2 font-normal sm:font-medium pt-1">
               <i class="ph ph-calendar-dot text-lg sm:text-2xl"></i>
               <p>Criado há ${dateToTime(criado_em)} atrás</p>

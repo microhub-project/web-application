@@ -95,7 +95,6 @@ const newMicroservice = async () => {
                 ${options}
             </select>
 
-            <!-- Custom Phosphor Caret Icon -->
             <span class="ph-bold ph-caret-down text-xl text-slate-400 pointer-events-none absolute top-1/2 end-3 -translate-y-1/2"></span>
             </div>
 
