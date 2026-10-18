@@ -80,7 +80,7 @@ async function cadastrar(req, res) {
     responseBody.message = "Email inválido";
     return res.status(400).json(responseBody);
   } else if (!password) {
-    responseBody.message = "Senha inválido";
+    responseBody.message = "Senha inválida";
     return res.status(400).json(responseBody);
   } else if (!code) {
     responseBody.message = "Código inválido";

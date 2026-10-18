@@ -22,6 +22,9 @@ var app = express();
 import usuarioRouter from "./src/routes/usuarios.js";
 import mailerRouter from "./src/routes/mailer.js";
 import codeRouter from "./src/routes/code.js";
+import microserviceRouter from "./src/routes/microservices.js";
+import instanceRouter from "./src/routes/instances.js";
+import AlertRouter from "./src/routes/alerts.js";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -32,20 +35,44 @@ app.use(cors());
 app.use("/usuarios", usuarioRouter);
 app.use("/mailer", mailerRouter);
 app.use("/code", codeRouter);
+app.use("/microservices", microserviceRouter);
+app.use("/instances", instanceRouter);
+app.use("/alerts", AlertRouter);
 
 app.listen(PORTA_APP, function () {
   console.log(`
-    ##   ##  ######   #####             ####       ##     ######     ##              ##  ##    ####    ######  
-    ##   ##  ##       ##  ##            ## ##     ####      ##      ####             ##  ##     ##         ##  
-    ##   ##  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##        ##   
-    ## # ##  ####     #####    ######   ##  ##   ######     ##     ######   ######   ##  ##     ##       ##    
-    #######  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##      ##     
-    ### ###  ##       ##  ##            ## ##    ##  ##     ##     ##  ##             ####      ##     ##      
-    ##   ##  ######   #####             ####     ##  ##     ##     ##  ##              ##      ####    ######  
-    \n\n\n                                                                                                 
-    Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar .: http://${HOST_APP}:${PORTA_APP} :. \n\n
-    Você está rodando sua aplicação em ambiente de .:${process.env.AMBIENTE_PROCESSO}:. \n\n
-    \tSe .:desenvolvimento:. você está se conectando ao banco local. \n
-    \tSe .:producao:. você está se conectando ao banco remoto. \n\n
-    \t\tPara alterar o ambiente, comente ou descomente as linhas 1 ou 2 no arquivo 'app.js'\n\n`);
+               %%%%%%%                            
+             %%%%%%%%%%%                          
+            %%%%      %%%                         
+            %%%        %%%                        
+            %%%        %%%                        
+            %%%%      %%%          %%%%%%%%       
+             %%%%%%%%%%%          %%%%%%%%%%%     
+                %%%%%%%%%%      #%%%      %%%%    
+                    %%%%%%%%%%  %%%        %%%    
+                   %%%%%%%%%%%%%%%%        %%%    
+                  %%%%      %%%%%%%%      %%%%    
+                  %%%        %%%% %%%%%%%%%%%     
+                  %%%        %%%    %%%%%%        
+                 %%%%%      %%%%%                 
+       %%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%       
+     %%%%%%%%%%%%%%   %%%%%%  %%%%%%%%%%%%%%     
+    %%%%     %%%%               %%%%      %%%    
+    %%%       %%%%              %%%        %%%    
+    %%%       %%%%              %%%%      %%%%    
+    %%%%     %%%%                %%%%%%%%%%%%     
+     %%%%%%%%%%%                    %%%%%%%       
+       %%%%%%%                        
+
+    ##   ##  ####   ####   ######    #####   ##  ##  ##   ##  ###### 
+    ### ###   ##   ##  ##  ##   ##  ##   ##  ##  ##  ##   ##  ##   ##
+    #######   ##   ##  ##  ##   ##  ##   ##  ##  ##  ##   ##  ##  ##
+    ## # ##   ##   ##      ######   ##   ##  ######  ##   ##  #####  
+    ##   ##   ##   ##  ##  ## ##    ##   ##  ##  ##  ##   ##  ##  ##
+    ##   ##   ##   ##  ##  ##  ##   ##   ##  ##  ##  ##   ##  ##   ##
+    ##   ##  ####   ####   ##   ##   #####   ##  ##   #####   ###### 
+                                                            
+    Aplicação MicroHub sendo executada em ambiente de ::${process.env.AMBIENTE_PROCESSO}::
+    
+    Para alterar o ambiente, acesse o arquivo 'app.js'\n\n`);
 });

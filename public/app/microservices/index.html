@@ -19,6 +19,8 @@
         window.addEventListener("DOMContentLoaded", () => {
             fillUserInfos();
             verifyIfUserCanAccess();
+
+            if (typeof getMicroservices === "function") getMicroservices();
         });
     </script>
     <script src="./script.js"></script>
@@ -29,7 +31,18 @@
 <body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
 
     <div class="flex min-h-screen">
-
+        <div id="popUpContainer"
+            class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-4">
+            <div id="popUpContent"
+                class="relative w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl p-8 shadow-2xl">
+            </div>
+        </div>
+        <div id="deletePopUpContainer"
+            class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-4">
+            <div id="deletePopUpContent"
+                class="relative w-fit max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-8 shadow-2xl">
+            </div>
+        </div>
         <nav
             class="w-72 fixed h-screen bg-slate-900 border-r border-slate-800 flex flex-col px-6 py-9 shrink-0 justify-between z-100">
             <div class="flex items-center justify-center -ml-5">
@@ -87,7 +100,18 @@
                     <h1 class="text-2xl font-extrabold">Microsserviços</h1>
                 </div>
                 <hr class="border-t border-slate-400 my-5">
+                <section class="w-full flex p-4 flex-col gap-6">
+                    <button
+                        class="bg-blue-600 text-white p-6 rounded-lg flex items-center gap-4 shadow w-fit hover:cursor-pointer hover:bg-blue-700 duration-150 transition-all"
+                        onclick="openNewMicroserviceForm()">
+                        <h1 class="text-2xl font-bold">Novo microsserviço</h1>
+                        <i class="ph-bold ph-plus text-3xl"></i>
+                    </button>
+                    <div id="microservicesContainer" class="w-full border grid grid-cols-1 sm:grid-cols-2 gap-6 justify-between">
+                    </div>
+                </section>
             </div>
+
         </main>
         <div id="toast-container"
             class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">

@@ -22,7 +22,7 @@ const fillRolesAtNewCode = () => {
 const getCodes = async () => {
   const token = sessionStorage.getItem('JWT_TOKEN');
   const userData = getUserSession();
-  
+
   if (!token || !userData) {
     logout();
     return showToast("Sessão inválida, faça login novamente", "warning")
