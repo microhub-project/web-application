@@ -56,17 +56,18 @@ const getMicroservices = async () => {
             }
 
             const element = `
-                <div class="bg-slate-100 p-6 rounded-lg flex flex-col gap-4 shadow w-full" id="${elementId}">
-                    <div class="flex justify-between items-center font-semibold text-lg">
-                        <h1 class="text-2xl font-bold">${nome}</h1>
-                        <div class="gap-1">
-                            <i onclick="openDeleteMicroserviceForm('${nome}', '${elementId}')" class="ph-bold ph-trash text-3xl hover:cursor-pointer rounded-lg hover:bg-slate-300 p-2 duration-150 transition-all"></i><i onclick="openEditMicroserviceForm('${nome}', '${descricao}', '${elementId}')" class="ph-bold ph-note-pencil text-3xl hover:cursor-pointer rounded-lg hover:bg-slate-300 p-2 duration-150 transition-all"></i>
+                <div class="bg-slate-100 p-6 max-sm:p-4 rounded-lg flex flex-col gap-3 sm:gap-4 shadow w-full" id="${elementId}">
+                    <div class="flex justify-between items-center gap-2 font-semibold text-lg">
+                        <h1 class="text-2xl max-sm:text-lg font-bold break-words shrink min-w-0">${nome}</h1>
+                        <div class="flex items-center gap-1 shrink-0">
+                            <i onclick="openDeleteMicroserviceForm('${nome}', '${elementId}')" class="ph-bold ph-trash text-3xl max-sm:text-xl hover:cursor-pointer rounded-lg hover:bg-slate-300 p-2 max-sm:p-1.5 duration-150 transition-all"></i>
+                            <i onclick="openEditMicroserviceForm('${nome}', '${descricao}', '${elementId}')" class="ph-bold ph-note-pencil text-3xl max-sm:text-xl hover:cursor-pointer rounded-lg hover:bg-slate-300 p-2 max-sm:p-1.5 duration-150 transition-all"></i>
                         </div>
                     </div>
-                    <div class="border border-slate-950/50"></div>
-                    <h1 class="${corInstance} py-2 px-4 rounded-lg font-semibold w-fit">${stringEnderecoMAC}</h1>
-                    <div class="flex justify-between items-center gap-5">
-                        <p class="w-full px-4 py-3 bg-slate-100">
+                    <div class="border-b border-slate-950/20"></div>
+                    <h1 class="${corInstance} py-1.5 px-3 max-sm:text-xs text-sm rounded-lg font-semibold w-fit break-all">${stringEnderecoMAC}</h1>
+                    <div class="flex justify-between items-center gap-2">
+                        <p class="w-full px-3 py-2 rounded text-slate-800 text-sm max-sm:text-xs leading-relaxed break-words">
                             ${descricao}
                         </p>
                     </div>
@@ -84,98 +85,98 @@ const getMicroservices = async () => {
 const openNewMicroserviceForm = () => {
     const popUpBody = `
     <div class="flex flex-col justify-around gap-4">
-      <form class="flex flex-col gap-2">    
+      <form class="flex flex-col gap-3">    
 
         <div class="flex flex-col gap-1.5">
-            <label for="microserviceName" class="text-sm text-slate-300">Nome</label> 
-            <input type="text" id="microserviceName" placeholder="Nome do microsserviço" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
+            <label for="microserviceName" class="text-xs sm:text-sm text-slate-300">Nome</label> 
+            <input type="text" id="microserviceName" placeholder="Nome do microsserviço" class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
         </div>
 
         <div class="flex flex-col gap-1.5">
-            <label for="microserviceDescription" class="text-sm text-slate-300">Descrição</label> 
-            <textarea type="text" id="microserviceDescription" placeholder="Descrição do microsserviço" 
-                class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors min-h-32 resize-none [field-sizing:content]"
-                rows="10"></textarea>
+            <label for="microserviceDescription" class="text-xs sm:text-sm text-slate-300">Descrição</label> 
+            <textarea id="microserviceDescription" placeholder="Descrição do microsserviço" 
+                class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors min-h-28 sm:min-h-32 resize-none"
+                rows="6"></textarea>
         </div>
       </form>
       
-      <div>
+      <div class="flex flex-col gap-2 mt-1">
         <button
           onclick="newMicroservice()"
           id="newMicroserviceButton"
-          class="w-full py-3 mt-2 border-2 border-blue-600 hover:bg-blue-600 rounded-lg font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center">
+          class="w-full py-2.5 sm:py-3 border-2 border-blue-600 hover:bg-blue-600 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
           <span class="font-medium">Criar</span>
         </button>
         <button
           onclick="closePopUp()"
-          class="w-full py-3 mt-2 border-2 border-red-600 hover:bg-red-600 rounded-lg font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center">
+          class="w-full py-2.5 sm:py-3 border-2 border-red-600 hover:bg-red-600 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
           <span class="font-medium">Cancelar</span>
         </button>
       </div>
     </div>
-  `
+  `;
 
-    showPopUp("Cadastrar novo microsserviço", popUpBody)
-}
+    showPopUp("Cadastrar novo microsserviço", popUpBody);
+};
 
 const openDeleteMicroserviceForm = (nome, microservice_uuid) => {
     const popUpBody = `
     <div class="flex flex-col justify-around gap-4">
-      <div>
+      <div class="flex flex-col gap-2 mt-1">
         <button
           onclick="deleteMicroservice('${microservice_uuid}')"
           id="deleteMicroserviceButton"
-          class="w-full py-3 mt-2 border-2 border-blue-600 hover:bg-blue-600 rounded-lg font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center">
+          class="w-full py-2.5 sm:py-3 border-2 border-blue-600 hover:bg-blue-600 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
           <span class="font-medium">Apagar</span>
         </button>
         <button
           onclick="closePopUp('deleteMicroservice')"
-          class="w-full py-3 mt-2 border-2 border-red-600 hover:bg-red-600 rounded-lg font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center">
+          class="w-full py-2.5 sm:py-3 border-2 border-red-600 hover:bg-red-600 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
           <span class="font-medium">Cancelar</span>
         </button>
       </div>
     </div>
-  `
+  `;
 
-    showPopUp(`Apagar "${nome}"?`, popUpBody, 'deleteMicroservice')
-}
+    showPopUp(`Apagar "${nome}"?`, popUpBody, 'deleteMicroservice');
+};
 
 const openEditMicroserviceForm = (nome, descricao, microservice_uuid) => {
     const popUpBody = `
     <div class="flex flex-col justify-around gap-4">
-      <form class="flex flex-col gap-2">    
+      <form class="flex flex-col gap-3">    
 
         <div class="flex flex-col gap-1.5">
-            <label for="microserviceName" class="text-sm text-slate-300">Nome</label> 
-            <input type="text" id="newMicroserviceName" value="${nome}" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
+            <label for="newMicroserviceName" class="text-xs sm:text-sm text-slate-300">Nome</label> 
+            <input type="text" id="newMicroserviceName" value="${nome}" class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
         </div>
 
         <div class="flex flex-col gap-1.5">
-            <label for="microserviceDescription" class="text-sm text-slate-300">Descrição</label> 
-            <textarea type="text" id="newMicroserviceDescription" 
-                class="w-full max-w-md px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors min-h-32 resize-none [field-sizing:content]"
-                rows="10">${descricao}</textarea>
+            <label for="newMicroserviceDescription" class="text-xs sm:text-sm text-slate-300">Descrição</label> 
+            <textarea id="newMicroserviceDescription" 
+                class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors min-h-28 sm:min-h-32 resize-none"
+                rows="6">${descricao}</textarea>
         </div>
       </form>
       
-      <div>
+      <div class="flex flex-col gap-2 mt-1">
         <button
           onclick="saveMicroservice('${microservice_uuid}')"
           id="saveMicroserviceButton"
-          class="w-full py-3 mt-2 border-2 border-blue-600 hover:bg-blue-600 rounded-lg font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center">
+          class="w-full py-2.5 sm:py-3 border-2 border-blue-600 hover:bg-blue-600 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
           <span class="font-medium">Salvar</span>
         </button>
         <button
           onclick="closePopUp()"
-          class="w-full py-3 mt-2 border-2 border-red-600 hover:bg-red-600 rounded-lg font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center">
+          class="w-full py-2.5 sm:py-3 border-2 border-red-600 hover:bg-red-600 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
           <span class="font-medium">Cancelar</span>
         </button>
       </div>
     </div>
-  `
+  `;
 
-    showPopUp(`Editando "${nome}"`, popUpBody)
-}
+    showPopUp(`Editando "${nome}"`, popUpBody);
+};
 
 const saveMicroservice = async (microservice_uuid) => {
     const token = sessionStorage.getItem('JWT_TOKEN');
@@ -346,35 +347,35 @@ const showPopUp = (title, popUpBody, deleteMicroservice) => {
     let popUpContent;
     let onClick;
 
-    if(deleteMicroservice) {
-        popUpContainer = document.getElementById("deletePopUpContainer")
-        popUpContent = document.getElementById("deletePopUpContent")
-        onClick = `onclick="closePopUp('deleteMicroservice')"`
+    if (deleteMicroservice) {
+        popUpContainer = document.getElementById("deletePopUpContainer");
+        popUpContent = document.getElementById("deletePopUpContent");
+        onClick = `onclick="closePopUp('deleteMicroservice')"`;
     } else {
-        popUpContainer = document.getElementById("popUpContainer")
-        popUpContent = document.getElementById("popUpContent")
-        onClick = `onclick="closePopUp()"`
+        popUpContainer = document.getElementById("popUpContainer");
+        popUpContent = document.getElementById("popUpContent");
+        onClick = `onclick="closePopUp()"`;
     }
 
-    popUpContainer.classList.replace("hidden", "flex")
+    popUpContainer.classList.replace("hidden", "flex");
     popUpContent.innerHTML = `
-    <h1 class="text-2xl pb-4 mr-8">${title}</h1>
+    <h1 class="text-lg sm:text-2xl font-bold pb-4 pr-8 break-words">${title}</h1>
     <button 
       type="button" 
       ${onClick}
-      class="absolute top-5 right-5 text-slate-400 hover:text-white cursor-pointer transition-all duration-300"> 
-      <i class="ph ph-x text-3xl"></i>
+      class="absolute top-4 right-4 sm:top-5 sm:right-5 text-slate-400 hover:text-white cursor-pointer transition-all duration-300"> 
+      <i class="ph ph-x text-2xl sm:text-3xl"></i>
     </button>
-  `
+  `;
 
-    popUpContent.innerHTML += popUpBody
-}
+    popUpContent.innerHTML += popUpBody;
+};
 
 const closePopUp = (deleteMicroservice) => {
-    if(deleteMicroservice) {
+    if (deleteMicroservice) {
         document.getElementById("deletePopUpContainer").classList.replace("flex", "hidden")
         document.getElementById("deletePopUpContent").innerHTML = ""
-        return    
+        return
     }
     document.getElementById("popUpContainer").classList.replace("flex", "hidden")
     document.getElementById("popUpContent").innerHTML = ""
