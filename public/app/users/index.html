@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<script src="https://cdn.tailwindcss.com"></script>
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Microhub</title>
+  <title>Microhub - Usuários</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="../../tailwind/output.css">
   <link rel="shortcut icon" href="/assets/img/logo/icon-128.ico" type="image/x-icon">
   <link rel="stylesheet" type="text/css"
@@ -29,7 +29,7 @@
 
 </head>
 
-<body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
+<body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative min-h-dvh">
 
   <div class="flex min-h-screen">
 
@@ -134,155 +134,125 @@
     </header>
 
     <main
-      class="text-slate-900 flex flex-col p-8 min-h-dvh gap-12 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
+      class="text-slate-900 flex flex-col p-8 max-sm:p-4 max-sm:pr-24 min-h-dvh gap-8 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
 
       <div class="flex flex-col gap-4 w-full">
-        <div class="">
-          <h1 class="text-2xl font-extrabold">Usuários</h1>
-          <h1 class="text-3xl font-extrabold pl-4 text-blue-950" id="companyName">@ Empresa</h1>
+        <div>
+          <h1 class="text-2xl max-sm:text-xl font-extrabold">Usuários</h1>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-blue-950 mt-1" id="companyName">@ Empresa</h1>
         </div>
-        <hr class="border-t border-slate-400 my-5">
+        <hr class="border-t border-slate-400 my-2 sm:my-5">
 
-        <div class="text-2xl flex items-center justify-center w-full">
+        <div class="text-xl sm:text-2xl font-bold flex items-center justify-center w-full">
           <h1>Informações do usuário</h1>
         </div>
 
-        <div class="flex items-center gap-3 self-end-safe my-5">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 self-full sm:self-end my-3 sm:my-5">
           <input id="input_pesquisa"
-            class="text-slate-950 bg-slate-50 w-64 h-10 px-4 border border-slate-400 rounded-full"
+            class="text-slate-950 bg-slate-50 w-full sm:w-64 h-10 px-4 border border-slate-400 rounded-full text-sm outline-none focus:border-blue-600"
             placeholder="Insira o nome">
 
           <button onclick="Pesquisar()"
-            class="px-4 py-3 bg-blue-300 hover:bg-blue-500 rounded-full cursor-pointer flex items-center gap-2 w-35 h-10 transition-all">
-
-            <i class="ph ph-magnifying-glass"></i>
+            class="px-5 py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-full cursor-pointer flex items-center justify-center gap-2 h-10 transition-all text-sm shrink-0">
+            <i class="ph ph-magnifying-glass text-lg"></i>
             Pesquisar
           </button>
         </div>
 
-
-        <div id="listarUsuarios" class="w-full flex flex-col gap-2">
-          <div class="grid grid-cols-12 px-5 font-bold text-slate-700 ">
+        <div id="listarUsuarios" class="w-full flex flex-col gap-3">
+          <div class="hidden sm:grid grid-cols-12 px-5 font-bold text-slate-700">
             <span class="col-span-5">Nome</span>
             <span class="col-span-4">Cargo</span>
             <span class="col-span-3 text-right">Ações</span>
           </div>
         </div>
 
-
-
         <div id="updateUser"
-          class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm items-center justify-center p-4">
+          class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-3 sm:p-4 overflow-y-auto">
 
-          <div class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-8 shadow-2xl">
+          <div class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-5 sm:p-8 shadow-2xl my-auto">
 
             <button onclick="fecharAtualizar()"
               class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl cursor-pointer">
-              &times;
+              <i class="ph ph-x text-2xl sm:text-3xl"></i>
             </button>
 
-            <h2 class="text-2xl font-semibold text-white mb-6">
+            <h2 class="text-xl sm:text-2xl font-semibold text-white mb-4 pr-8">
               Atualizar usuário
             </h2>
 
-            <label class="relative bottom-2 text-slate-200 font-medium">O que deseja atualizar?</label>
+            <label class="text-sm text-slate-200 font-medium mb-1 block">O que deseja atualizar?</label>
 
-
-            <select id="opcaoAtualizar" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl
-               text-slate-100 outline-none focus:border-blue-500
-               focus:ring-1 focus:ring-blue-500 transition-colors cursor-pointer" onchange="mostrarCampoAtualizar()">
-
+            <select id="opcaoAtualizar" class="w-full px-4 py-3 text-sm sm:text-base bg-slate-800 border border-slate-700 rounded-xl
+               text-slate-100 outline-none focus:border-blue-500 transition-colors cursor-pointer" onchange="mostrarCampoAtualizar()">
               <option value="" class="bg-slate-800">Selecione uma opção</option>
               <option value="nome" class="bg-slate-800">Nome</option>
               <option value="email" class="bg-slate-800">E-mail</option>
               <option value="cargo" class="bg-slate-800">Cargo</option>
-
             </select>
 
-            <div id="campoNome" class="hidden flex-col gap-2 mt-4">
-              <label class="text-slate-200 font-medium">
-                Novo nome
-              </label>
-
-              <input id="nomeAtualizar" type="text" placeholder="Digite o novo nome" class="w-full px-4 py-3 bg-slate-800 border border-slate-700
-               rounded-xl text-slate-100 outline-none
-               focus:border-blue-500 focus:ring-1 focus:ring-blue-500
-               transition-colors cursor-pointer">
+            <div id="campoNome" class="hidden flex-col gap-1.5 mt-4">
+              <label class="text-xs sm:text-sm text-slate-200 font-medium">Novo nome</label>
+              <input id="nomeAtualizar" type="text" placeholder="Digite o novo nome" class="w-full px-4 py-3 text-sm sm:text-base bg-slate-800 border border-slate-700
+               rounded-xl text-slate-100 outline-none focus:border-blue-500 transition-colors">
             </div>
 
-            <div id="campoEmail" class="hidden flex-col gap-2 mt-4">
-              <label class="text-slate-200 font-medium">
-                Novo e-mail
-              </label>
-
-              <input id="emailAtualizar" type="email" placeholder="Digite o novo e-mail" class="w-full px-4 py-3 bg-slate-800 border border-slate-700
-               rounded-xl text-slate-100 outline-none
-               focus:border-blue-500 focus:ring-1 focus:ring-blue-500
-               transition-colors cursor-pointer">
+            <div id="campoEmail" class="hidden flex-col gap-1.5 mt-4">
+              <label class="text-xs sm:text-sm text-slate-200 font-medium">Novo e-mail</label>
+              <input id="emailAtualizar" type="email" placeholder="Digite o novo e-mail" class="w-full px-4 py-3 text-sm sm:text-base bg-slate-800 border border-slate-700
+               rounded-xl text-slate-100 outline-none focus:border-blue-500 transition-colors">
             </div>
 
-            <div id="campoCargo" class="hidden flex-col gap-2 mt-4">
-              <label class="text-slate-200 font-medium">
-                Novo cargo
-              </label>
-
-              <select id="cargoAtualizar" class="w-full px-4 py-3 bg-slate-800 border border-slate-700
-               rounded-xl text-slate-100 outline-none
-               focus:border-blue-500 focus:ring-1 focus:ring-blue-500
-               transition-colors cursor-pointer">
-
+            <div id="campoCargo" class="hidden flex-col gap-1.5 mt-4">
+              <label class="text-xs sm:text-sm text-slate-200 font-medium">Novo cargo</label>
+              <select id="cargoAtualizar" class="w-full px-4 py-3 text-sm sm:text-base bg-slate-800 border border-slate-700
+               rounded-xl text-slate-100 outline-none focus:border-blue-500 transition-colors cursor-pointer">
                 <option value="1" class="bg-slate-800">Gerente</option>
                 <option value="2" class="bg-slate-800">FinOps</option>
                 <option value="3" class="bg-slate-800">Dev/DevOps</option>
-
               </select>
             </div>
-            <br>
+
             <button id="btnConfirmarAtualizacao" type="button" onclick="salvarAtualizacao()"
-              class="hidden w-full py-2 bg-blue-500 hover:bg-blue-600 rounded-xl font-medium text-white transition-colors cursor-pointer">
-              <i class="ph ph-check mr-1"></i>
+              class="hidden w-full py-3 mt-6 bg-blue-600 hover:bg-blue-700 rounded-xl font-medium text-white transition-colors cursor-pointer items-center justify-center gap-2">
+              <i class="ph ph-check text-xl"></i>
               Confirmar atualização
             </button>
           </div>
         </div>
 
-
-
         <div id="deleteUser"
-          class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm items-center justify-center p-4">
+          class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-3 sm:p-4 overflow-y-auto">
 
-          <div class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-8 shadow-2xl">
-
-            <h2 class="text-2xl font-semibold text-white mb-6">
+          <div class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-5 sm:p-8 shadow-2xl my-auto">
+            <h2 class="text-xl sm:text-2xl font-semibold text-white mb-4">
               Excluir usuário
             </h2>
 
-            <label class=" text-slate-200 font-medium ">
-              Tem certeza que deseja excluir este usuário?
-              Essa ação não poderá ser desfeita.
-            </label>
-            <br><br>
+            <p class="text-sm sm:text-base text-slate-300 leading-relaxed mb-6">
+              Tem certeza que deseja excluir este usuário? Essa ação não poderá ser desfeita.
+            </p>
 
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full">
+              <button onclick="cancelarExcluir()"
+                class="w-full py-2.5 sm:py-3 border border-slate-600 hover:bg-slate-800 text-slate-200 rounded-xl font-medium transition-colors cursor-pointer text-center">
+                Cancelar
+              </button>
 
-            <button onclick="cancelarExcluir()"
-              class="w-45 py-2 border bg-slate-400 hover:bg-slate-500 rounded-lg font-medium transition-colors cursor-pointer">
-              Cancelar
-            </button>
-
-            <button onclick="confirmarExclusao()"
-              class="w-45 py-2 bg-red-400 hover:bg-red-500 rounded-lg font-medium transition-colors cursor-pointer">
-              Excluir
-            </button>
+              <button onclick="confirmarExclusao()"
+                class="w-full py-2.5 sm:py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-colors cursor-pointer text-center">
+                Excluir
+              </button>
+            </div>
           </div>
         </div>
 
       </div>
+    </main>
 
-  </div>
-  </div>
-  </main>
-  <div id="toast-container"
-    class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">
+    <div id="toast-container"
+      class="fixed w-xs bottom-4 right-4 pointer-events-none z-50 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">
+    </div>
   </div>
 </body>
 
