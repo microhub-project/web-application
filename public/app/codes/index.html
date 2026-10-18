@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<script src="https://cdn.tailwindcss.com"></script>
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Códigos de Ativação</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="../../tailwind/output.css">
   <link rel="shortcut icon" href="/assets/img/logo/icon-128.ico" type="image/x-icon">
   <link rel="stylesheet" type="text/css"
@@ -28,15 +28,18 @@
   <script src="../../js/toast.js"></script>
 </head>
 
-<body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
+<body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative min-h-dvh">
   <div class="flex min-h-screen">
+    
+    <!-- Pop-Up Overlay Container -->
     <div id="popUpContainer"
-      class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-4">
+      class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-3 sm:p-4 overflow-y-auto">
       <div id="popUpContent"
-        class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl px-8 py-6 shadow-2xl">
-
+        class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl px-5 sm:px-8 py-5 sm:py-6 shadow-2xl my-auto">
       </div>
     </div>
+
+    <!-- Desktop Header (Left Side) -->
     <header id="header-main" class="max-lg:hidden">
       <nav
         class="w-72 fixed left-0 top-0 h-screen bg-slate-900 border-r border-slate-800 flex flex-col px-6 py-9 shrink-0 justify-between z-40">
@@ -88,6 +91,7 @@
       </nav>
     </header>
 
+    <!-- Mobile Header (Right Side) -->
     <header id="header-mobile" class="lg:hidden">
       <nav
         class="w-20 fixed right-0 top-0 h-screen bg-slate-900 border-l border-slate-800 flex flex-col items-center px-4 py-9 shrink-0 justify-between z-40">
@@ -137,34 +141,40 @@
       </nav>
     </header>
 
+    <!-- Main Content Area -->
     <main
-      class="text-slate-900 flex flex-col p-8 min-h-dvh gap-12 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
+      class="text-slate-900 flex flex-col p-8 max-sm:p-4 max-sm:pr-24 min-h-dvh gap-8 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
 
       <div class="flex flex-col gap-4 w-full">
-        <div class="">
-          <h1 class="text-2xl font-extrabold">Códigos de Ativação</h1>
+        <div>
+          <h1 class="text-2xl max-sm:text-xl font-normal sm:font-extrabold">Códigos de Ativação</h1>
         </div>
-        <hr class="border-t border-slate-400 my-5">
-        <section id="codesContainer" class="w-full flex flex-col gap-6">
-          <div class="bg-slate-100 p-6 rounded-lg flex flex-col gap-4 shadow">
-            <h1 class="text-2xl font-bold">Gerar novo código</h1>
-            <div class="border border-slate-950/50"></div>
-            <div class="flex justify-between items-center gap-5">
-              <div class="flex items-center gap-2 font-semibold">
-                <i class="ph-bold ph-briefcase text-2xl"></i>
-                <select id="newRoleSelect" class="text-lg outline-none!">
-                  <option value="" selected disabled>Selecione um cargo</option>
+        <hr class="border-t border-slate-400 my-2 sm:my-5">
+        <section id="codesContainer" class="w-full flex flex-col gap-4 sm:gap-6">
+          <div class="bg-slate-100 p-4 sm:p-6 rounded-lg flex flex-col gap-3 sm:gap-4 shadow">
+            <h1 class="text-xl sm:text-2xl font-normal sm:font-bold">Gerar novo código</h1>
+            <div class="border-b border-slate-950/20"></div>
+            
+            <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 sm:gap-5">
+              <div class="flex items-center gap-2 font-normal sm:font-semibold w-full sm:w-auto  p-2.5 sm:p-0 rounded-lg sm:bg-transparent">
+                <i class="ph-bold ph-briefcase text-xl sm:text-2xl shrink-0"></i>
+                <select id="newRoleSelect" class="text-sm sm:text-lg outline-none bg-transparent w-full max-w-full sm:max-w-xs cursor-pointer truncate">
+                  <option value="" selected disabled>Cargo</option>
                   <option value="0" id="newPartnerOpt" class="hidden">Novo parceiro</option>
                   <option value="1">Gerente TI</option>
                   <option value="2">FinOps</option>
                   <option value="3">DevOps</option>
                 </select>
               </div>
+
               <input type="email" id="newEmailReceiver" placeholder="Digite o email a receber o código"
-                class="w-full px-4 py-3 bg-slate-100 border-2 border-slate-800 rounded-lg outline-none focus:border-blue-500 transition-colors">
-              <div class="flex *:cursor-pointer items-center gap-5">
-                <i onclick="sendCode()" tabindex="0"
-                  class="ph-bold ph-paper-plane-tilt text-3xl hover:text-blue-600 duration-150 transition-all pr-4"></i>
+                class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 bg-slate-100 border-2 border-slate-800 rounded-lg outline-none focus:border-blue-500 transition-colors text-sm sm:text-base">
+
+              <div class="flex items-center justify-center w-full sm:w-auto shrink-0">
+                <button onclick="sendCode()" 
+                  class="w-full sm:w-auto bg-blue-600 sm:bg-transparent hover:bg-blue-700 sm:hover:bg-transparent text-white sm:text-slate-900 py-2.5 px-4 sm:p-0 rounded-full sm:rounded-none flex items-center justify-center cursor-pointer transition-all">
+                  <i tabindex="0" class="ph-bold ph-paper-plane-tilt text-2xl sm:text-3xl sm:hover:text-blue-600 duration-150 transition-all pr-0 sm:pr-4"></i>
+                </button>
               </div>
             </div>
           </div>
@@ -174,7 +184,7 @@
 
   </div>
   <div id="toast-container"
-    class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">
+    class="fixed w-xs bottom-4 right-4 pointer-events-none z-50 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">
   </div>
 </body>
 

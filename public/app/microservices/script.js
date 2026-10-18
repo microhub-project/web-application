@@ -60,8 +60,8 @@ const getMicroservices = async () => {
                     <div class="flex justify-between items-center gap-2 font-semibold text-lg">
                         <h1 class="text-2xl max-sm:text-lg font-bold break-words shrink min-w-0">${nome}</h1>
                         <div class="flex items-center gap-1 shrink-0">
-                            <i onclick="openDeleteMicroserviceForm('${nome}', '${elementId}')" class="ph-bold ph-trash text-3xl max-sm:text-xl hover:cursor-pointer rounded-lg hover:bg-slate-300 p-2 max-sm:p-1.5 duration-150 transition-all"></i>
-                            <i onclick="openEditMicroserviceForm('${nome}', '${descricao}', '${elementId}')" class="ph-bold ph-note-pencil text-3xl max-sm:text-xl hover:cursor-pointer rounded-lg hover:bg-slate-300 p-2 max-sm:p-1.5 duration-150 transition-all"></i>
+                            <i onclick="openDeleteMicroserviceForm('${nome}', '${elementId}')" class="ph-bold ph-trash text-2xl sm:text-3xl hover:cursor-pointer rounded-lg hover:bg-slate-300 size-10 sm:size-12 flex items-center justify-center duration-150 transition-all"></i>
+                            <i onclick="openEditMicroserviceForm('${nome}', '${descricao}', '${elementId}')" class="ph-bold ph-note-pencil text-2xl sm:text-3xl hover:cursor-pointer rounded-lg hover:bg-slate-300 size-10 sm:size-12 flex items-center justify-center duration-150 transition-all"></i>
                         </div>
                     </div>
                     <div class="border-b border-slate-950/20"></div>
