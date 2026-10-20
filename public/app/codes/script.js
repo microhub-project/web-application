@@ -222,9 +222,10 @@ const resendCode = async (elementId) => {
       return showToast(responseJson.message, "error");
 
     emailReceiverElement.value = "";
-    showToast(responseJson.message, "success");
-
+    
     closePopUp();
+    reloadPage();
+    showToast(responseJson.message, "success");
   } catch (e) {
     console.error(e);
     return showToast("Algo deu errado. Tente novamente mais tarde", "error");
@@ -288,9 +289,9 @@ const disableCodeConfirmed = async (elementId) => {
     if (response.status !== 200)
       return showToast(responseJson.message, "error");
 
-    showToast(responseJson.message, "success");
-
     closePopUp();
+    reloadPage();
+    showToast(responseJson.message, "success");
   } catch (e) {
     console.error(e);
     return showToast("Algo deu errado. Tente novamente mais tarde", "error");
@@ -365,9 +366,9 @@ const editRoleConfirmed = async (elementId) => {
     if (response.status !== 200)
       return showToast(responseJson.message, "error");
 
-    showToast(responseJson.message, "success");
-
     closePopUp();
+    reloadPage();
+    showToast(responseJson.message, "success");
   } catch (e) {
     console.error(e);
     return showToast("Algo deu errado. Tente novamente mais tarde", "error");
@@ -392,17 +393,17 @@ const sendCode = () => {
         <span class="flex gap-2"><p class="font-normal sm:font-semibold">Email:</p> ${newEmailReceiver}</span>
       </div>
       <div class="flex flex-col gap-2">
-        <button
-          onclick="closePopUp()"
-          class="w-full py-2.5 sm:py-3 bg-blue-600 hover:bg-blue-700 rounded-full font-normal sm:font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center text-sm sm:text-base">
-          <span class="font-normal sm:font-medium">Cancelar</span>
-        </button>
-        <button
-          onclick="sendCodeConfirmed()"
-          id="sendCodeConfirmedButton"
-          class="w-full py-2.5 sm:py-3 border border-blue-600 hover:bg-blue-700 text-blue-400 hover:text-white rounded-full font-normal sm:font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center text-sm sm:text-base">
-          <span class="font-normal sm:font-medium">Confirmar</span>
-        </button>
+      <button
+      onclick="sendCodeConfirmed()"
+      id="sendCodeConfirmedButton"
+      class="w-full py-2.5 sm:py-3 border-2 border-blue-600 hover:bg-blue-600 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
+      <span font-medium">Confirmar</span>
+      </button>
+      <button
+        onclick="closePopUp()"
+        class="w-full py-2.5 sm:py-3 border-2 border-red-600 hover:bg-red-600 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
+        <span class="font-medium">Cancelar</span>
+      </button>
       </div>
     </div>
   `;
@@ -449,19 +450,23 @@ const sendCodeConfirmed = async () => {
 
     const responseJson = await response.json();
 
-    toggleDisableButton(button);
-    if (response.status === 500)
+    if (response.status === 500) {
+      toggleDisableButton(button);
       return showToast(responseJson.message, "error");
+    }
 
-    if (response.status === 400)
+    if (response.status === 400) {
+      toggleDisableButton(button);
       return showToast(responseJson.message, "warning");
+    }
 
-    if (response.status !== 200)
+    if (response.status !== 200) {
+      toggleDisableButton(button);
       return showToast(responseJson.message, "error");
+    }
 
+    reloadPage();
     showToast(responseJson.message, "success");
-
-    closePopUp();
   } catch (e) {
     console.error(e);
     return showToast("Algo deu errado. Tente novamente mais tarde", "error");
@@ -489,8 +494,11 @@ const showPopUp = (title, popUpBody) => {
 const closePopUp = () => {
   document.getElementById("popUpContainer").classList.replace("flex", "hidden");
   document.getElementById("popUpContent").innerHTML = "";
-  setTimeout(() => window.location.reload(), 2500);
 };
+
+const reloadPage = () => {
+    setTimeout(() => window.location.reload(), 2500)
+}
 
 const toggleLoadingSendButton = (button) => {
   if (!button) return;
