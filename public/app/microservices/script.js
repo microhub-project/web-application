@@ -41,18 +41,28 @@ const getMicroservices = async () => {
         const data = body.data || [];
 
         data.forEach(microservice => {
-            const { uuid, nome, descricao, endereco_mac } = microservice;
+            const { uuid, nome, descricao, endereco_mac, instancia } = microservice;
             const elementId = `${uuid}`;
 
-            let stringEnderecoMAC = "";
-            let corInstance = ""
+            let temInstancia = "";
+            let nomeInstancia = "";
+            let corInstance = "";
+            let corHoverInstance = "";
 
             if (!endereco_mac) {
-                stringEnderecoMAC = "Não atribuído"
+                temInstancia = "hidden"
+                nomeInstancia = "Não atribuído"
                 corInstance = "bg-red-200"
+                corHoverInstance = "bg-red-300";
             } else {
-                stringEnderecoMAC = `Instância: ${endereco_mac}`
+                temInstancia = ""
                 corInstance = "bg-slate-300"
+                corHoverInstance = "bg-slate-400"
+                if (!instancia) {
+                    nomeInstancia = `${endereco_mac}`
+                } else {
+                    nomeInstancia = `${instancia}`
+                }
             }
 
             const element = `
@@ -65,7 +75,10 @@ const getMicroservices = async () => {
                         </div>
                     </div>
                     <div class="border-b border-slate-950/20"></div>
-                    <h1 class="${corInstance} py-1.5 px-3 max-sm:text-xs text-sm rounded-lg font-semibold w-fit break-all">${stringEnderecoMAC}</h1>
+                    <div class="flex items-center">
+                        <h1 class="${corInstance}py-1.5 pr-3 max-sm:text-xs text-sm rounded-lg font-semibold w-fit break-all ${temInstancia}">Instância:</h1>
+                        <h1 class="${corInstance} hover:${corHoverInstance} py-1.5 px-3 max-sm:text-xs text-sm rounded-lg font-semibold w-fit break-all hover:cursor-pointer duration-150 transition-all" onclick="openInstancesPage()">${nomeInstancia}</h1>
+                    </div>
                     <div class="flex justify-between items-center gap-2">
                         <p class="w-full px-3 py-2 rounded text-slate-800 text-sm max-sm:text-xs leading-relaxed break-words">
                             ${descricao}
@@ -216,14 +229,20 @@ const saveMicroservice = async (microservice_uuid) => {
 
         const response = await atualizar.json()
 
-        if (atualizar.status === 500)
+        if (atualizar.status === 500) {
+            toggleDisableButton(button)
             return showToast(response.message, "error")
+        }
 
-        if (atualizar.status === 400)
+        if (atualizar.status === 400) {
+            toggleDisableButton(button)
             return showToast(response.message, "warning")
+        }
 
-        if (!atualizar.ok)
+        if (!atualizar.ok) {
+            toggleDisableButton(button)
             return showToast(response.message, "error")
+        }
 
         closePopUp()
         reloadPage()
@@ -272,14 +291,20 @@ const newMicroservice = async () => {
 
         const response = await cadastrar.json()
 
-        if (cadastrar.status === 500)
+        if (cadastrar.status === 500) {
+            toggleDisableButton(button)
             return showToast(response.message, "error")
+        }
 
-        if (cadastrar.status === 400)
+        if (cadastrar.status === 400) {
+            toggleDisableButton(button)
             return showToast(response.message, "warning")
+        }
 
-        if (!cadastrar.ok)
+        if (!cadastrar.ok) {
+            toggleDisableButton(button)
             return showToast(response.message, "error")
+        }
 
         closePopUp()
         reloadPage()
@@ -324,14 +349,20 @@ const deleteMicroservice = async (microservice_uuid) => {
 
         const response = await apagar.json()
 
-        if (apagar.status === 500)
+        if (apagar.status === 500) {
+            toggleDisableButton(button)
             return showToast(response.message, "error")
+        }
 
-        if (apagar.status === 400)
+        if (apagar.status === 400) {
+            toggleDisableButton(button)
             return showToast(response.message, "warning")
+        }
 
-        if (!apagar.ok)
+        if (!apagar.ok) {
+            toggleDisableButton(button)
             return showToast(response.message, "error")
+        }
 
         closePopUp()
         reloadPage()
@@ -389,4 +420,8 @@ const toggleDisableButton = (button) => {
     if (!button) return
 
     button.disabled = !button.disabled
+}
+
+const openInstancesPage = () => {
+    window.location.href = "/app/instances/index.html";
 }
