@@ -244,4 +244,5 @@ CREATE TABLE IF NOT EXISTS `microhub`.`volume` (
     
 INSERT INTO `microhub`.`volume` (`uuid`, `armazenamento`, `custo_giga`, `instancia_uuid`, `status`) VALUES
   (UUID_TO_BIN('54d8a870-e6bd-4aaa-973b-087ed62fea45'), 100.00, 0.15, UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177'), 1),
-  (UUID_TO_BIN('b81416d4-0eaa-443b-9f36-5c968fb2b29e'), 150.00, 0.15, UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), 1);
+  (UUID_TO_BIN('b81416d4-0eaa-443b-9f36-5c968fb2b29e'), 150.00, 0.15, UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), 1),
+  (UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), 150.00, 0.15, UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), 1);
