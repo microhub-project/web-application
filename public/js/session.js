@@ -11,6 +11,10 @@ const navItems = [
     mobile: document.getElementById("navItemGeneralMobile")
   },
   {
+    desktop: document.getElementById("navItemReports"),
+    mobile: document.getElementById("navItemReportsMobile")
+  },
+  {
     desktop: document.getElementById("navItemAlerts"),
     mobile: document.getElementById("navItemAlertsMobile")
   },
@@ -33,25 +37,33 @@ const navItems = [
   {
     desktop: document.getElementById("navItemCodes"),
     mobile: document.getElementById("navItemCodesMobile")
+  },
+  {
+    desktop: document.getElementById("navItemTrash"),
+    mobile: document.getElementById("navItemTrashMobile")
   }
 ];
 
 const pages = [
   "/app/index.html",
+  "/app/reports/index.html",
   "/app/alerts/index.html",
   "/app/finances/index.html",
   "/app/microservices/index.html",
   "/app/instances/index.html",
   "/app/users/index.html",
-  "/app/codes/index.html"
+  "/app/codes/index.html",
+  "/app/trash/index.html"
 ];
 
 const roleAccess = [
   [0, 1, 2, 3],
+  [0, 1],
   [0, 1, 3],
   [0, 1, 2],
   [0, 1, 3],
   [0, 1, 2, 3],
+  [0, 1],
   [0, 1],
   [0, 1]
 ];

@@ -19,6 +19,8 @@
         window.addEventListener("DOMContentLoaded", () => {
             fillUserInfos();
             verifyIfUserCanAccess();
+
+            if (typeof getInstances === "function") getInstances();
         });
     </script>
     <script src="./script.js"></script>
@@ -41,6 +43,10 @@
                     <a href="../index.html" id="navItemGeneral"
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
                         <i class="ph ph-house text-2xl"></i> Geral
+                    </a>
+                    <a href="../reports/index.html" id="navItemReports"
+                        class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
+                        <i class="ph ph-files text-2xl"></i> Relatórios
                     </a>
                     <a href="../alerts/index.html" id="navItemAlerts"
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
@@ -65,6 +71,10 @@
                     <a href="../codes/index.html" id="navItemCodes"
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
                         <i class="ph ph-lock text-2xl"></i> Códigos
+                    </a>
+                    <a href="../trash/index.html" id="navItemTrash"
+                        class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
+                        <i class="ph ph-trash text-2xl"></i> Lixeira
                     </a>
                 </div>
                 <div class="flex justify-around items-center bg-slate-800 py-3 rounded">
@@ -94,6 +104,10 @@
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center justify-center text-xl cursor-pointer">
                         <i class="ph ph-house text-3xl"></i>
                     </a>
+                    <a href="../reports/index.html" id="navItemReportsMobile"
+                        class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center justify-center text-xl cursor-pointer">
+                        <i class="ph ph-files text-3xl"></i>
+                    </a>
                     <a href="../alerts/index.html" id="navItemAlertsMobile"
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center justify-center text-xl cursor-pointer">
                         <i class="ph ph-warning text-3xl"></i>
@@ -118,6 +132,10 @@
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center justify-center text-xl cursor-pointer">
                         <i class="ph ph-lock text-3xl"></i>
                     </a>
+                    <a href="../trash/index.html" id="navItemTrashMobile"
+                        class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center justify-center text-xl cursor-pointer">
+                        <i class="ph ph-trash text-3xl"></i>
+                    </a>
                 </div>
                 <div class="flex flex-col justify-center items-center p-2 gap-4 bg-slate-800 py-3 rounded w-full">
                     <div id="navUserIconMobile"
@@ -139,6 +157,16 @@
                     <h1 class="text-2xl font-extrabold">Instâncias</h1>
                 </div>
                 <hr class="border-t border-slate-400 my-5">
+                <section class="w-full flex flex-col gap-6">
+                    <button
+                        class="bg-blue-600 text-white p-6 max-sm:p-3.5 rounded-lg flex items-center justify-center gap-3 shadow w-fit hover:cursor-pointer hover:bg-blue-700 duration-150 transition-all"
+                        onclick="openNewInstanceeForm()">
+                        <h1 class="text-2xl max-sm:text-base font-bold">Nova instância</h1>
+                        <i class="ph-bold ph-plus text-3xl max-sm:text-xl"></i>
+                    </button>
+                    <div id="instancesContainer" class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                    </div>
+                </section>
             </div>
         </main>
         <div id="toast-container"
