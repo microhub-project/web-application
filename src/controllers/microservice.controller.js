@@ -14,7 +14,7 @@ async function cadastrar(req, res) {
         responseBody.message = "Nome inválido";
         return res.status(400).json(responseBody);
     } else if (!descricao) {
-        responseBody.message = "Descrição inválido";
+        responseBody.message = "Descrição inválida";
         return res.status(400).json(responseBody);
     }
 

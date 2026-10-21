@@ -11,7 +11,8 @@ const getAll = async (empresa_uuid) => {
         BIN_TO_UUID(m.uuid) AS uuid, 
         m.nome, 
         m.descricao, 
-        i.endereco_mac 
+        i.endereco_mac,
+        i.nome AS instancia 
     FROM microsservico m 
     LEFT JOIN instancia i 
         ON i.microsservico_uuid = m.uuid 

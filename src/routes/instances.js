@@ -8,6 +8,8 @@ router.use(verifyJWT);
 
 router.get("/listar", instanceController.listar);
 
+router.get("/listar-volumes/:instance_uuid", instanceController.listarVolumes);
+
 router.post("/cadastrar", instanceController.cadastrar);
 
 export default router;
