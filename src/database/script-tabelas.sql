@@ -21,7 +21,7 @@ INSERT INTO `microhub`.`componente` (`uuid`, `nome`, `nome_tecnico`, `unidade_me
     (UUID_TO_BIN('40a9de89-d427-4c6d-a7d2-1e4f4889b661'), 'Tráfego de bytes de download', 'download_traffic', 'Mbps'),
     (UUID_TO_BIN('5acf74f9-7e8f-46a2-853a-56fa6c6ec1e2'), 'Espaço livre no disco', 'disk', 'GiB'),
     (UUID_TO_BIN('3eef27b6-b3e3-46b3-9a2a-df7c1ce09037'), 'Quantidade de processos', 'processes_qtd', 'processos'),
-    (UUID_TO_BIN('f80ca86d-d17e-4b8c-aa52-b2261b0fe643'), 'Quantidade de processos zumbi', 'zombie_processes_percent', '%');
+    (UUID_TO_BIN('f80ca86d-d17e-4b8c-aa52-b2261b0fe643'), 'Porcentagem de processos zumbi', 'zombie_processes_percent', '%');
 
 -- -----------------------------------------------------
 -- Table `microhub`.`tipo`
