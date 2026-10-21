@@ -100,7 +100,6 @@ CREATE TABLE IF NOT EXISTS `microhub`.`instancia` (
   `nome` VARCHAR(45) NULL,
   `endereco_mac` CHAR(17) NOT NULL,
   `tipo_uuid` BINARY(16) NOT NULL,
-  `custo_mensal` DECIMAL(10,2) NULL,
   `status` TINYINT(1) NOT NULL,
   `microsservico_uuid` BINARY(16) NOT NULL,
   `criado_em` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -117,10 +116,10 @@ CREATE TABLE IF NOT EXISTS `microhub`.`instancia` (
     FOREIGN KEY (`microsservico_uuid`)
     REFERENCES `microhub`.`microsservico` (`uuid`));
 
-INSERT INTO `microhub`.`instancia` (`uuid`, `nome`, `endereco_mac`, `tipo_uuid`, `custo_mensal`, `status`, `microsservico_uuid`) VALUES
-  (UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177'), NULL, '00:1A:2B:3C:4D:5E', UUID_TO_BIN('ef9f4280-b9af-402b-bcaa-dcbc45462ab0'), 33.83, 1, UUID_TO_BIN('9f23000f-8c6b-43bd-9d91-566b8c2a34f9')),
-  (UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), 'vm-prd-ubuntu-pagamentos', '00:1A:2B:3C:4D:5F', UUID_TO_BIN('6994f496-a302-4780-b759-f70f194d588c'), 97.84, 1, UUID_TO_BIN('b762054b-d0eb-44dc-b2ce-61b62776accd')),
-  (UUID_TO_BIN('47b46b2a-8ee0-4492-85d0-8095bbdab387'), 'vm-prd-ubuntu-notificacoes', '00:1A:2B:3C:4D:60', UUID_TO_BIN('0a65e2db-0418-4bda-871b-5ef348d52dc7'), 111.56, 1, UUID_TO_BIN('c497fcfe-c4a4-45f3-a3d7-5e36e1a8d5fe'));
+INSERT INTO `microhub`.`instancia` (`uuid`, `nome`, `endereco_mac`, `tipo_uuid`, `status`, `microsservico_uuid`) VALUES
+  (UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177'), NULL, '00:1A:2B:3C:4D:5E', UUID_TO_BIN('ef9f4280-b9af-402b-bcaa-dcbc45462ab0'), 1, UUID_TO_BIN('9f23000f-8c6b-43bd-9d91-566b8c2a34f9')),
+  (UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), 'vm-prd-ubuntu-pagamentos', '00:1A:2B:3C:4D:5F', UUID_TO_BIN('6994f496-a302-4780-b759-f70f194d588c'), 1, UUID_TO_BIN('b762054b-d0eb-44dc-b2ce-61b62776accd')),
+  (UUID_TO_BIN('47b46b2a-8ee0-4492-85d0-8095bbdab387'), 'vm-prd-ubuntu-notificacoes', '00:1A:2B:3C:4D:60', UUID_TO_BIN('0a65e2db-0418-4bda-871b-5ef348d52dc7'), 1, UUID_TO_BIN('c497fcfe-c4a4-45f3-a3d7-5e36e1a8d5fe'));
 
 -- -----------------------------------------------------
 -- Table `microhub`.`instancia_tem_componente`
