@@ -1,12 +1,24 @@
 import database from "../database/config.js";
 
-const create = async (uuid) => {
+const create = async (uuid, nome, endereco_mac, tipo_uuid, microsservico_uuid) => {
   const query = `
-    INSERT INTO instancia (uuid, endereco_mac, tipo_uuid, custo_mensal, status, microsservico_uuid) VALUES (UUID_TO_BIN(?), ?, UUID_TO_BIN(?), ?, 1, UUID_TO_BIN(?));
-    INSERT INTO instancia_tem_componente (componente_uuid, instancia_uuid, limite_maximo, limite_minimo, monitorado, status) VALUES (UUID_TO_BIN(?), UUID_TO_BIN(?), ?, ?, ?, 1);
+    INSERT INTO instancia (uuid, nome, endereco_mac, tipo_uuid, status, microsservico_uuid) VALUES (UUID_TO_BIN(?), ?, ?, UUID_TO_BIN(?), 1, UUID_TO_BIN(?));
+  `;
+  return await database.execute(query, [uuid, nome, endereco_mac, tipo_uuid, microsservico_uuid]);
+};
+
+const createVolume = async (uuid, armazenamento, instancia_uuid) => {
+  const query = `
     INSERT INTO volume (uuid, armazenamento, custo_giga, instancia_uuid, status) VALUES (UUID_TO_BIN(?), ?, 0.15, UUID_TO_BIN(?), 1);
   `;
-  return await database.execute(query, [uuid]);
+  return await database.execute(query, [uuid, armazenamento, instancia_uuid]);
+};
+
+const createComponentInstance = async (componente_uuid, instancia_uuid, limite_maximo, limite_minimo, monitorado) => {
+  const query = `
+    INSERT INTO instancia_tem_componente (componente_uuid, instancia_uuid, limite_maximo, limite_minimo, monitorado, status) VALUES (UUID_TO_BIN(?), UUID_TO_BIN(?), ?, ?, ?, 1);
+  `;
+  return await database.execute(query, [componente_uuid, instancia_uuid, limite_maximo, limite_minimo, monitorado]);
 };
 
 const getAll = async (empresa_uuid) => {
@@ -38,19 +50,27 @@ const getVolumes = async (instancia_uuid) => {
 };
 
 const getComponents = async () => {
-  const query = "SELECT * FROM componente;";
+  const query = "SELECT BIN_TO_UUID(uuid) AS uuid, nome, nome_tecnico, unidade_medida FROM componente ORDER BY nome;";
+  return await database.execute(query, []);
+};
+
+const getTypes = async () => {
+  const query = "SELECT BIN_TO_UUID(uuid) AS uuid, nome, cpu, ram, custo_computacao FROM tipo ORDER BY cpu;";
   return await database.execute(query, []);
 };
 
 const getInstanceComponents  = async (instancia_uuid) => {
-  const query = "SELECT * FROM instancia_tem_componente WHERE instancia_uuid = UUID_TO_BIN(?);";
+  const query = "SELECT BIN_TO_UUID(componente_uuid) AS componente_uuid, BIN_TO_UUID(instancia_uuid) AS instancia_uuid, limite_maximo, limite_minimo, monitorado, status FROM instancia_tem_componente WHERE instancia_uuid = UUID_TO_BIN(?);";
   return await database.execute(query, [instancia_uuid]);
 };
 
 export default {
   create,
+  createVolume,
+  createComponentInstance,
   getAll,
   getComponents,
   getInstanceComponents,
-  getVolumes
+  getVolumes,
+  getTypes
 };

@@ -31,6 +31,19 @@
 <body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
 
     <div class="flex min-h-screen">
+        <div id="popUpContainer"
+            class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-3 sm:p-4 overflow-y-auto">
+            <div id="popUpContent"
+                class="relative w-full max-w-6xl bg-slate-900 border border-slate-700 rounded-2xl p-5 sm:p-8 shadow-2xl my-auto">
+            </div>
+        </div>
+
+        <div id="deletePopUpContainer"
+            class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-3 sm:p-4 overflow-y-auto">
+            <div id="deletePopUpContent"
+                class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-5 sm:p-8 shadow-2xl my-auto">
+            </div>
+        </div>
 
         <header id="header-main" class="max-lg:hidden">
             <nav
@@ -160,7 +173,7 @@
                 <section class="w-full flex flex-col gap-6">
                     <button
                         class="bg-blue-600 text-white p-6 max-sm:p-3.5 rounded-lg flex items-center justify-center gap-3 shadow w-fit hover:cursor-pointer hover:bg-blue-700 duration-150 transition-all"
-                        onclick="openNewInstanceeForm()">
+                        onclick="openNewInstanceForm()">
                         <h1 class="text-2xl max-sm:text-base font-bold">Nova instância</h1>
                         <i class="ph-bold ph-plus text-3xl max-sm:text-xl"></i>
                     </button>

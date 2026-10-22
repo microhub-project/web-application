@@ -10,6 +10,14 @@ router.get("/listar", instanceController.listar);
 
 router.get("/listar-volumes/:instance_uuid", instanceController.listarVolumes);
 
+router.get("/listar-componentes", instanceController.listarComponentes);
+
+router.get("/listar-tipos", instanceController.listarTipos);
+
 router.post("/cadastrar", instanceController.cadastrar);
+
+router.post("/cadastrar-volume", instanceController.cadastrarVolume);
+
+router.post("/cadastrar-componente-instancia", instanceController.cadastrarComponenteInstancia);
 
 export default router;
