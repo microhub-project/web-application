@@ -113,6 +113,62 @@ async function cadastrarComponenteInstancia(req, res) {
     }
 }
 
+async function apagar(req, res) {
+    const uuid = req.body.uuid;
+    const responseBody = {
+        message: ""
+    };
+
+
+    if (!uuid)
+        return res.status(400).send();
+
+    try {
+        try {
+            const response = await instanceModel.deleteInstanceComponent(uuid);
+
+            if (response.affectedRows < 1) {
+                responseBody.message = "Não foi possível apagar os componentes da instância. Tente novamente mais tarde";
+                return res.status(500).json(responseBody);
+            }
+        } catch (e) {
+            console.error(e);
+            return res.status(500).json({
+                message: "Erro ao apagar componentes da instância"
+            });
+        }
+
+        try {
+            const response = await instanceModel.deleteInstanceVolume(uuid);
+
+            if (response.affectedRows < 1) {
+                responseBody.message = "Não foi possível apagar o(s) volume(s) da instância. Tente novamente mais tarde";
+                return res.status(500).json(responseBody);
+            }
+        } catch (e) {
+            console.error(e);
+            return res.status(500).json({
+                message: "Erro ao apagar volume(s) da instância"
+            });
+        }
+
+        const response = await instanceModel.deleteInstance(uuid);
+
+        if (response.affectedRows !== 1) {
+            responseBody.message = "Não foi possível apagar a instância. Tente novamente mais tarde";
+            return res.status(500).json(responseBody);
+        }
+
+        responseBody.message = "Instância apagada com sucesso!";
+        return res.status(201).json(responseBody);
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({
+            message: "Erro ao apagar instância"
+        });
+    }
+}
+
 async function listar(req, res) {
     const companyUUID = req.companyUUID;
 
@@ -184,11 +240,12 @@ async function listarTipos(req, res) {
 }
 
 export default {
-  cadastrar,
-  cadastrarVolume,
-  cadastrarComponenteInstancia,
-  listar,
-  listarVolumes,
-  listarComponentes,
-  listarTipos
+    cadastrar,
+    cadastrarVolume,
+    cadastrarComponenteInstancia,
+    listar,
+    listarVolumes,
+    listarComponentes,
+    listarTipos,
+    apagar
 };

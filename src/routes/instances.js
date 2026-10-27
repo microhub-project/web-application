@@ -20,4 +20,6 @@ router.post("/cadastrar-volume", instanceController.cadastrarVolume);
 
 router.post("/cadastrar-componente-instancia", instanceController.cadastrarComponenteInstancia);
 
+router.post("/apagar", instanceController.apagar);
+
 export default router;

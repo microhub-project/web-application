@@ -82,7 +82,7 @@ const getInstances = async () => {
                             </div>
                         </div>
                         <div class="flex items-center gap-1 shrink-0">
-                            <i onclick="openDeleteInstanceForm('${uuid}', '${elementId}')" class="ph-bold ph-trash text-2xl sm:text-3xl hover:cursor-pointer rounded-lg hover:bg-slate-300 size-10 sm:size-12 flex items-center justify-center duration-150 transition-all"></i>
+                            <i onclick="openDeleteInstanceForm('${nomeInstancia}', '${elementId}')" class="ph-bold ph-trash text-2xl sm:text-3xl hover:cursor-pointer rounded-lg hover:bg-slate-300 size-10 sm:size-12 flex items-center justify-center duration-150 transition-all"></i>
                             <i onclick="openEditInstanceForm('${uuid}', '${endereco_mac}', '${elementId}')" class="ph-bold ph-note-pencil text-2xl sm:text-3xl hover:cursor-pointer rounded-lg hover:bg-slate-300 size-10 sm:size-12 flex items-center justify-center duration-150 transition-all"></i>
                         </div>
                     </div>
@@ -111,6 +111,86 @@ const getInstances = async () => {
         showToast("Algo deu errado ao carregar as instâncias.", "error");
     }
 };
+
+const openDeleteInstanceForm = (nome, instance_uuid) => {
+    const popUpBody = `
+    <div class="flex flex-col justify-around gap-4">
+      <div class="flex flex-col gap-2 mt-1">
+        <button
+          onclick="deleteInstance('${instance_uuid}')"
+          id="deleteInstanceButton"
+          class="w-full py-2.5 sm:py-3 border-2 bg-red-600 border-red-600 hover:bg-red-800 hover:border-red-800 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
+          <span class="font-medium">Apagar</span>
+        </button>
+        <button
+          onclick="closePopUp('deleteInstanceButton')"
+          class="w-full py-2.5 sm:py-3 border-2 border-red-600 hover:bg-red-600 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
+          <span class="font-medium">Cancelar</span>
+        </button>
+      </div>
+    </div>
+  `;
+
+    showPopUp(`Apagar "${nome}"?`, popUpBody, 'deleteInstance');
+};
+
+const deleteInstance = async (instance_uuid) => {
+    const token = sessionStorage.getItem('JWT_TOKEN');
+    const userData = getUserSession();
+
+    if (!token || !userData) {
+        logout();
+        return showToast("Sessão inválida, faça login novamente", "warning");
+    }
+
+    const button = document.getElementById("deleteInstanceButton")
+
+    toggleDisableButton(button)
+
+    const body = {
+        "uuid": instance_uuid
+    }
+
+    try {
+        const apagar = await fetch("/instances/apagar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(body)
+        })
+
+        if (apagar.status === 401 || apagar.status === 403) {
+            logout();
+            return;
+        }
+
+        const response = await apagar.json()
+
+        if (apagar.status === 500) {
+            toggleDisableButton(button)
+            return showToast(response.message, "error")
+        }
+
+        if (apagar.status === 400) {
+            toggleDisableButton(button)
+            return showToast(response.message, "warning")
+        }
+
+        if (!apagar.ok) {
+            toggleDisableButton(button)
+            return showToast(response.message, "error")
+        }
+
+        closePopUp()
+        reloadPage()
+        showToast(response.message, "success")
+    } catch (e) {
+        console.error(e)
+        return showToast("Algo deu errado. Tente novamente mais tarde", "error")
+    }
+}
 
 const getInstanceVolumes = async (instance_uuid) => {
     const token = sessionStorage.getItem('JWT_TOKEN');

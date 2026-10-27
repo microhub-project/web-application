@@ -64,6 +64,21 @@ const getInstanceComponents  = async (instancia_uuid) => {
   return await database.execute(query, [instancia_uuid]);
 };
 
+const deleteInstance  = async (instancia_uuid) => {
+  const query = "UPDATE instancia SET status = 2, deletado_em = CURRENT_TIMESTAMP() WHERE uuid = UUID_TO_BIN(?);";
+  return await database.execute(query, [instancia_uuid]);
+};
+
+const deleteInstanceComponent  = async (instancia_uuid) => {
+  const query = "UPDATE instancia_tem_componente SET status = 2, deletado_em = CURRENT_TIMESTAMP() WHERE instancia_uuid = UUID_TO_BIN(?);";
+  return await database.execute(query, [instancia_uuid]);
+};
+
+const deleteInstanceVolume  = async (instancia_uuid) => {
+  const query = "UPDATE volume SET status = 2, deletado_em = CURRENT_TIMESTAMP() WHERE instancia_uuid = UUID_TO_BIN(?);";
+  return await database.execute(query, [instancia_uuid]);
+};
+
 export default {
   create,
   createVolume,
@@ -72,5 +87,8 @@ export default {
   getComponents,
   getInstanceComponents,
   getVolumes,
-  getTypes
+  getTypes,
+  deleteInstance,
+  deleteInstanceComponent,
+  deleteInstanceVolume
 };

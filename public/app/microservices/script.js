@@ -139,7 +139,7 @@ const openDeleteMicroserviceForm = (nome, microservice_uuid) => {
         <button
           onclick="deleteMicroservice('${microservice_uuid}')"
           id="deleteMicroserviceButton"
-          class="w-full py-2.5 sm:py-3 border-2 border-blue-600 hover:bg-blue-600 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
+          class="w-full py-2.5 sm:py-3 border-2 bg-red-600 border-red-600 hover:bg-red-800 hover:border-red-800 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
           <span class="font-medium">Apagar</span>
         </button>
         <button
