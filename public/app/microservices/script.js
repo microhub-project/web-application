@@ -40,30 +40,11 @@ const getMicroservices = async () => {
 
         const data = body.data || [];
 
-        data.forEach(microservice => {
-            const { uuid, nome, descricao, endereco_mac, instancia } = microservice;
+        for (const microservice of data) {
+            const { uuid, nome, descricao } = microservice;
             const elementId = `${uuid}`;
 
-            let temInstancia = "";
-            let nomeInstancia = "";
-            let corInstance = "";
-            let corHoverInstance = "";
-
-            if (!endereco_mac) {
-                temInstancia = "hidden"
-                nomeInstancia = "Não atribuído"
-                corInstance = "bg-red-200"
-                corHoverInstance = "bg-red-300";
-            } else {
-                temInstancia = ""
-                corInstance = "bg-slate-300"
-                corHoverInstance = "bg-slate-400"
-                if (!instancia) {
-                    nomeInstancia = `${endereco_mac}`
-                } else {
-                    nomeInstancia = `${instancia}`
-                }
-            }
+            let instances = await getMicroserviceInstances(uuid);
 
             const element = `
                 <div class="bg-slate-100 p-6 max-sm:p-4 rounded-lg flex flex-col gap-3 sm:gap-4 shadow w-full" id="${elementId}">
@@ -76,8 +57,7 @@ const getMicroservices = async () => {
                     </div>
                     <div class="border-b border-slate-950/20"></div>
                     <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
-                        <h1 class="py-1.5 max-sm:text-xs text-sm rounded-lg font-semibold whitespace-nowrap ${temInstancia}">Instância:</h1>
-                        <h1 class="${corInstance} hover:${corHoverInstance} py-1.5 px-3 max-sm:text-xs text-sm rounded-lg font-semibold w-fit break-all hover:cursor-pointer duration-150 transition-all" onclick="openInstancesPage()">${nomeInstancia}</h1>
+                        ${instances}
                     </div>
                     <div class="flex justify-between items-center gap-2">
                         <p class="w-full px-3 py-2 rounded text-slate-800 text-sm max-sm:text-xs leading-relaxed break-words">
@@ -88,12 +68,85 @@ const getMicroservices = async () => {
             `;
 
             microservicesContainer.innerHTML += element;
-        });
+        };
     } catch (e) {
         console.error(e);
         showToast("Algo deu errado ao carregar os microsserviços.", "error");
     }
 };
+
+const getMicroserviceInstances = async (microservice_uuid) => {
+    const token = sessionStorage.getItem('JWT_TOKEN');
+    const userData = getUserSession();
+
+    if (!token || !userData) {
+        logout();
+        return showToast("Sessão inválida, faça login novamente", "warning");
+    }
+
+    try {
+        const response = await fetch(`/microservices/listar-instancias/${microservice_uuid}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.status === 401 || response.status === 403) {
+            logout();
+            return;
+        }
+
+        if (response.status === 204) {
+            return showToast("Não há nenhuma instância", "warning");
+        }
+
+        const body = await response.json();
+
+        if (response.status === 400) {
+            return showToast(body.message || "Requisição inválida", "warning");
+        }
+
+        if (response.status === 500) {
+            return showToast(body.message || "Erro interno do servidor", "error");
+        }
+
+        const data = body.data || [];
+
+        let element = `<h1 class="py-1.5 max-sm:text-xs text-sm rounded-lg font-semibold whitespace-nowrap">Instância:</h1>`;
+
+        if (data.length > 1) {
+            element = `<h1 class="py-1.5 max-sm:text-xs text-sm rounded-lg font-semibold whitespace-nowrap">Instâncias:</h1>`;
+        }
+
+        if (data == "") {
+            element = `
+                <h1 class="bg-red-200 hover:bg-red-300 py-1.5 px-3 max-sm:text-xs text-sm rounded-lg font-semibold w-fit break-all hover:cursor-pointer duration-150 transition-all" onclick="openInstancesPage()">Não atribuído</h1>
+            `;
+        }
+
+        data.forEach(instancia => {
+            const { nome, endereco_mac } = instancia;
+
+            let nomeInstancia = "";
+
+            if (!nome) {
+                nomeInstancia = `${endereco_mac}`
+            } else {
+                nomeInstancia = `${nome}`
+            }
+
+            element += `
+                <h1 class="bg-slate-300 hover:bg-slate-400 py-1.5 px-3 max-sm:text-xs text-sm rounded-lg font-semibold w-fit break-all hover:cursor-pointer duration-150 transition-all" onclick="openInstancesPage()">${nomeInstancia}</h1>
+            `;
+        });
+        return element;
+    } catch (e) {
+        console.error(e);
+        showToast("Algo deu errado ao carregar as instâncias do microsserviço.", "error");
+    }
+}
 
 const openNewMicroserviceForm = () => {
     const popUpBody = `

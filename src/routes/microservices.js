@@ -8,6 +8,8 @@ router.use(verifyJWT);
 
 router.get("/listar", microserviceController.listar);
 
+router.get("/listar-instancias/:microservice_uuid", microserviceController.listarInstanciasPorMicrosservico);
+
 router.post("/cadastrar", microserviceController.cadastrar);
 
 router.post("/apagar", microserviceController.apagar);

@@ -58,6 +58,26 @@ async function listar(req, res) {
     }
 }
 
+async function listarInstanciasPorMicrosservico(req, res) {
+    const microservice_uuid = req.params.microservice_uuid;
+
+    if (!microservice_uuid)
+        return res.status(400).send();
+
+    try {
+        const resultado = await microserviceModel.getMicroserviceInstances(microservice_uuid);
+
+        return res.status(200).json({
+            data: resultado
+        });
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({
+            message: "Erro ao listar instâncias do microsserviço"
+        });
+    }
+}
+
 async function apagar(req, res) {
     const uuid = req.body.uuid;
     const responseBody = {
@@ -124,6 +144,7 @@ async function atualizar(req, res) {
 export default {
     cadastrar,
     listar,
+    listarInstanciasPorMicrosservico,
     apagar,
     atualizar
 };
