@@ -268,17 +268,17 @@ const openNewInstanceForm = async () => {
 
     const popUpBody = `
         <div class="flex flex-col justify-around gap-4">
-            <form class="flex flex-row gap-4 w-full">
+            <form class="flex flex-col md:flex-row gap-6 w-full">
 
-                <div class="flex flex-col mb-8 gap-1.5 w-2/3">
+                <div class="flex flex-col gap-1.5 w-full md:w-2/3">
                     <span class="text-xs sm:text-sm text-slate-300">Componentes monitorados</span> 
                     
-                    <div class="grid grid-cols-2 gap-3 items-start">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
                         ${componentes}
                     </div>
                 </div>
 
-                <div class="flex flex-col mb-8 gap-3 w-1/3 shrink-0">
+                <div class="flex flex-col gap-3 w-full md:w-1/3 shrink-0">
                     <div class="flex flex-col gap-1.5">
                         <label for="instanceName" class="text-xs sm:text-sm text-slate-300">Nome</label> 
                         <input type="text" id="instanceName" placeholder="Nome da instância" class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
@@ -293,7 +293,7 @@ const openNewInstanceForm = async () => {
                         <label for="instanceType" class="text-xs sm:text-sm text-slate-300">Tipo</label> 
                         <div class="relative w-full">
                             <select id="instanceType"
-                                class="w-full px-4 py-3 pr-10 bg-slate-800 border border-slate-700 rounded-lg text-gray-400 outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer"
+                                class="w-full px-4 py-3 pr-10 bg-slate-800 border border-slate-700 rounded-lg text-gray-400 outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer text-sm sm:text-base"
                                 onchange="this.classList.toggle('text-gray-400', !this.value); this.classList.toggle('text-slate-100', !!this.value);">
                                 <option value="" disabled selected class="text-gray-400 bg-slate-800">Selecione um tipo</option>
                                 ${tipos}
@@ -306,7 +306,7 @@ const openNewInstanceForm = async () => {
                         <label for="instanceMicroservice" class="text-xs sm:text-sm text-slate-300">Microsserviço</label> 
                         <div class="relative w-full">
                             <select id="instanceMicroservice"
-                                class="w-full px-4 py-3 pr-10 bg-slate-800 border border-slate-700 rounded-lg text-gray-400 outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer"
+                                class="w-full px-4 py-3 pr-10 bg-slate-800 border border-slate-700 rounded-lg text-gray-400 outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer text-sm sm:text-base"
                                 onchange="this.classList.toggle('text-gray-400', !this.value); this.classList.toggle('text-slate-100', !!this.value);">
                                 <option value="" disabled selected class="text-gray-400 bg-slate-800">Selecione um microsserviço</option>
                                 ${microsservicos}
@@ -322,7 +322,7 @@ const openNewInstanceForm = async () => {
                             <span onclick="newVolume()"
                                 class="ph-bold ph-plus text-xl text-slate-400 hover:text-slate-100 hover:cursor-pointer absolute top-1/2 end-3 -translate-y-1/2 duration-150 transition-all"></span>
                         </div>
-                        <div class="flex flex-col gap-1.5">
+                        <div class="flex flex-col gap-1.5 mb-8">
                             <ol id="newVolumesList"
                                 class="list-decimal list-inside space-y-2 text-xs sm:text-sm text-slate-300">
                             </ol>
