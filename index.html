@@ -124,7 +124,8 @@
     id="header-main"
     class="w-full bg-slate-950 flex items-center justify-around py-6 max-md:px-1 px-8 border-y border-slate-700 z-40 fixed overflow-hidden h-24">
     <div>
-      <img src="/assets/img/logo/logo-light.svg" alt="Logo da Microhub" class="max-h-11">
+      <img src="/assets/img/logo/logo-light.svg" alt="Logo da Microhub" class="max-h-11 md:hidden lg:block">
+      <img src="/assets/img/logo/icon-light.svg" alt="Logo da Microhub" class="max-h-11 hidden md:block lg:hidden">
     </div>
     <nav
       class="flex gap-6 text-slate-300 *:border-b *:border-b-transparent *:hover:border-b-slate-100 *:cursor-pointer *:hover:text-slate-50 *:transition-all *:duration-300 max-md:hidden">
@@ -169,26 +170,28 @@
         class="min-w-32 py-2 border border-blue-600 rounded-lg hover:bg-blue-600 transition-colors duration-300">Cadastre-se</button>
     </div>
   </header>
-  <main class="flex flex-col items-center justify-center px-4 max-w-6xl mx-auto gap-44">
-    <section id="home" class="w-full min-h-[60dvh] flex flex-col items-center justify-end text-center gap-6 relative">
-      <div class="w-xl h-40 bg-blue-800 absolute top-0 -left-56 blur-[8rem] rotate-45"></div>
-      <div class="w-xl h-40 bg-indigo-800 absolute top-0 -right-56 blur-[8rem] -rotate-45"></div>
-      <div class="flex flex-col items-center justify-center gap-3">
-        <h1
-          class="text-5xl max-sm:text-3xl max-md:text-4xl max-w-4xl font-black bg-linear-120 from-blue-600 via-blue-400 to-indigo-600 via-35% bg-clip-text text-transparent animate-aurora-text bg-size-[200%_auto]">
-          Visibilidade para sua infraestrutura nos momentos que mais importam.
-        </h1>
-        <p class="text-slate-200 max-w-5xl max-sm:text-sm">
-          Monitore CPU, memória e rede dos seus microsserviços em um único dashboard e identifique rapidamente sinais de
-          sobrecarga e degradação de desempenho.
-        </p>
-      </div>
-      <a href="#problem">
-        <button
-          class="cursor-pointer min-w-32 py-2 px-6 bg-blue-500 shadow-lg shadow-blue-500 rounded-lg hover:shadow-xl hover:scale-102 transition-all duration-300">Conheça
-          a solução</button>
-      </a>
-    </section>
+  <main class="w-full flex flex-col items-center justify-center px-4 overflow-hidden max-w-6xl mx-auto gap-44">
+    <div class="max-w-6xl w-full px-4 flex flex-col items-center justify-center gap-44 mx-auto">
+      <section id="home" class="w-full min-h-[60dvh] flex flex-col items-center justify-end text-center gap-6 relative">
+        <div class="w-[500px] max-w-full h-40 bg-blue-800 absolute top-0 left-1/2 -translate-x-full blur-[8rem] rotate-45 -z-10"></div>
+        <div class="w-[500px] max-w-full h-40 bg-indigo-800 absolute top-0 left-1/2 blur-[8rem] -rotate-45 -z-10"></div>
+        <div class="flex flex-col items-center justify-center gap-3">
+          <h1
+            class="text-5xl max-sm:text-3xl max-md:text-4xl max-w-4xl font-black bg-linear-120 from-blue-600 via-blue-400 to-indigo-600 via-35% bg-clip-text text-transparent animate-aurora-text bg-size-[200%_auto]">
+            Visibilidade para sua infraestrutura nos momentos que mais importam.
+          </h1>
+          <p class="text-slate-200 max-w-5xl max-sm:text-sm">
+            Monitore CPU, memória e rede dos seus microsserviços em um único dashboard e identifique rapidamente sinais de
+            sobrecarga e degradação de desempenho.
+          </p>
+        </div>
+        <a href="#problem">
+          <button
+            class="cursor-pointer min-w-32 py-2 px-6 bg-blue-500 shadow-lg shadow-blue-500 rounded-lg hover:shadow-xl hover:scale-102 transition-all duration-300">Conheça
+            a solução</button>
+        </a>
+      </section>
+    </div>
     <section id="problem" class="w-full flex flex-col items-center justify-center relative gap-3">
       <div class="w-2xl max-sm:w-full h-16 bg-linear-to-b from-blue-800 via-indigo-700 to-indigo-800 absolute -top-5 blur-3xl"></div>
       <div class="w-full flex max-sm:flex-col gap-6 bg-linear-120 from-slate-700/90 via-blue-800/90 to-indigo-800/90 rounded-2xl transition-all duration-300 hover:scale-101">
