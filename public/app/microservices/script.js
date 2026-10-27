@@ -75,8 +75,8 @@ const getMicroservices = async () => {
                         </div>
                     </div>
                     <div class="border-b border-slate-950/20"></div>
-                    <div class="flex items-center">
-                        <h1 class="${corInstance}py-1.5 pr-3 max-sm:text-xs text-sm rounded-lg font-semibold w-fit break-all ${temInstancia}">Instância:</h1>
+                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <h1 class="py-1.5 max-sm:text-xs text-sm rounded-lg font-semibold whitespace-nowrap ${temInstancia}">Instância:</h1>
                         <h1 class="${corInstance} hover:${corHoverInstance} py-1.5 px-3 max-sm:text-xs text-sm rounded-lg font-semibold w-fit break-all hover:cursor-pointer duration-150 transition-all" onclick="openInstancesPage()">${nomeInstancia}</h1>
                     </div>
                     <div class="flex justify-between items-center gap-2">

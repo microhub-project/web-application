@@ -71,14 +71,16 @@ const getInstances = async () => {
 
             const element = `
                 <div class="bg-slate-100 p-6 rounded-lg flex flex-col gap-4 shadow w-full" id="${elementId}">
-                    <div class="flex justify-between items-center gap-2 font-semibold text-lg">
-                        <div>
-                            <h1 class="text-2xl font-bold">${nomeInstancia}</h1>
-                            <div class="flex items-center mt-1">
+                    <div class="flex justify-between items-start gap-2 font-semibold text-lg">
+                        <div class="flex flex-col w-full">
+                            <h1 class="text-xl sm:text-2xl font-bold break-all">${nomeInstancia}</h1>
+                            <div class="flex flex-col sm:flex-row sm:items-center mt-1 gap-2">
                                 <p class="text-md text-blue-600 font-bold">${tipo}</p>
-                                <p class="text-sm ml-2 bg-blue-600 text-white py-1.5 px-3 max-sm:text-xs rounded-lg font-semibold w-fit break-all">${cpu}vCPU</p>
-                                <p class="text-sm ml-2 bg-blue-600 text-white py-1.5 px-3 max-sm:text-xs rounded-lg font-semibold w-fit break-all">${ram} GiB de RAM</p>
-                                <p class="text-sm ml-2 bg-green-600 text-white py-1.5 px-3 max-sm:text-xs rounded-lg font-semibold w-fit break-all">$${custo_computacao}/mês</p>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <p class="text-sm bg-blue-600 text-white py-1.5 px-3 max-sm:text-xs rounded-lg font-semibold w-fit whitespace-nowrap">${cpu}vCPU</p>
+                                    <p class="text-sm bg-blue-600 text-white py-1.5 px-3 max-sm:text-xs rounded-lg font-semibold w-fit whitespace-nowrap">${ram} GiB de RAM</p>
+                                    <p class="text-sm bg-green-600 text-white py-1.5 px-3 max-sm:text-xs rounded-lg font-semibold w-fit whitespace-nowrap">$${custo_computacao}/mês</p>
+                                </div>
                             </div>
                         </div>
                         <div class="flex items-center gap-1 shrink-0">
@@ -87,19 +89,19 @@ const getInstances = async () => {
                         </div>
                     </div>
                     <div class="border border-slate-950"></div>
-                    <div class="flex items-center">
-                        <h1 class="py-1.5 pr-3 max-sm:text-xs text-sm rounded-lg font-semibold w-fit break-all ${microsservicoAtribuido}">Microsserviço:</h1>
+                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <h1 class="py-1.5 max-sm:text-xs text-sm rounded-lg font-semibold w-fit whitespace-nowrap ${microsservicoAtribuido}">Microsserviço:</h1>
                         <h1 class="${corMicroservice} hover:${corHoverMicroservice} py-1.5 px-3 max-sm:text-xs text-sm rounded-lg font-semibold w-fit break-all hover:cursor-pointer duration-150 transition-all" onclick="openMicroservicesPage()">${nomeMicrosservico}</h1>
                     </div>
-                    <div class="flex items-center">
-                        <h1 class="py-1.5 pr-3 max-sm:text-xs text-sm rounded-lg font-semibold w-fit break-all">Custo da instância:</h1>
-                        <h1 class="bg-green-600 text-white py-1.5 px-3 max-sm:text-xs text-sm rounded-lg font-semibold w-fit break-all">$${custo_mensal}/mês</h1>
+                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <h1 class="py-1.5 max-sm:text-xs text-sm rounded-lg font-semibold whitespace-nowrap">Custo da instância:</h1>
+                        <h1 class="bg-green-600 text-white py-1.5 px-3 max-sm:text-xs text-sm rounded-lg font-semibold w-fit whitespace-nowrap">$${custo_mensal}/mês</h1>
                     </div>
                     <h1 class="max-sm:text-xs text-sm rounded-lg font-semibold w-fit break-all">Volumes:</h1>
                     ${volumes}
-                    <div class="flex items-center">
-                        <p class="max-sm:text-xs text-sm pl-3 font-semibold w-fit break-all">Total:</p>
-                        <p class="text-sm ml-2 bg-green-600 text-white py-1.5 px-3 max-sm:text-xs rounded-lg font-semibold w-fit break-all">$${custo_armazenamento}/mês</p>
+                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <p class="max-sm:text-xs text-sm font-semibold whitespace-nowrap">Total:</p>
+                        <p class="text-sm bg-green-600 text-white py-1.5 px-3 max-sm:text-xs rounded-lg font-semibold w-fit whitespace-nowrap">$${custo_armazenamento}/mês</p>
                     </div>
                 </div>
             `;
