@@ -14,6 +14,8 @@ router.get("/listar-componentes", instanceController.listarComponentes);
 
 router.get("/listar-tipos", instanceController.listarTipos);
 
+router.get("/listar-componentes-monitorados/:instance_uuid", instanceController.listarComponentesMonitorados);
+
 router.post("/cadastrar", instanceController.cadastrar);
 
 router.post("/cadastrar-volume", instanceController.cadastrarVolume);
@@ -21,5 +23,11 @@ router.post("/cadastrar-volume", instanceController.cadastrarVolume);
 router.post("/cadastrar-componente-instancia", instanceController.cadastrarComponenteInstancia);
 
 router.post("/apagar", instanceController.apagar);
+
+router.post("/apagar-volume", instanceController.apagarVolume);
+
+router.post("/atualizar", instanceController.atualizar);
+
+router.post("/atualizar-componente-instancia", instanceController.atualizarComponenteInstancia);
 
 export default router;
