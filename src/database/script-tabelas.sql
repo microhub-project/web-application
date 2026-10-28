@@ -1,5 +1,3 @@
--- https://calculator.aws/#/estimate
-
 DROP DATABASE IF EXISTS `microhub`;
 CREATE DATABASE IF NOT EXISTS `microhub`;
 USE `microhub`;
@@ -10,19 +8,20 @@ USE `microhub`;
 CREATE TABLE IF NOT EXISTS `microhub`.`componente` (
   `uuid` BINARY(16) NOT NULL,
   `nome` VARCHAR(45) NOT NULL,
+  `nome_tecnico` VARCHAR(45) NOT NULL,
   `unidade_medida` VARCHAR(20) NOT NULL,
   PRIMARY KEY (`uuid`));
 
-INSERT INTO `microhub`.`componente` (`uuid`, `nome`, `unidade_medida`) VALUES 
-    (UUID_TO_BIN('f40975fe-1a28-4526-aba0-7b15dd6048f9'), 'cpu_percent', '%'),
-    (UUID_TO_BIN('84592640-3fa9-4f77-adc6-6f9e878a5f40'), 'cpu_frequency', 'GHz'),
-    (UUID_TO_BIN('196d04b2-a976-4da5-a2e8-2cccb42cb0ac'), 'ram_percent', '%'),
-    (UUID_TO_BIN('6379189d-aec3-47dc-8efa-9daadd23d36d'), 'swap_memory_percent', '%'),
-    (UUID_TO_BIN('83589fb2-dfee-484a-bc53-4ed0c5b1777d'), 'upload_traffic', 'Mpbs'),
-    (UUID_TO_BIN('40a9de89-d427-4c6d-a7d2-1e4f4889b661'), 'download_traffic', 'Mbps'),
-    (UUID_TO_BIN('5acf74f9-7e8f-46a2-853a-56fa6c6ec1e2'), 'disk', 'GiB'),
-    (UUID_TO_BIN('3eef27b6-b3e3-46b3-9a2a-df7c1ce09037'), 'processes', 'processos'),
-    (UUID_TO_BIN('f80ca86d-d17e-4b8c-aa52-b2261b0fe643'), 'zombie_processes', '%');
+INSERT INTO `microhub`.`componente` (`uuid`, `nome`, `nome_tecnico`, `unidade_medida`) VALUES 
+    (UUID_TO_BIN('f40975fe-1a28-4526-aba0-7b15dd6048f9'), 'Porcentagem de uso de CPU', 'cpu_percent', '%'),
+    (UUID_TO_BIN('84592640-3fa9-4f77-adc6-6f9e878a5f40'), 'Frequência da CPU', 'cpu_frequency', 'GHz'),
+    (UUID_TO_BIN('196d04b2-a976-4da5-a2e8-2cccb42cb0ac'), 'Porcentagem de uso de memória RAM', 'ram_percent', '%'),
+    (UUID_TO_BIN('6379189d-aec3-47dc-8efa-9daadd23d36d'), 'Porcentagem de uso de memória SWAP', 'swap_memory_percent', '%'),
+    (UUID_TO_BIN('83589fb2-dfee-484a-bc53-4ed0c5b1777d'), 'Tráfego de bytes de upload', 'upload_traffic', 'Mpbs'),
+    (UUID_TO_BIN('40a9de89-d427-4c6d-a7d2-1e4f4889b661'), 'Tráfego de bytes de download', 'download_traffic', 'Mbps'),
+    (UUID_TO_BIN('5acf74f9-7e8f-46a2-853a-56fa6c6ec1e2'), 'Espaço livre no disco', 'disk', 'GiB'),
+    (UUID_TO_BIN('3eef27b6-b3e3-46b3-9a2a-df7c1ce09037'), 'Quantidade de processos', 'processes_qtd', 'processos'),
+    (UUID_TO_BIN('f80ca86d-d17e-4b8c-aa52-b2261b0fe643'), 'Porcentagem de processos zumbi', 'zombie_processes_percent', '%');
 
 -- -----------------------------------------------------
 -- Table `microhub`.`tipo`
@@ -68,8 +67,7 @@ CREATE TABLE IF NOT EXISTS `microhub`.`empresa` (
   UNIQUE INDEX `cnpj_unique` (`cnpj` ASC) VISIBLE);
 
 INSERT INTO `microhub`.`empresa` (`uuid`, `cnpj`, `razao_social`, `nome_fantasia`, `status`) VALUES
-  (UUID_TO_BIN('61983115-a071-4cec-8bb7-d5e45e126c66'), '12345678000195', 'Tech Solutions Ltda', 'Tech Solutions', 1),
-  (UUID_TO_BIN('9e4e3a73-1721-48bd-9f90-7c1da7a5005e'), '98765432000110', 'Inovacao Digital S.A.', 'Inovacao Tech', 1);
+  (UUID_TO_BIN('61983115-a071-4cec-8bb7-d5e45e126c66'), '12345678000195', 'MicroHub Digital Solutions', 'MicroHub', 1);
 
 -- -----------------------------------------------------
 -- Table `microhub`.`microsservico`
@@ -92,16 +90,16 @@ CREATE TABLE IF NOT EXISTS `microhub`.`microsservico` (
 INSERT INTO `microhub`.`microsservico` (`uuid`, `empresa_uuid`, `nome`, `descricao`, `status`) VALUES
   (UUID_TO_BIN('9f23000f-8c6b-43bd-9d91-566b8c2a34f9'), UUID_TO_BIN('61983115-a071-4cec-8bb7-d5e45e126c66'), 'Autenticação', 'Serviço responsável por login e emissão de tokens JWT', 1),
   (UUID_TO_BIN('b762054b-d0eb-44dc-b2ce-61b62776accd'), UUID_TO_BIN('61983115-a071-4cec-8bb7-d5e45e126c66'), 'Pagamentos', 'Processamento de transações de cartão de crédito e PIX', 1),
-  (UUID_TO_BIN('c497fcfe-c4a4-45f3-a3d7-5e36e1a8d5fe'), UUID_TO_BIN('9e4e3a73-1721-48bd-9f90-7c1da7a5005e'), 'Notificações', 'Serviço para disparo de e-mails e SMS', 1);
+  (UUID_TO_BIN('c497fcfe-c4a4-45f3-a3d7-5e36e1a8d5fe'), UUID_TO_BIN('61983115-a071-4cec-8bb7-d5e45e126c66'), 'Notificações', 'Serviço para disparo de e-mails e SMS', 1);
 
 -- -----------------------------------------------------
 -- Table `microhub`.`instancia`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `microhub`.`instancia` (
   `uuid` BINARY(16) NOT NULL,
+  `nome` VARCHAR(45) NULL,
   `endereco_mac` CHAR(17) NOT NULL,
   `tipo_uuid` BINARY(16) NOT NULL,
-  `custo_mensal` DECIMAL(10,2) NULL,
   `status` TINYINT(1) NOT NULL,
   `microsservico_uuid` BINARY(16) NOT NULL,
   `criado_em` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -118,10 +116,10 @@ CREATE TABLE IF NOT EXISTS `microhub`.`instancia` (
     FOREIGN KEY (`microsservico_uuid`)
     REFERENCES `microhub`.`microsservico` (`uuid`));
 
-INSERT INTO `microhub`.`instancia` (`uuid`, `endereco_mac`, `tipo_uuid`, `custo_mensal`, `status`, `microsservico_uuid`) VALUES
-  (UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177'), '00:1A:2B:3C:4D:5E', UUID_TO_BIN('ef9f4280-b9af-402b-bcaa-dcbc45462ab0'), 33.83, 1, UUID_TO_BIN('9f23000f-8c6b-43bd-9d91-566b8c2a34f9')),
-  (UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), '00:1A:2B:3C:4D:5F', UUID_TO_BIN('6994f496-a302-4780-b759-f70f194d588c'), 97.84, 1, UUID_TO_BIN('b762054b-d0eb-44dc-b2ce-61b62776accd')),
-  (UUID_TO_BIN('47b46b2a-8ee0-4492-85d0-8095bbdab387'), '00:1A:2B:3C:4D:60', UUID_TO_BIN('0a65e2db-0418-4bda-871b-5ef348d52dc7'), 111.56, 1, UUID_TO_BIN('c497fcfe-c4a4-45f3-a3d7-5e36e1a8d5fe'));
+INSERT INTO `microhub`.`instancia` (`uuid`, `nome`, `endereco_mac`, `tipo_uuid`, `status`, `microsservico_uuid`) VALUES
+  (UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177'), NULL, '00:1A:2B:3C:4D:5E', UUID_TO_BIN('ef9f4280-b9af-402b-bcaa-dcbc45462ab0'), 1, UUID_TO_BIN('9f23000f-8c6b-43bd-9d91-566b8c2a34f9')),
+  (UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), 'vm-prd-ubuntu-pagamentos', '00:1A:2B:3C:4D:5F', UUID_TO_BIN('6994f496-a302-4780-b759-f70f194d588c'), 1, UUID_TO_BIN('b762054b-d0eb-44dc-b2ce-61b62776accd')),
+  (UUID_TO_BIN('47b46b2a-8ee0-4492-85d0-8095bbdab387'), 'vm-prd-ubuntu-notificacoes', '00:1A:2B:3C:4D:60', UUID_TO_BIN('0a65e2db-0418-4bda-871b-5ef348d52dc7'), 1, UUID_TO_BIN('c497fcfe-c4a4-45f3-a3d7-5e36e1a8d5fe'));
 
 -- -----------------------------------------------------
 -- Table `microhub`.`instancia_tem_componente`
@@ -152,28 +150,55 @@ INSERT INTO `microhub`.`instancia_tem_componente` (`componente_uuid`, `instancia
   (UUID_TO_BIN('f40975fe-1a28-4526-aba0-7b15dd6048f9'), UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), 85.00, 5.00, 1, 1);
   
 -- -----------------------------------------------------
+-- Table `microhub`.`usuario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `microhub`.`usuario` (
+  `uuid` BINARY(16) NOT NULL,
+  `empresa_uuid` BINARY(16) NOT NULL,
+  `nome` VARCHAR(120) NOT NULL,
+  `cargo` TINYINT(1) NOT NULL,
+  `email` VARCHAR(120) NOT NULL,
+  `senha` VARCHAR(60) NOT NULL,
+  `status` TINYINT(1) NOT NULL,
+  `criado_em` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `atualizado_em` DATETIME NULL DEFAULT NULL,
+  `deletado_em` DATETIME NULL,
+  PRIMARY KEY (`uuid`, `empresa_uuid`),
+  UNIQUE INDEX `email_unique` (`email` ASC) VISIBLE,
+  INDEX `fk_usuario_empresa_uuidx` (`empresa_uuid` ASC) VISIBLE,
+  CONSTRAINT `fk_usuario_empresa`
+    FOREIGN KEY (`empresa_uuid`)
+    REFERENCES `microhub`.`empresa` (`uuid`));
+
+-- -----------------------------------------------------
 -- Table `microhub`.`alerta`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `microhub`.`alerta` (
   `uuid` BINARY(16) NOT NULL,
   `prioridade` TINYINT NOT NULL,
   `descricao` TEXT NULL DEFAULT NULL,
-  `valor_detectado` DECIMAL(10,2) NULL,
+  `valor_detectado` DECIMAL(10,2) NULL DEFAULT NULL,
   `status` TINYINT(1) NOT NULL,
   `criado_em` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `data_hora_resolvido` DATETIME NULL,
+  `data_hora_resolvido` DATETIME NULL DEFAULT NULL,
+  `resolvido_por` BINARY(16) NULL,
+  `empresa_uuid` BINARY(16) NULL,
   `instancia_tem_componente_componente_uuid` BINARY(16) NOT NULL,
   `instancia_tem_componente_instancia_uuid` BINARY(16) NOT NULL,
   PRIMARY KEY (`uuid`),
   INDEX `fk_alerta_instancia_tem_componente1_uuidx` (`instancia_tem_componente_componente_uuid` ASC, `instancia_tem_componente_instancia_uuid` ASC) VISIBLE,
+  INDEX `fk_alerta_usuario1_idx` (`resolvido_por` ASC, `empresa_uuid` ASC) VISIBLE,
   CONSTRAINT `fk_alerta_instancia_tem_componente1`
     FOREIGN KEY (`instancia_tem_componente_componente_uuid` , `instancia_tem_componente_instancia_uuid`)
-    REFERENCES `microhub`.`instancia_tem_componente` (`componente_uuid` , `instancia_uuid`));
+    REFERENCES `microhub`.`instancia_tem_componente` (`componente_uuid` , `instancia_uuid`),
+  CONSTRAINT `fk_alerta_usuario1`
+    FOREIGN KEY (`resolvido_por` , `empresa_uuid`)
+    REFERENCES `microhub`.`usuario` (`uuid` , `empresa_uuid`));
 
 INSERT INTO `microhub`.`alerta` (`uuid`, `prioridade`, `descricao`, `valor_detectado`, `status`, `instancia_tem_componente_componente_uuid`, `instancia_tem_componente_instancia_uuid`) VALUES
   (UUID_TO_BIN('dd03a4c8-f6d4-4f82-b0c3-2e126633f4ce'), 3, 'Uso excessivo de CPU detectado', 92.50, 1, UUID_TO_BIN('f40975fe-1a28-4526-aba0-7b15dd6048f9'), UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177')),
   (UUID_TO_BIN('1e6729fd-2c17-4ac8-8e8d-b0a83ccdbd1c'), 2, 'Consumo de RAM acima do limite', 91.20, 1, UUID_TO_BIN('196d04b2-a976-4da5-a2e8-2cccb42cb0ac'), UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177'));
-
+    
 -- -----------------------------------------------------
 -- Table `microhub`.`codigo_ativacao`
 -- -----------------------------------------------------
@@ -196,37 +221,7 @@ CREATE TABLE IF NOT EXISTS `microhub`.`codigo_ativacao` (
     REFERENCES `microhub`.`empresa` (`uuid`));
 
 INSERT INTO `microhub`.`codigo_ativacao` (`uuid`, `empresa_uuid`, `codigo`, `cargo`, `status`, `expira_em`) VALUES
-  (UUID_TO_BIN('32cd2ab8-940c-452b-bc02-a439bfe01eaa'), UUID_TO_BIN('61983115-a071-4cec-8bb7-d5e45e126c66'), 'ACT123', 1, 1, DATE_ADD(NOW(), INTERVAL 7 DAY)),
-  (UUID_TO_BIN('7fa0dc8b-4e23-40df-a997-56fe0c6e0250'), UUID_TO_BIN('9e4e3a73-1721-48bd-9f90-7c1da7a5005e'), 'ACT456', 2, 1, DATE_ADD(NOW(), INTERVAL 7 DAY));
-
--- -----------------------------------------------------
--- Table `microhub`.`usuario`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `microhub`.`usuario` (
-  `uuid` BINARY(16) NOT NULL,
-  `empresa_uuid` BINARY(16) NOT NULL,
-  `nome` VARCHAR(120) NOT NULL,
-  `cargo` TINYINT(1) NOT NULL,
-  `email` VARCHAR(120) NOT NULL,
-  `senha` VARCHAR(60) NOT NULL,
-  `status` TINYINT(1) NOT NULL,
-  `criado_em` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `atualizado_em` DATETIME NULL DEFAULT NULL,
-  `deletado_em` DATETIME NULL,
-  PRIMARY KEY (`uuid`, `empresa_uuid`),
-  UNIQUE INDEX `email_unique` (`email` ASC) VISIBLE,
-  INDEX `fk_usuario_empresa_uuidx` (`empresa_uuid` ASC) VISIBLE,
-  CONSTRAINT `fk_usuario_empresa`
-    FOREIGN KEY (`empresa_uuid`)
-    REFERENCES `microhub`.`empresa` (`uuid`));
-
-INSERT INTO `microhub`.`usuario` (`uuid`, `empresa_uuid`, `nome`, `cargo`, `email`, `senha`, `status`) VALUES
-  (UUID_TO_BIN('e8a71dbf-bb68-4b7f-920c-5e54ab123b91'), UUID_TO_BIN('61983115-a071-4cec-8bb7-d5e45e126c66'), 'Usuário Teste', 1, 'teste@gmail.com', 'hash_senha_aqui', 1);
-
-SELECT u.uuid, u.nome, u.email, u.cargo, u.senha, u.empresa_uuid, e.nome_fantasia 
-FROM usuario u 
-JOIN empresa e ON u.empresa_uuid = e.uuid 
-WHERE email = 'teste@gmail.com' AND u.deletado_em IS NULL;
+  (UUID_TO_BIN('32cd2ab8-940c-452b-bc02-a439bfe01eaa'), UUID_TO_BIN('61983115-a071-4cec-8bb7-d5e45e126c66'), 'ACT123', 1, 1, DATE_ADD(NOW(), INTERVAL 15 MINUTE));
 
 -- -----------------------------------------------------
 -- Table `microhub`.`volume`
@@ -248,4 +243,5 @@ CREATE TABLE IF NOT EXISTS `microhub`.`volume` (
     
 INSERT INTO `microhub`.`volume` (`uuid`, `armazenamento`, `custo_giga`, `instancia_uuid`, `status`) VALUES
   (UUID_TO_BIN('54d8a870-e6bd-4aaa-973b-087ed62fea45'), 100.00, 0.15, UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177'), 1),
-  (UUID_TO_BIN('b81416d4-0eaa-443b-9f36-5c968fb2b29e'), 150.00, 0.15, UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), 1);
+  (UUID_TO_BIN('b81416d4-0eaa-443b-9f36-5c968fb2b29e'), 150.00, 0.15, UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), 1),
+  (UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), 150.00, 0.15, UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), 1);

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<script src="https://cdn.tailwindcss.com"></script>
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Códigos de Ativação</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="../../tailwind/output.css">
   <link rel="shortcut icon" href="/assets/img/logo/icon-128.ico" type="image/x-icon">
   <link rel="stylesheet" type="text/css"
@@ -28,87 +28,180 @@
   <script src="../../js/toast.js"></script>
 </head>
 
-<body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
+<body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative min-h-dvh">
   <div class="flex min-h-screen">
-    <div id="popUpContainer"
-      class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-4">
-      <div id="popUpContent"
-        class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl px-8 py-6 shadow-2xl">
 
+    <div id="popUpContainer"
+      class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div id="popUpContent"
+        class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl px-5 sm:px-8 py-5 sm:py-6 shadow-2xl my-auto">
       </div>
     </div>
-    <nav
-      class="w-72 fixed h-screen bg-slate-900 border-r border-slate-800 flex flex-col px-6 py-9 shrink-0 justify-between z-100">
-      <div class="flex items-center justify-center -ml-5">
-        <img src="/assets/img/logo/logo-light.svg" alt="Logo da Microhub" class="max-h-11">
-      </div>
 
-      <div class="flex flex-col gap-8">
-        <a href="../index.html"
-          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
-          <i class="ph ph-house text-2xl"></i> Geral
-        </a>
-        <a href="#"
-          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
-          <i class="ph ph-hard-drives text-2xl"></i> Aplicações
-        </a>
-        <a href="#"
-          class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
-          <i class="ph ph-bell text-2xl"></i> Histórico Alertas
-        </a>
-        <a href="../users/index.html" id="navItemUsers"
-          class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
-          <i class="ph ph-user text-2xl"></i> Usuários
-        </a>
-        <a id="navItemCodes" href="#"
-          class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
-          <i class="ph ph-lock text-2xl"></i> Códigos
-        </a>
-      </div>
-      <div class="flex justify-around items-center bg-slate-800 py-3 rounded">
-        <div id="navUserIcon" class="rounded-full bg-slate-950 size-10 flex justify-center items-center font-bold">
-          US
+    <header id="header-main" class="max-lg:hidden">
+      <nav
+        class="w-72 fixed left-0 top-0 h-screen bg-slate-900 border-r border-slate-800 flex flex-col px-6 py-9 shrink-0 justify-between z-40">
+        <div class="flex items-center justify-center -ml-5">
+          <img src="/assets/img/logo/logo-light.svg" alt="Logo da Microhub" class="max-h-11">
         </div>
-        <div id="navUserName" class="font-semibold">
-          Usuário
-        </div>
-        <div>
-          <a onclick="logout()"><i class="ph ph-sign-out text-2xl cursor-pointer"></i></a>
-        </div>
-      </div>
-    </nav>
 
-    <main class="text-slate-900 flex flex-col p-8 absolute right-0 top-0 w-[calc(100dvw-18rem)] min-h-dvh gap-12">
-      <h1 class="text-2xl font-extrabold">Códigos de Ativação</h1>
-      <section id="codesContainer" class="w-full flex p-4 flex-col gap-6">
-        <div class="bg-slate-100 p-6 rounded-lg flex flex-col gap-4 shadow">
-          <h1 class="text-2xl font-bold">Gerar novo código</h1>
-          <div class="border border-slate-950/50"></div>
-          <div class="flex justify-between items-center gap-5">
-            <div class="flex items-center gap-2 font-semibold">
-              <i class="ph-bold ph-briefcase text-2xl"></i>
-              <select id="newRoleSelect" class="text-lg outline-none!">
-                <option value="" selected disabled>Selecione um cargo</option>
-                <option value="0" id="newPartnerOpt" class="hidden">Novo parceiro</option>
-                <option value="1">Gerente TI</option>
-                <option value="2">FinOps</option>
-                <option value="3">DevOps</option>
-              </select>
-            </div>
-            <input type="email" id="newEmailReceiver" placeholder="Digite o email a receber o código"
-              class="w-full px-4 py-3 bg-slate-100 border-2 border-slate-800 rounded-lg outline-none focus:border-blue-500 transition-colors">
-            <div class="flex *:cursor-pointer items-center gap-5">
-              <i onclick="sendCode()" tabindex="0"
-                class="ph-bold ph-paper-plane-tilt text-3xl hover:text-blue-600 duration-150 transition-all pr-4"></i>
-            </div>
+        <div class="flex flex-col gap-8">
+          <a href="../index.html" id="navItemGeneral"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
+            <i class="ph ph-house text-2xl"></i> Geral
+          </a>
+          <a href="../reports/index.html" id="navItemReports"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
+            <i class="ph ph-files text-2xl"></i> Relatórios
+          </a>
+          <a href="../alerts/index.html" id="navItemAlerts"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
+            <i class="ph ph-warning text-2xl"></i> Alertas
+          </a>
+          <a href="../finances/index.html" id="navItemFinances"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
+            <i class="ph ph-money text-2xl"></i> Finanças
+          </a>
+          <a href="../microservices/index.html" id="navItemMicroservices"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
+            <i class="ph ph-cube text-2xl"></i> Microsserviços
+          </a>
+          <a href="../instances/index.html" id="navItemInstances"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
+            <i class="ph ph-computer-tower text-2xl"></i> Instâncias
+          </a>
+          <a href="../users/index.html" id="navItemUsers"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
+            <i class="ph ph-user text-2xl"></i> Usuários
+          </a>
+          <a href="#" id="navItemCodes"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
+            <i class="ph ph-lock text-2xl"></i> Códigos
+          </a>
+          <a href="../trash/index.html" id="navItemTrash"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
+            <i class="ph ph-trash text-2xl"></i> Lixeira
+          </a>
+        </div>
+        <div class="flex justify-around items-center bg-slate-800 py-3 rounded">
+          <div id="navUserIcon" class="rounded-full bg-slate-950 size-10 flex justify-center items-center font-bold">
+            US
+          </div>
+          <div id="navUserName" class="font-semibold">
+            Usuário
+          </div>
+          <div>
+            <a onclick="logout()"><i class="ph ph-sign-out text-2xl cursor-pointer"></i></a>
           </div>
         </div>
-      </section>
+      </nav>
+    </header>
+
+    <header id="header-mobile" class="lg:hidden">
+      <nav
+        class="w-20 fixed right-0 top-0 h-screen bg-slate-900 border-l border-slate-800 flex flex-col items-center px-4 py-9 shrink-0 justify-between z-40">
+        <div class="flex items-center justify-center w-full">
+          <img src="/assets/img/logo/icon-light.svg" alt="Logo da Microhub" class="max-h-11">
+        </div>
+
+        <div class="flex flex-col items-center justify-center gap-8 w-full">
+          <a href="../index.html" id="navItemGeneralMobile"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center justify-center text-xl cursor-pointer">
+            <i class="ph ph-house text-3xl"></i>
+          </a>
+          <a href="../reports/index.html" id="navItemReportsMobile"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center justify-center text-xl cursor-pointer">
+            <i class="ph ph-files text-3xl"></i>
+          </a>
+          <a href="../alerts/index.html" id="navItemAlertsMobile"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center justify-center text-xl cursor-pointer">
+            <i class="ph ph-warning text-3xl"></i>
+          </a>
+          <a href="../finances/index.html" id="navItemFinancesMobile"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center justify-center text-xl cursor-pointer">
+            <i class="ph ph-money text-3xl"></i>
+          </a>
+          <a href="../microservices/index.html" id="navItemMicroservicesMobile"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center justify-center text-xl cursor-pointer">
+            <i class="ph ph-cube text-3xl"></i>
+          </a>
+          <a href="../instances/index.html" id="navItemInstancesMobile"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center justify-center text-xl cursor-pointer">
+            <i class="ph ph-computer-tower text-3xl"></i>
+          </a>
+          <a href="../users/index.html" id="navItemUsersMobile"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center justify-center text-xl cursor-pointer">
+            <i class="ph ph-user text-3xl"></i>
+          </a>
+          <a href="#" id="navItemCodesMobile"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center justify-center text-xl cursor-pointer">
+            <i class="ph ph-lock text-3xl"></i>
+          </a>
+          <a href="../trash/index.html" id="navItemTrashMobile"
+            class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center justify-center text-xl cursor-pointer">
+            <i class="ph ph-trash text-3xl"></i>
+          </a>
+        </div>
+        <div class="flex flex-col justify-center items-center p-2 gap-4 bg-slate-800 py-3 rounded w-full">
+          <div id="navUserIconMobile"
+            class="rounded-full bg-slate-950 size-10 flex justify-center items-center font-bold">
+            US
+          </div>
+          <div>
+            <a onclick="logout()"><i class="ph ph-sign-out text-3xl cursor-pointer"></i></a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main
+      class="text-slate-900 flex flex-col p-8 max-sm:p-4 max-sm:pr-24 min-h-dvh gap-8 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
+
+      <div class="flex flex-col gap-4 w-full">
+        <div>
+          <h1 class="text-2xl max-sm:text-xl font-normal sm:font-extrabold">Códigos de Ativação</h1>
+        </div>
+        <hr class="border-t border-slate-400 my-2 sm:my-5">
+        <section class="w-full flex flex-col gap-4 sm:gap-6">
+          <div class="bg-slate-100 p-4 sm:p-6 rounded-lg flex flex-col gap-3 sm:gap-4 shadow">
+            <h1 class="text-xl sm:text-2xl font-normal sm:font-bold">Gerar novo código</h1>
+            <div class="border-b border-slate-950/20"></div>
+
+            <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 sm:gap-5">
+              <div
+                class="flex items-center gap-2 font-normal sm:font-semibold w-full sm:w-auto p-2.5 sm:p-0 rounded-lg sm:bg-transparent">
+                <i class="ph-bold ph-briefcase text-xl sm:text-2xl shrink-0"></i>
+                <select id="newRoleSelect"
+                  class="text-sm sm:text-lg outline-none bg-transparent w-full max-w-full sm:max-w-xs cursor-pointer truncate">
+                  <option value="" selected disabled>Cargo</option>
+                  <option value="0" id="newPartnerOpt" class="hidden">Novo parceiro</option>
+                  <option value="1">Gerente TI</option>
+                  <option value="2">FinOps</option>
+                  <option value="3">DevOps</option>
+                </select>
+              </div>
+
+              <input type="email" id="newEmailReceiver" placeholder="Digite o email a receber o código"
+                class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 bg-slate-100 border-2 border-slate-800 rounded-lg outline-none focus:border-blue-500 transition-colors text-sm sm:text-base">
+
+              <div class="flex items-center justify-center w-full sm:w-auto shrink-0">
+                <button onclick="sendCode()"
+                  class="w-full sm:w-auto bg-blue-600 sm:bg-transparent hover:bg-blue-700 sm:hover:bg-transparent text-white sm:text-slate-900 py-2.5 px-4 sm:p-0 rounded-full sm:rounded-none flex items-center justify-center cursor-pointer transition-all">
+                  <i tabindex="0"
+                    class="ph-bold ph-paper-plane-tilt text-2xl sm:text-3xl sm:hover:text-blue-600 duration-150 transition-all pr-0 sm:pr-4"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="codesContainer" class="w-full grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6"></div>
+        </section>
+      </div>
     </main>
 
   </div>
   <div id="toast-container"
-    class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">
+    class="fixed w-xs bottom-4 right-4 pointer-events-none z-50 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">
   </div>
 </body>
 

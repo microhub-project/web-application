@@ -174,7 +174,7 @@ const loadCharts = () => {
         ctx.fillStyle = '#0f172a';
         ctx.fillText('55', centroX, centroY - 8);
 
-        ctx.font = 'normal 20px font-mono, monospace';
+        ctx.font = 'normal 12px font-mono, monospace';
         ctx.fillStyle = '#64748b';
         ctx.fillText('Instâncias', centroX, centroY + 25);
 
