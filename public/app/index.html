@@ -75,11 +75,11 @@
             <i class="ph ph-trash text-2xl"></i> Lixeira
           </a>
         </div>
-        <div class="flex justify-around items-center bg-slate-800 py-3 rounded">
+        <div class="flex justify-around items-center px-2 bg-slate-800 py-3 rounded">
           <div id="navUserIcon" class="rounded-full bg-slate-950 size-10 flex justify-center items-center font-bold">
             US
           </div>
-          <div id="navUserName" class="font-semibold">
+          <div id="navUserName" class="pl-2 font-semibold">
             Usuário
           </div>
           <div>
@@ -157,7 +157,7 @@
         </div>
 
         <div
-          class="flex items-center gap-3 text-base text-slate-500 bg-slate-100 px-5 py-3 rounded-xl border border-slate-200 shadow-sm">
+          class="flex items-center gap-3 text-base text-slate-500 bg-slate-100 px-5 py-3 rounded-xl border border-slate-200 shadow-sm max-md:mt-4">
           <i class="ph ph-clock text-2xl text-slate-400"></i>
           <span>Última atualização: <span id="data-atualizacao"
               class="font-bold text-slate-800">Carregando...</span></span>
@@ -165,23 +165,23 @@
 
       </div>
 
-      <div class="grid md:grid-rows-1 md:grid-cols-5 gap-5 w-full grid-cols-1 grid-rows-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 lg:grid-cols-5 gap-4 md:gap-5 w-full">
 
         <div id="card-alerta"
-          class="w-full h-40 rounded-2xl bg-slate-100 text-slate-900 flex flex-col items-center justify-center p-6 gap-4 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:-translate-y-1 cursor-pointer md:max-lg:h-52">
+          class="lg:col-span-1 lg:col-start-auto col-span-1 sm:col-span-1 md:col-span-2 w-full h-40 md:h-44 rounded-2xl bg-slate-100 text-slate-900 flex flex-col items-center justify-center p-3 md:p-4 lg:p-6 gap-4 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:-translate-y-1 cursor-pointer md:max-lg:h-52">
           <i id="icone-alerta"
             class=" md:max-lg:hidden ph-bold ph-warning absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
 
           <h2 id="texto-alerta" class="top-4 left-6 absolute text-2xl font-semibold md:max-lg:left-3 ">Alertas</h2>
           <p id="valor-alerta" class="text-6xl font-medium -mb-4 ">8</p>
-          <p class="absolute bottom-4 text-base md:max-lg:text-sm font-medium text-slate-600">
+          <p class="absolute bottom-4 text-base md:max-lg:text-sm lg:max-[1920px]:text-xs font-medium text-slate-600">
             &bull; <span class="text-amber-500">10 Em Atenção</span> &bull; <span class="text-rose-500 ">5
               Críticos</span>
           </p>
         </div>
 
         <div id="card-cpu"
-          class="w-full h-40 rounded-2xl bg-slate-100 text-slate-900 flex flex-col items-center justify-center p-6 gap-4 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:-translate-y-1 cursor-pointer  md:max-lg:h-52">
+          class="lg:col-span-1 lg:col-start-auto col-span-1 sm:col-span-1 md:col-span-2 w-full h-40 md:h-44 rounded-2xl bg-slate-100 text-slate-900 flex flex-col items-center justify-center p-3 md:p-4 lg:p-6 gap-4 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:-translate-y-1 cursor-pointer  md:max-lg:h-52">
           <i id="icone-cpu" class="md:max-lg:hidden ph-bold ph-cpu absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
 
           <h2 id="texto-cpu" class="top-4 left-6 absolute text-2xl font-semibold">CPU média</h2>
@@ -189,7 +189,7 @@
         </div>
 
         <div id="card-ram"
-          class="w-full h-40 rounded-2xl bg-slate-100 text-slate-900 flex flex-col items-center justify-center p-6 gap-4 relative overflow-hidden  border border-blue-900 transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:-translate-y-1 cursor-pointer  md:max-lg:h-52">
+          class="lg:col-span-1 lg:col-start-auto col-span-1 sm:col-span-2 md:col-span-2 w-full h-40 md:h-44 rounded-2xl bg-slate-100 text-slate-900 flex flex-col items-center justify-center p-3 md:p-4 lg:p-6 gap-4 relative overflow-hidden  border border-blue-900 transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:-translate-y-1 cursor-pointer  md:max-lg:h-52">
           <i id="icone-ram"
             class="md:max-lg:hidden ph-bold ph-memory absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
 
@@ -198,7 +198,7 @@
         </div>
 
         <div id="card-upload"
-          class="w-full h-40 rounded-2xl bg-slate-100 text-slate-900 flex flex-col items-center justify-end pb-6 px-6 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:-translate-y-1 cursor-pointer  md:max-lg:h-52">
+          class="lg:col-span-1 lg:col-start-auto col-span-1 sm:col-span-1 md:col-span-2 md:col-start-2 w-full min-w-0 h-40 md:h-44 rounded-2xl bg-slate-100 text-slate-900 flex flex-col items-center justify-end pb-5 px-3 md:px-5 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 cursor-pointer">
           <i id="icone-upload"
             class=" md:max-lg:hidden ph-bold ph-box-arrow-up absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
 
@@ -212,7 +212,7 @@
         </div>
 
         <div id="card-download"
-          class="w-full h-40 rounded-2xl bg-slate-100 text-slate-900 flex flex-col items-center justify-end pb-6 px-6 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:-translate-y-1 cursor-pointer  md:max-lg:h-52">
+         class="lg:col-span-1 lg:col-start-auto col-span-1 sm:col-span-1 md:col-span-2 md:col-start-4 w-full min-w-0 h-40 md:h-44 rounded-2xl bg-slate-100 text-slate-900 flex flex-col items-center justify-end pb-5 px-3 md:px-5 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 cursor-pointer">
           <i id="icone-download"
             class="md:max-lg:hidden ph-bold ph-box-arrow-down absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
 
@@ -264,7 +264,7 @@
             <h2 class="text-2xl font-semibold mb-2">Status das instâncias</h2>
             <p class="text-xl text-slate-500 mb-4">Classificação Atual</p>
 
-            <div class="flex-1 relative w-full max-h-[220px] mx-auto min-h-0 flex justify-center items-center">
+            <div class="relative w-full min-w-0 h-[280px] md:h-[220px] max-md:h-[300px] mx-auto flex justify-center items-center">
               <canvas id="myChart2"></canvas>
             </div>
           </div>
