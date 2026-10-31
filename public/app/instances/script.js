@@ -83,7 +83,7 @@ const getInstances = async () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="flex items-center gap-1 shrink-0">
+                        <div class="flex flex-col xl:flex-row items-center gap-1 shrink-0">
                             <i onclick="openDeleteInstanceForm('${nomeInstancia}', '${elementId}')" class="ph-bold ph-trash text-2xl sm:text-3xl hover:cursor-pointer rounded-lg hover:bg-slate-300 size-10 sm:size-12 flex items-center justify-center duration-150 transition-all"></i>
                             <i onclick="openEditInstanceForm('${uuid}', '${nome}', '${endereco_mac}', '${tipo_uuid}', '${tipo}', '${cpu}', '${ram}', '${microsservico_uuid}', '${microsservico}')" class="ph-bold ph-note-pencil text-2xl sm:text-3xl hover:cursor-pointer rounded-lg hover:bg-slate-300 size-10 sm:size-12 flex items-center justify-center duration-150 transition-all"></i>
                         </div>
