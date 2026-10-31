@@ -1,0 +1,29 @@
+.card-ativo{
+  background-color: #155dfc;
+  color: white;
+  border-color: #155dfc;
+}
+
+.card-ativo:hover{
+  background-color: #1447e6;
+  border-color: #1447e6;
+}
+
+.card-inativo{
+  background-color: white;
+  color: black;
+  border-color: #155dfc;
+}
+
+.card-inativo:hover{
+  color: #1447e6;
+  background-color: #cad5e2;
+}
+
+.ativo{
+    display: flex;
+}
+
+.desativado{
+    display: none;
+}

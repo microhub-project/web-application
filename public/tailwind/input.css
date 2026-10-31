@@ -30,6 +30,8 @@
   }
 }
 
+
+
 @layer base {
   .bg-noise {
     @apply fixed pointer-events-none opacity-[0.12] z-100 bg-(image:--background-noise) inset-0;

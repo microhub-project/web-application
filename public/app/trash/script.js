@@ -1,0 +1,126 @@
+const viewIntancia = document.querySelector('#viewer-inst');
+const viewMicro = document.querySelector('#viewer-micro');
+const viewComp = document.querySelector('#viewer-comp');
+const viewUser = document.querySelector('#viewer-user');
+const viewVol = document.querySelector('#viewer-vol');
+
+const selectInst = document.querySelector('#btn_select_instancias');
+const selectMicro = document.querySelector('#btn_select_micro');
+const selectCompo = document.querySelector('#btn_select_compo');
+const selectUsuario = document.querySelector('#btn_select_usuario');
+const selectVolume = document.querySelector('#btn_select_volume');
+
+selectInst.addEventListener('click', function () {
+    selectInst.classList.add('card-ativo');
+    selectInst.classList.remove('card-inativo');
+    selectMicro.classList.add('card-inativo');
+    selectMicro.classList.remove('card-ativo');
+    selectCompo.classList.add('card-inativo');
+    selectCompo.classList.remove('card-ativo');
+    selectUsuario.classList.add('card-inativo');
+    selectUsuario.classList.remove('card-ativo');
+    selectVolume.classList.add('card-inativo');
+    selectVolume.classList.remove('card-ativo');
+    viewIntancia.classList.add('ativo');
+    viewIntancia.classList.remove('desativado');
+    viewMicro.classList.add('desativado');
+    viewMicro.classList.remove('ativo');
+    viewComp.classList.add('desativado');
+    viewComp.classList.remove('ativo');
+    viewUser.classList.add('desativado');
+    viewUser.classList.remove('ativo');
+    viewVol.classList.add('desativado');
+    viewVol.classList.remove('ativo');
+});
+
+selectMicro.addEventListener('click', function () {
+    selectInst.classList.add('card-inativo');
+    selectInst.classList.remove('card-ativo');
+    selectMicro.classList.add('card-ativo');
+    selectMicro.classList.remove('card-inativo');
+    selectCompo.classList.add('card-inativo');
+    selectCompo.classList.remove('card-ativo');
+    selectUsuario.classList.add('card-inativo');
+    selectUsuario.classList.remove('card-ativo');
+    selectVolume.classList.add('card-inativo');
+    selectVolume.classList.remove('card-ativo');
+    viewIntancia.classList.add('desativado');
+    viewIntancia.classList.remove('ativo');
+    viewMicro.classList.add('ativo');
+    viewMicro.classList.remove('desativado');
+    viewComp.classList.add('desativado');
+    viewComp.classList.remove('ativo');
+    viewUser.classList.add('desativado');
+    viewUser.classList.remove('ativo');
+    viewVol.classList.add('desativado');
+    viewVol.classList.remove('ativo');
+});
+
+selectCompo.addEventListener('click', function () {
+    selectInst.classList.add('card-inativo');
+    selectInst.classList.remove('card-ativo');
+    selectMicro.classList.add('card-inativo');
+    selectMicro.classList.remove('card-ativo');
+    selectCompo.classList.add('card-ativo');
+    selectCompo.classList.remove('card-inativo');
+    selectUsuario.classList.add('card-inativo');
+    selectUsuario.classList.remove('card-ativo');
+    selectVolume.classList.add('card-inativo');
+    selectVolume.classList.remove('card-ativo');
+    viewIntancia.classList.add('desativado');
+    viewIntancia.classList.remove('ativo');
+    viewMicro.classList.add('desativado');
+    viewMicro.classList.remove('ativo');
+    viewComp.classList.add('ativo');
+    viewComp.classList.remove('desativado');
+    viewUser.classList.add('desativado');
+    viewUser.classList.remove('ativo');
+    viewVol.classList.add('desativado');
+    viewVol.classList.remove('ativo');
+});
+
+selectUsuario.addEventListener('click', function () {
+    selectInst.classList.add('card-inativo');
+    selectInst.classList.remove('card-ativo');
+    selectMicro.classList.add('card-inativo');
+    selectMicro.classList.remove('card-ativo');
+    selectCompo.classList.add('card-inativo');
+    selectCompo.classList.remove('card-ativo');
+    selectUsuario.classList.add('card-ativo');
+    selectUsuario.classList.remove('card-inativo');
+    selectVolume.classList.add('card-inativo');
+    selectVolume.classList.remove('card-ativo');
+    viewIntancia.classList.add('desativado');
+    viewIntancia.classList.remove('ativo');
+    viewMicro.classList.add('desativado');
+    viewMicro.classList.remove('ativo');
+    viewComp.classList.add('desativado');
+    viewComp.classList.remove('ativo');
+    viewUser.classList.add('ativo');
+    viewUser.classList.remove('desativado');
+    viewVol.classList.add('desativado');
+    viewVol.classList.remove('ativo');
+});
+
+selectVolume.addEventListener('click', function () {
+    selectInst.classList.add('card-inativo');
+    selectInst.classList.remove('card-ativo');
+    selectMicro.classList.add('card-inativo');
+    selectMicro.classList.remove('card-ativo');
+    selectCompo.classList.add('card-inativo');
+    selectCompo.classList.remove('card-ativo');
+    selectUsuario.classList.add('card-inativo');
+    selectUsuario.classList.remove('card-ativo');
+    selectVolume.classList.add('card-ativo');
+    selectVolume.classList.remove('card-inativo');
+    viewIntancia.classList.add('desativado');
+    viewIntancia.classList.remove('ativo');
+    viewMicro.classList.add('desativado');
+    viewMicro.classList.remove('ativo');
+    viewComp.classList.add('desativado');
+    viewComp.classList.remove('ativo');
+    viewUser.classList.add('desativado');
+    viewUser.classList.remove('ativo');
+    viewVol.classList.add('ativo');
+    viewVol.classList.remove('desativado');
+});
