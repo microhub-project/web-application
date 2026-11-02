@@ -13,6 +13,7 @@ export default defineConfig({
       '/microservices': 'http://localhost:3333',
       '/instances': 'http://localhost:3333',
       '/alerts': 'http://localhost:3333',
+      '/lixeira': 'http://localhost:3333',
     },
   },
 });

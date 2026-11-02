@@ -22,6 +22,29 @@ async function execute(query, params) {
   return rows;
 }
 
+// Executa várias consultas dentro de uma transação
+async function transaction(callback) {
+  const connection = await poolDB.getConnection();
+
+  try {
+    await connection.beginTransaction();
+
+    const resultado = await callback(connection);
+
+    await connection.commit();
+
+    return resultado;
+
+  } catch (erro) {
+    await connection.rollback();
+    throw erro;
+
+  } finally {
+    connection.release();
+  }
+}
+
 export default {
-  execute
+  execute,
+  transaction
 };
