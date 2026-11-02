@@ -167,14 +167,15 @@
           <h2 id="texto-alerta" class="top-4 left-6 absolute text-2xl font-semibold md:max-lg:left-3 ">Alertas</h2>
           <p id="valor-alerta" class="text-6xl font-medium -mb-4 ">8</p>
           <p class="absolute bottom-4 text-base md:max-lg:text-sm font-medium text-slate-600">
-            &bull; <span class="text-amber-500">10 Em Atenção</span> &bull; <span class="text-rose-500 ">5
+            &bull; <span class="text-amber-500">2 Em Atenção</span> &bull; <span class="text-rose-500 ">2
               Críticos</span>
           </p>
         </div>
 
         <div id="card-cpu"
           class="w-full h-40 rounded-2xl bg-slate-100 text-slate-900 flex flex-col items-center justify-center p-6 gap-4 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:-translate-y-1 cursor-pointer  md:max-lg:h-52">
-          <i id="icone-cpu" class="md:max-lg:hidden ph-bold ph-cpu absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
+          <i id="icone-cpu"
+            class="md:max-lg:hidden ph-bold ph-cpu absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
 
           <h2 id="texto-cpu" class="top-4 left-6 absolute text-2xl font-semibold">CPU média</h2>
           <p id="valor-cpu" class="text-6xl font-medium -mb-4"></p>
@@ -219,10 +220,11 @@
         </div>
       </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
 
 
-        <div class="col-span-1 lg:col-span-2 min-w-0 w-full bg-slate-100 rounded-2xl border border-blue-900 p-3 md:p-6 flex flex-col text-slate-900 lg:h-full">
+        <div
+          class="col-span-1 lg:col-span-2 min-w-0 w-full bg-slate-100 rounded-2xl border border-blue-900 p-3 md:p-6 flex flex-col text-slate-900 lg:h-full">
           <h2 class="text-2xl font-bold mb-1">Utilização da Infraestrutura</h2>
           <p class="text-xl text-slate-500 mb-6">Média entre todas as instâncias</p>
 
@@ -248,7 +250,6 @@
             <canvas id="myChart1"></canvas>
           </div>
         </div>
-
         <div class="col-span-1 flex flex-col gap-6 md:max-lg:flex-row">
 
           <div
@@ -262,24 +263,22 @@
           </div>
 
           <div
-            class="bg-slate-100 rounded-2xl border border-blue-900 p-6 flex-1 flex flex-col text-slate-900 transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl cursor-pointer w-full md:max-lg:w-80 ">
-            <h2 class="text-2xl font-semibold mb-2">Performance por Serviço</h2>
+            class="bg-slate-100 rounded-2xl border border-blue-900 p-6 flex-1 flex flex-col text-slate-900 transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl cursor-pointer w-full md:max-lg:w-80">
+            <h2 class="text-2xl font-semibold mb-2">Alertas por instância</h2>
             <p class="text-xl text-slate-500 mb-4">Maior número de alertas</p>
 
             <div class="flex flex-col gap-5 mt-4 w-full">
 
               <div class="flex items-center gap-6 w-full">
-                <span class="w-24 text-2xl font-medium text-slate-700">Payment</span>
-
+                <span class="w-44 text-xl font-medium text-slate-700">pagamento-01</span>
                 <div class="flex-1 h-3.5 bg-slate-200 rounded-full overflow-hidden border border-slate-300">
                   <div class="h-full bg-red-500 rounded-full" style="width: 85%;"></div>
                 </div>
-
-                <span class="w-10 text-right text-2xl font-bold text-slate-900">7</span>
+                <span class="w-10 text-right text-2xl font-bold text-slate-900">6</span>
               </div>
 
               <div class="flex items-center gap-6 w-full">
-                <span class="w-24 text-2xl font-medium text-slate-700">Catalog</span>
+                <span class="w-44 text-xl font-medium text-slate-700">notificação-01</span>
                 <div class="flex-1 h-3.5 bg-slate-200 rounded-full overflow-hidden border border-slate-300">
                   <div class="h-full bg-amber-400 rounded-full" style="width: 62.5%;"></div>
                 </div>
@@ -287,7 +286,7 @@
               </div>
 
               <div class="flex items-center gap-6 w-full">
-                <span class="w-24 text-2xl font-medium text-slate-700">Search</span>
+                <span class="w-44 text-xl font-medium text-slate-700">autenticação-03</span>
                 <div class="flex-1 h-3.5 bg-slate-200 rounded-full overflow-hidden border border-slate-300">
                   <div class="h-full bg-blue-500 rounded-full" style="width: 37.5%;"></div>
                 </div>
@@ -295,7 +294,7 @@
               </div>
 
               <div class="flex items-center gap-6 w-full">
-                <span class="w-24 text-2xl font-medium text-slate-700">Checkout</span>
+                <span class="w-44 text-2xl font-medium text-slate-700">carrinho-02</span>
                 <div class="flex-1 h-3.5 bg-slate-200 rounded-full overflow-hidden border border-slate-300">
                   <div class="h-full bg-blue-500 rounded-full" style="width: 37.5%;"></div>
                 </div>
