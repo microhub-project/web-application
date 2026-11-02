@@ -87,12 +87,16 @@ const loadCharts = () => {
   }
 
 
-  const grafico2 = document.getElementById('myChart2');
 
+const grafico2 = document.getElementById('myChart2');
+
+if (grafico2) {
   new Chart(grafico2, {
     type: 'doughnut',
+
     data: {
       labels: ['Normal', 'Em Atenção', 'Críticos'],
+
       datasets: [{
         data: [6, 2, 2],
         backgroundColor: [
@@ -107,50 +111,77 @@ const loadCharts = () => {
         hoverOffset: 4
       }]
     },
+
     options: {
       responsive: true,
       maintainAspectRatio: false,
       cutout: '72%',
 
-      layout: {
-        padding: {
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0
+      onResize: function (chart, size) {
+        const posicaoLegenda = size.width < 380 ? 'bottom' : 'right';
+        const tamanhoFonte = size.width < 380 ? 11 : 18;
+        const espacamento = size.width < 380 ? 10 : 25;
+
+        const legenda = chart.options.plugins.legend;
+        const fonteAtual = legenda.labels.font.size;
+
+        if (
+          legenda.position !== posicaoLegenda ||
+          fonteAtual !== tamanhoFonte ||
+          legenda.labels.padding !== espacamento
+        ) {
+          legenda.position = posicaoLegenda;
+          legenda.labels.font.size = tamanhoFonte;
+          legenda.labels.padding = espacamento;
+
+          chart.update('none');
         }
       },
+
+      layout: {
+        padding: {
+          top: 4,
+          bottom: 4,
+          left: 4,
+          right: 4
+        }
+      },
+
       plugins: {
         legend: {
-          position: 'right',
+          position: window.innerWidth < 768 ? 'bottom' : 'right',
           align: 'center',
+
           labels: {
             color: '#1e293b',
-            padding: 25,
+            padding: window.innerWidth < 768 ? 10 : 25,
             usePointStyle: true,
             pointStyle: 'circle',
-
             boxWidth: 10,
             boxHeight: 10,
+
             font: {
-              size: 22,
+              size: window.innerWidth < 768 ? 11 : 18,
               family: 'monospace',
               weight: 'normal'
             },
 
             generateLabels: function (chart) {
               const data = chart.data;
-              if (data.labels.length && data.datasets.length) { // Verifica se existem textos e valores para nao quebrar
-                return data.labels.map((label, i) => { // Laço de repetição, varre os labels (Normal, Crítico e Em atenção)
+
+              if (data.labels.length && data.datasets.length) {
+                return data.labels.map((label, i) => {
                   const valor = data.datasets[0].data[i];
+
                   return {
-                    text: `  ${label.padEnd(11)} ${valor}`, // Empurra o valor para o final da linha, alinhamaneto
+                    text: `${label}: ${valor}`,
                     fillStyle: data.datasets[0].backgroundColor[i],
-                    strokeStyle: 'transparent', // Tiram a borda da bolinha
+                    strokeStyle: 'transparent',
                     lineWidth: 0
                   };
                 });
               }
+
               return [];
             }
           }
@@ -160,28 +191,49 @@ const loadCharts = () => {
 
     plugins: [{
       id: 'textoCentral',
-      beforeDraw: function (chart) { // Insere o texto ao centro após desenhar o circulo
+
+      afterDraw: function (chart) {
+        const meta = chart.getDatasetMeta(0);
+
+        if (!meta.data.length) return; 
+        const arco = meta.data[0];
+        const centroX = arco.x;
+        const centroY = arco.y;
+        const raio = arco.innerRadius;
+
         const { ctx } = chart;
-        ctx.restore();
 
-        const centroX = chart.getDatasetMeta(0).data[0].x;
-        const centroY = chart.getDatasetMeta(0).data[0].y;
+        const tamanhoNumero = Math.max(
+          18,
+          Math.min(48, raio * 0.85)
+        );
 
-        ctx.textBaseline = 'middle';
-        ctx.textAlign = 'center';
-
-        ctx.font = 'bold 48px font-mono, monospace';
-        ctx.fillStyle = '#0f172a';
-        ctx.fillText('10', centroX, centroY - 8);
-
-        ctx.font = 'normal 12px font-mono, monospace';
-        ctx.fillStyle = '#64748b';
-        ctx.fillText('Instâncias', centroX, centroY + 25);
+        const tamanhoLegenda = Math.max(
+          9,
+          Math.min(12, raio * 0.23)
+        );
 
         ctx.save();
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#0f172a';
+        ctx.font = `bold ${tamanhoNumero}px monospace`;
+        ctx.fillText('55', centroX, centroY - tamanhoNumero * 0.12);
+        ctx.fillStyle = '#64748b';
+        ctx.font = `normal ${tamanhoLegenda}px monospace`;
+        ctx.fillText(
+          'Instâncias',
+          centroX,
+          centroY + tamanhoNumero * 0.62
+        );
+
+        ctx.restore();
       }
     }]
   });
+}
+
 }
 
 const mudarGrafico = (metrica, botaoClicado) => {
