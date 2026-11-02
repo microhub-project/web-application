@@ -6,12 +6,12 @@ const create = async (uuid, empresa_uuid, nome, descricao) => {
 };
 
 const getAll = async (empresa_uuid) => {
-  const query = "SELECT BIN_TO_UUID(m.uuid) AS uuid, m.nome, m.descricao FROM microsservico m WHERE m.empresa_uuid = UUID_TO_BIN(?) AND m.deletado_em IS NULL;";
+  const query = "SELECT BIN_TO_UUID(m.uuid) AS uuid, m.nome, m.descricao FROM microsservico m WHERE m.empresa_uuid = UUID_TO_BIN(?) AND m.deletado_em IS NULL ORDER BY m.nome;";
   return await database.execute(query, [empresa_uuid]);
 };
 
 const getMicroserviceInstances = async (microsservico_uuid) => {
-  const query = "SELECT nome, endereco_mac FROM instancia WHERE microsservico_uuid = UUID_TO_BIN(?) AND instancia.deletado_em IS NULL;";
+  const query = "SELECT nome, endereco_mac FROM instancia WHERE microsservico_uuid = UUID_TO_BIN(?) AND instancia.deletado_em IS NULL ORDER BY nome;";
   return await database.execute(query, [microsservico_uuid]);
 };
 

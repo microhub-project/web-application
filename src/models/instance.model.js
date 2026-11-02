@@ -39,7 +39,8 @@ const getAll = async (empresa_uuid) => {
     ) v ON v.instancia_uuid = i.uuid
     WHERE m.empresa_uuid = UUID_TO_BIN(?) 
       AND m.deletado_em IS NULL 
-      AND i.deletado_em IS NULL;
+      AND i.deletado_em IS NULL
+    ORDER BY i.nome;
   `;
   return await database.execute(query, [empresa_uuid]);
 };
