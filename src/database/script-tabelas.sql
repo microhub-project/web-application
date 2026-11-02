@@ -146,8 +146,24 @@ CREATE TABLE IF NOT EXISTS `microhub`.`instancia_tem_componente` (
 
 INSERT INTO `microhub`.`instancia_tem_componente` (`componente_uuid`, `instancia_uuid`, `limite_maximo`, `limite_minimo`, `monitorado`, `status`) VALUES
   (UUID_TO_BIN('f40975fe-1a28-4526-aba0-7b15dd6048f9'), UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177'), 80.00, 10.00, 1, 1),
+  (UUID_TO_BIN('84592640-3fa9-4f77-adc6-6f9e878a5f40'), UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177'), NULL, NULL, 0, 1),
   (UUID_TO_BIN('196d04b2-a976-4da5-a2e8-2cccb42cb0ac'), UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177'), 90.00, 15.00, 1, 1),
-  (UUID_TO_BIN('f40975fe-1a28-4526-aba0-7b15dd6048f9'), UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), 85.00, 5.00, 1, 1);
+  (UUID_TO_BIN('6379189d-aec3-47dc-8efa-9daadd23d36d'), UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177'), NULL, NULL, 0, 1),
+  (UUID_TO_BIN('83589fb2-dfee-484a-bc53-4ed0c5b1777d'), UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177'), NULL, NULL, 0, 1),
+  (UUID_TO_BIN('40a9de89-d427-4c6d-a7d2-1e4f4889b661'), UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177'), NULL, NULL, 0, 1),
+  (UUID_TO_BIN('5acf74f9-7e8f-46a2-853a-56fa6c6ec1e2'), UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177'), NULL, NULL, 0, 1),
+  (UUID_TO_BIN('3eef27b6-b3e3-46b3-9a2a-df7c1ce09037'), UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177'), NULL, NULL, 0, 1),
+  (UUID_TO_BIN('f80ca86d-d17e-4b8c-aa52-b2261b0fe643'), UUID_TO_BIN('0361802d-91ce-4190-8664-30ab1e1c9177'), NULL, NULL, 0, 1),
+
+  (UUID_TO_BIN('f40975fe-1a28-4526-aba0-7b15dd6048f9'), UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), 85.00, 5.00, 1, 1),
+  (UUID_TO_BIN('84592640-3fa9-4f77-adc6-6f9e878a5f40'), UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), NULL, NULL, 0, 1),
+  (UUID_TO_BIN('196d04b2-a976-4da5-a2e8-2cccb42cb0ac'), UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), NULL, NULL, 0, 1),
+  (UUID_TO_BIN('6379189d-aec3-47dc-8efa-9daadd23d36d'), UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), NULL, NULL, 0, 1),
+  (UUID_TO_BIN('83589fb2-dfee-484a-bc53-4ed0c5b1777d'), UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), NULL, NULL, 0, 1),
+  (UUID_TO_BIN('40a9de89-d427-4c6d-a7d2-1e4f4889b661'), UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), NULL, NULL, 0, 1),
+  (UUID_TO_BIN('5acf74f9-7e8f-46a2-853a-56fa6c6ec1e2'), UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), NULL, NULL, 0, 1),
+  (UUID_TO_BIN('3eef27b6-b3e3-46b3-9a2a-df7c1ce09037'), UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), NULL, NULL, 0, 1),
+  (UUID_TO_BIN('f80ca86d-d17e-4b8c-aa52-b2261b0fe643'), UUID_TO_BIN('f0520ab4-aa09-4417-9c3b-7337f3cb20de'), NULL, NULL, 0, 1);
   
 -- -----------------------------------------------------
 -- Table `microhub`.`usuario`
