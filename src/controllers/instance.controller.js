@@ -119,18 +119,12 @@ async function apagar(req, res) {
         message: ""
     };
 
-
     if (!uuid)
         return res.status(400).send();
 
     try {
         try {
-            const response = await instanceModel.deleteInstanceComponent(uuid);
-
-            if (response.affectedRows < 1) {
-                responseBody.message = "Não foi possível apagar os componentes da instância. Tente novamente mais tarde";
-                return res.status(500).json(responseBody);
-            }
+            await instanceModel.deleteInstanceComponent(uuid);
         } catch (e) {
             console.error(e);
             return res.status(500).json({
@@ -139,12 +133,7 @@ async function apagar(req, res) {
         }
 
         try {
-            const response = await instanceModel.deleteInstanceVolume(uuid);
-
-            if (response.affectedRows < 1) {
-                responseBody.message = "Não foi possível apagar o(s) volume(s) da instância. Tente novamente mais tarde";
-                return res.status(500).json(responseBody);
-            }
+            await instanceModel.deleteInstanceVolume(uuid);
         } catch (e) {
             console.error(e);
             return res.status(500).json({
@@ -161,6 +150,7 @@ async function apagar(req, res) {
 
         responseBody.message = "Instância apagada com sucesso!";
         return res.status(201).json(responseBody);
+
     } catch (e) {
         console.error(e);
         return res.status(500).json({

@@ -340,8 +340,143 @@
                             <div class="h-full rounded-2xl border-red-500  hover:cursor-pointer hover:bg-red-500 hover:text-white border-2 py-3 px-5">Não (Apagar)</div>
                         </div>
                     </div>
-               
+        </div>
+
             </div>
+
+            <div id="deleteInst"
+          class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-3 sm:p-4 overflow-y-auto">
+
+          <div
+            class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-5 sm:p-8 shadow-2xl my-auto">
+            <h2 class="text-xl sm:text-2xl font-semibold text-white mb-4">
+              Excluir instância
+            </h2>
+
+            <p class="text-sm sm:text-base text-slate-300 leading-relaxed mb-6">
+              Tem certeza que deseja excluir esta instância? Essa ação não poderá ser desfeita.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full">
+              <button onclick="cancelarExcluirInst()"
+                class="w-full py-2.5 sm:py-3 border border-slate-600 hover:bg-slate-800 text-slate-200 rounded-xl font-medium transition-colors cursor-pointer text-center">
+                Cancelar
+              </button>
+
+              <button onclick="confirmarExclusaoInst()"
+                class="w-full py-2.5 sm:py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-colors cursor-pointer text-center">
+                Excluir
+              </button>
+            </div>
+          </div>
+        </div>                    
+
+                <div id="deleteMicro"
+          class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-3 sm:p-4 overflow-y-auto">
+
+          <div
+            class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-5 sm:p-8 shadow-2xl my-auto">
+            <h2 class="text-xl sm:text-2xl font-semibold text-white mb-4">
+              Excluir Microsserviço
+            </h2>
+
+            <p class="text-sm sm:text-base text-slate-300 leading-relaxed mb-6">
+              Tem certeza que deseja excluir este microsserviço? Essa ação não poderá ser desfeita.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full">
+              <button onclick="cancelarExcluirMicro()"
+                class="w-full py-2.5 sm:py-3 border border-slate-600 hover:bg-slate-800 text-slate-200 rounded-xl font-medium transition-colors cursor-pointer text-center">
+                Cancelar
+              </button>
+
+              <button onclick="confirmarExclusaoMicro()"
+                class="w-full py-2.5 sm:py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-colors cursor-pointer text-center">
+                Excluir
+              </button>
+            </div>
+          </div>
+        </div>
+
+                <div id="deleteCompo"
+          class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-3 sm:p-4 overflow-y-auto">
+
+          <div
+            class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-5 sm:p-8 shadow-2xl my-auto">
+            <h2 class="text-xl sm:text-2xl font-semibold text-white mb-4">
+              Excluir componente
+            </h2>
+
+            <p class="text-sm sm:text-base text-slate-300 leading-relaxed mb-6">
+              Tem certeza que deseja excluir este componente? Essa ação não poderá ser desfeita.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full">
+              <button onclick="cancelarExcluirCompo()"
+                class="w-full py-2.5 sm:py-3 border border-slate-600 hover:bg-slate-800 text-slate-200 rounded-xl font-medium transition-colors cursor-pointer text-center">
+                Cancelar
+              </button>
+
+              <button onclick="confirmarExclusaoCompo()"
+                class="w-full py-2.5 sm:py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-colors cursor-pointer text-center">
+                Excluir
+              </button>
+            </div>
+          </div>
+        </div>
+
+          <div id="deleteUser"
+          class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-3 sm:p-4 overflow-y-auto">
+
+          <div
+            class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-5 sm:p-8 shadow-2xl my-auto">
+            <h2 class="text-xl sm:text-2xl font-semibold text-white mb-4">
+              Excluir usuário
+            </h2>
+
+            <p class="text-sm sm:text-base text-slate-300 leading-relaxed mb-6">
+              Tem certeza que deseja excluir este usuário? Essa ação não poderá ser desfeita.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full">
+              <button onclick="cancelarExcluirUser()"
+                class="w-full py-2.5 sm:py-3 border border-slate-600 hover:bg-slate-800 text-slate-200 rounded-xl font-medium transition-colors cursor-pointer text-center">
+                Cancelar
+              </button>
+
+              <button onclick="confirmarExclusaoUser()"
+                class="w-full py-2.5 sm:py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-colors cursor-pointer text-center">
+                Excluir
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="deleteVol"
+          class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-3 sm:p-4 overflow-y-auto">
+
+          <div
+            class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-5 sm:p-8 shadow-2xl my-auto">
+            <h2 class="text-xl sm:text-2xl font-semibold text-white mb-4">
+              Excluir volume
+            </h2>
+
+            <p class="text-sm sm:text-base text-slate-300 leading-relaxed mb-6">
+              Tem certeza que deseja excluir este volume? Essa ação não poderá ser desfeita.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full">
+              <button onclick="cancelarExcluirVol()"
+                class="w-full py-2.5 sm:py-3 border border-slate-600 hover:bg-slate-800 text-slate-200 rounded-xl font-medium transition-colors cursor-pointer text-center">
+                Cancelar
+              </button>
+
+              <button onclick="confirmarExclusaoVol()"
+                class="w-full py-2.5 sm:py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-colors cursor-pointer text-center">
+                Excluir
+              </button>
+            </div>
+          </div></div>
         </main>
         <div id="toast-container"
             class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">

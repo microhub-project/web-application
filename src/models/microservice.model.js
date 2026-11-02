@@ -16,7 +16,7 @@ const getMicroserviceInstances = async (microsservico_uuid) => {
 };
 
 const deleteMicroservice = async (uuid) => {
-  const query = "UPDATE microsservico SET status = 2, deletado_em = CURRENT_TIMESTAMP() WHERE uuid = UUID_TO_BIN(?);";
+  const query = "UPDATE microsservico SET status = 2, deletado_em = CURRENT_TIMESTAMP() WHERE uuid = UUID_TO_BIN(?) AND deletado_em IS NULL;";
   return await database.execute(query, [uuid]);
 };
 
