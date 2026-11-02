@@ -219,7 +219,7 @@ if (grafico2) {
         ctx.textBaseline = 'middle';
         ctx.fillStyle = '#0f172a';
         ctx.font = `bold ${tamanhoNumero}px monospace`;
-        ctx.fillText('55', centroX, centroY - tamanhoNumero * 0.12);
+        ctx.fillText('10', centroX, centroY - tamanhoNumero * 0.12);
         ctx.fillStyle = '#64748b';
         ctx.font = `normal ${tamanhoLegenda}px monospace`;
         ctx.fillText(
