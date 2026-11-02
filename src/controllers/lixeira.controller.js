@@ -20,114 +20,6 @@ async function listarInstancias(req, res) {
     }
 }
 
-async function listarInstanciasVolumes(req, res) {
-    const instanceUUID = req.params.instance_uuid;
-
-    if (!instanceUUID)
-        return res.status(400).send();
-
-    try {
-        const resultado = await lixeiraModel.getInstancesVolumes(instanceUUID);
-
-        return res.status(200).json({
-            data: resultado
-        });
-    } catch (e) {
-        console.error(e);
-        return res.status(500).json({
-            message: "Erro ao listar volumes"
-        });
-    }
-}
-
-async function listarInstanciasComponentes(req, res) {
-    try {
-        const resultado = await lixeiraModel.getInstancesComponents();
-
-        return res.status(200).json({
-            data: resultado
-        });
-    } catch (e) {
-        console.error(e);
-        return res.status(500).json({
-            message: "Erro ao listar componentes"
-        });
-    }
-}
-
-async function listarInstanciasTipos(req, res) {
-    try {
-        const resultado = await lixeiraModel.getInstancesTypes();
-
-        return res.status(200).json({
-            data: resultado
-        });
-    } catch (e) {
-        console.error(e);
-        return res.status(500).json({
-            message: "Erro ao listar tipos"
-        });
-    }
-}
-
-async function apagarInstancia(req, res) {
-    const uuid = req.body.uuid;
-    const responseBody = {
-        message: ""
-    };
-
-
-    if (!uuid)
-        return res.status(400).send();
-
-    try {
-        try {
-            const response = await lixeiraModel.deleteInstanceComponent(uuid);
-
-            if (response.affectedRows < 1) {
-                responseBody.message = "Não foi possível apagar os componentes da instância. Tente novamente mais tarde";
-                return res.status(500).json(responseBody);
-            }
-        } catch (e) {
-            console.error(e);
-            return res.status(500).json({
-                message: "Erro ao apagar componentes da instância"
-            });
-        }
-
-        try {
-            const response = await lixeiraModel.deleteInstanceVolume(uuid);
-
-            if (response.affectedRows < 1) {
-                responseBody.message = "Não foi possível apagar o(s) volume(s) da instância. Tente novamente mais tarde";
-                return res.status(500).json(responseBody);
-            }
-        } catch (e) {
-            console.error(e);
-            return res.status(500).json({
-                message: "Erro ao apagar volume(s) da instância"
-            });
-        }
-
-        const response = await lixeiraModel.deleteInstance(uuid);
-
-        if (response.affectedRows !== 1) {
-            responseBody.message = "Não foi possível apagar a instância. Tente novamente mais tarde";
-            return res.status(500).json(responseBody);
-        }
-
-        responseBody.message = "Instância apagada com sucesso!";
-        return res.status(201).json(responseBody);
-    } catch (e) {
-        console.error(e);
-        return res.status(500).json({
-            message: "Erro ao apagar instância"
-        });
-    }
-}
-
-async function recuperarInstancia(req, res) {}
-
 async function listarMicros(req, res) {
     const companyUUID = req.companyUUID;
 
@@ -150,25 +42,70 @@ async function listarMicros(req, res) {
     }
 }
 
-async function listarMicrosInstancias(req, res) {
-    const microservice_uuid = req.params.microservice_uuid;
+async function listarComponentes(req, res) {
+    const companyUUID = req.companyUUID;
 
-    if (!microservice_uuid)
+    if (!companyUUID)
         return res.status(400).send();
 
     try {
-        const resultado = await lixeiraModel.getMicroservicesInstances(microservice_uuid);
+        const response = await lixeiraModel.getComponentes(companyUUID);
+        
+        console.log("RESULTADO:", response);
 
         return res.status(200).json({
-            data: resultado
+            data: response
         });
     } catch (e) {
         console.error(e);
         return res.status(500).json({
-            message: "Erro ao listar instâncias do microsserviço"
+            message: "Erro ao listar componentes"
         });
     }
 }
+
+async function listarUsuarios(req, res) {
+  const empresaUUID = req.companyUUID;
+
+  if (!empresaUUID)
+    return res.status(400).send();
+
+  try {
+    const response = await lixeiraModel.getUsuarios(empresaUUID);
+    console.log("RESULTADO:", response);
+    return res.status(200).json(response);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({
+      message: "Erro ao listar usuários"
+    });
+  }
+}
+
+async function listarVolumes(req, res) {
+     const empresaUUID = req.companyUUID;
+
+     if (!empresaUUID)
+       return res.status(400).send();
+
+     try {
+       const response = await lixeiraModel.getVolumes(empresaUUID);
+       console.log("RESULTADO:", response);
+        return res.status(200).json({
+            data: response
+        });
+     } catch (e) {
+       console.error(e);
+       return res.status(500).json({
+         message: "Erro ao listar volumes"
+       });
+     }
+}
+
+async function recuperarInstancia(req, res) {}
+
+
+
 
 async function apagarMicro(req, res) {
     const uuid = req.body.uuid;
@@ -200,29 +137,13 @@ async function apagarMicro(req, res) {
 
 async function recuperarMicro(req, res) {}
 
-async function listarUsuarios(req, res) {
-  const userUUID = req.params.uuid;
 
-  if (!userUUID)
-    return res.status(400).send();
-
-  try {
-    const resultado = await lixeiraModel.getUsuarios(userUUID);
-    console.log("RESULTADO:", resultado);
-    return res.status(200).json(resultado);
-  } catch (e) {
-    console.error(e);
-    return res.status(500).json({
-      message: "Erro ao listar usuários"
-    });
-  }
-}
 
 async function apagarUsuario(req, res) {
   const uuid = req.params.uuid;
 
   try {
-    const resultado = await usuarioModel.excluir(uuid);
+    const resultado = await lixeiraModel.excluir(uuid);
     if (resultado.affectedRows !== 1) {
       return res.status(400).json({
         message: "Usuário não encontrado"
@@ -242,19 +163,43 @@ async function apagarUsuario(req, res) {
 
 async function recuperarUsuario(req, res) {}
 
+
+
+async function recuperarComponente(req, res) {
+    // Implementar consulta dos volumes excluídos
+}
+
+async function recuperarVolume(req, res) {
+    // Implementar consulta dos volumes excluídos
+}
+
+async function apagarComponente(req, res) {
+    // Implementar consulta dos volumes excluídos
+}
+
+async function apagarInstancia(req, res) {
+    // Implementar consulta dos volumes excluídos
+}
+
+async function apagarVolume(req, res) {
+    // Implementar consulta dos volumes excluídos
+}
+
 export default {
   listarInstancias,
-  listarInstanciasVolumes,
-  listarInstanciasComponentes,
-  listarInstanciasTipos,
-  apagarInstancia,
   recuperarInstancia,
   listarMicros,
-  listarMicrosInstancias,
   apagarMicro,
   recuperarMicro,
   listarUsuarios,
   apagarUsuario,
-  recuperarUsuario
+  recuperarUsuario,
+  listarComponentes,
+  listarVolumes,
+  recuperarComponente,
+  recuperarVolume,
+  apagarComponente,
+  apagarVolume,
+  apagarInstancia
 };
 
