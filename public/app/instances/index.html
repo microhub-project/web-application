@@ -68,14 +68,10 @@
                     <a href="../finances/index.html" id="navItemFinances"
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
                         <i class="ph ph-money text-2xl"></i> Finanças
-                    </a>
-                    <a href="../microservices/index.html" id="navItemMicroservices"
-                        class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
-                        <i class="ph ph-cube text-2xl"></i> Microsserviços
-                    </a>
+                    </a>    
                     <a href="#" id="navItemInstances"
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
-                        <i class="ph ph-computer-tower text-2xl"></i> Instâncias
+                        <i class="ph ph-tree-structure text-2xl"></i> Infraestrutura
                     </a>
                     <a href="../users/index.html" id="navItemUsers"
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center gap-3 text-xl cursor-pointer">
@@ -129,13 +125,9 @@
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center justify-center text-xl cursor-pointer">
                         <i class="ph ph-money text-3xl"></i>
                     </a>
-                    <a href="../microservices/index.html" id="navItemMicroservicesMobile"
-                        class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center justify-center text-xl cursor-pointer">
-                        <i class="ph ph-cube text-3xl"></i>
-                    </a>
                     <a href="#" id="navItemInstancesMobile"
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center justify-center text-xl cursor-pointer">
-                        <i class="ph ph-computer-tower text-3xl"></i>
+                        <i class="ph ph-tree-structure text-3xl"></i>
                     </a>
                     <a href="../users/index.html" id="navItemUsersMobile"
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors hidden items-center justify-center text-xl cursor-pointer">
@@ -163,13 +155,22 @@
         </header>
 
         <main
-            class="text-slate-900 flex flex-col p-8 min-h-dvh gap-12 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
+            class="text-slate-900 flex flex-col p-8 max-sm:p-2 max-sm:pr-24 min-h-dvh gap-5 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
 
-            <div class="flex flex-col gap-4 w-full">
-                <div class="">
-                    <h1 class="text-2xl font-extrabold">Instâncias</h1>
+            <div class="flex flex-col mr-2 md:ml-0 md:flex-row gap-1 md:gap-4 w-full flex-wrap">
+                <div class="w-fit flex gap-0 md:gap-1 flex-col md:flex-row">
+
+                    <h1 class="gap-2 w-full text-[1.2rem] md:text-2xl font-extrabold border-4 border-blue-800 text-blue-600 p-4 max-sm:p-3.5 rounded-lg flex itens-center hover:cursor-point hover:bg-blue-800 hover:text-white duration-150 transition-all">
+                        <i class="ph ph-computer-tower text-2xl ms-1"></i>Instâncias
+                    </h1>
+                        <a href="/app/microservices/index.html" id="navItemMicroservices"
+                        class="border-2 border-slate-500 bg-slate-300 text-black p-3 max-sm:p-3.5 rounded-lg mt-1 flex items-center gap-3 shadow w-fit hover:cursor-point hover:bg-blue-700 hover:text-white hover:border-blue-900 duration-150 transition-all">
+                            <i class="ph ph-cube text-2xl"></i> Microsserviços
+                        </a>
                 </div>
-                <hr class="border-t border-slate-400 my-5">
+            </div>
+
+                <hr class="border-t border-slate-400 my-2 sm:my-5">
                 <section class="w-full flex flex-col gap-6">
                     <button
                         class="bg-blue-600 text-white p-6 max-sm:p-3.5 rounded-lg flex items-center justify-center gap-3 shadow w-fit hover:cursor-pointer hover:bg-blue-700 duration-150 transition-all"

@@ -214,12 +214,12 @@ const openEditMicroserviceForm = (nome, descricao, microservice_uuid) => {
 
         <div class="flex flex-col gap-1.5">
             <label for="newMicroserviceName" class="text-xs sm:text-sm text-slate-300">Nome</label> 
-            <input type="text" id="newMicroserviceName" value="${nome}" class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
+            <input type="text" id="newMicroserviceName" placeholder="Nome do microsserviço"  value="${nome}" class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
         </div>
 
         <div class="flex flex-col gap-1.5">
             <label for="newMicroserviceDescription" class="text-xs sm:text-sm text-slate-300">Descrição</label> 
-            <textarea id="newMicroserviceDescription" 
+            <textarea id="newMicroserviceDescription" placeholder="Descrição do microsserviço" 
                 class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors min-h-28 sm:min-h-32 resize-none"
                 rows="6">${descricao}</textarea>
         </div>

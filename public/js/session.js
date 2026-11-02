@@ -48,7 +48,7 @@ const pages = [
   "/app/index.html",
   "/app/reports/index.html",
   "/app/alerts/index.html",
-  "/app/finances/index.html",
+  "/app/finances/index.html", // página de financas
   "/app/microservices/index.html",
   "/app/instances/index.html",
   "/app/users/index.html",
@@ -59,8 +59,8 @@ const pages = [
 const roleAccess = [
   [0, 1, 2, 3],
   [0, 1],
-  [0, 1, 3],
-  [0, 1, 2],
+  [0, 1, 3],  
+  [0, 1, 2], // página de financas
   [0, 1, 3],
   [0, 1, 2, 3],
   [0, 1],

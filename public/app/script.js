@@ -1,10 +1,10 @@
 let graficoPrincipal;
-const labelsEixoX = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00'];
+const labelsEixoX = ['7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00'];
 
 const dadosGrafico = {
   cpu: {
     label: 'CPU (%)',
-    data: [45, 55, 75, 68, 65, 50, 62], // Média de 60%
+    data: [45, 55, 75, 68, 65, 50, 64], // Média de 60%
     limite: 80,
     cor: '#64748b',
     tipoLimite: 'Limite Máximo',
@@ -20,7 +20,7 @@ const dadosGrafico = {
   },
   upload: {
     label: 'Upload (Mbps)',
-    data: [50, 75, 115, 100, 95, 65, 85], // Média de 83 Mbps
+    data: [50, 75, 115, 100, 95, 65, 83], // Média de 83 Mbps
     limite: 30,
     cor: '#10b981',
     tipoLimite: 'Limite Mínimo',
@@ -28,7 +28,7 @@ const dadosGrafico = {
   },
   download: {
     label: 'Download (Mbps)',
-    data: [10, 18, 35, 28, 25, 12, 22], // Média de 21 Mbps.
+    data: [10, 18, 35, 28, 25, 12, 21], // Média de 21 Mbps.
     limite: 10,
     cor: '#3b82f6',
     tipoLimite: 'Limite Mínimo',
@@ -98,8 +98,7 @@ if (grafico2) {
       labels: ['Normal', 'Em Atenção', 'Críticos'],
 
       datasets: [{
-        data: [40, 10, 5],
-
+        data: [6, 2, 2],
         backgroundColor: [
           '#4CAF50',
           '#FFD54F',
@@ -370,8 +369,8 @@ const loadAllMetrics = () => {
   atualizarDataHora();
 
   // valores mockados
-  const alertas = 8;
-  const cpuMedia = 60;
+  const alertas = 4;
+  const cpuMedia = 64;
   const ramMedia = 68;
   const upload = 83;
   const download = 21;

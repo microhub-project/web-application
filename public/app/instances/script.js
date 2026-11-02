@@ -41,7 +41,7 @@ const getInstances = async () => {
         const data = body.data || [];
 
         for (const instance of data) {
-            const { uuid, nome, endereco_mac, custo_armazenamento, custo_mensal, custo_computacao, microsservico, tipo, cpu, ram } = instance;
+            const { uuid, nome, endereco_mac, custo_armazenamento, custo_mensal, custo_computacao, microsservico_uuid, microsservico, tipo_uuid, tipo, cpu, ram } = instance;
             const elementId = `${uuid}`;
 
             let nomeInstancia = "";
@@ -83,9 +83,9 @@ const getInstances = async () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="flex items-center gap-1 shrink-0">
+                        <div class="flex flex-col xl:flex-row items-center gap-1 shrink-0">
                             <i onclick="openDeleteInstanceForm('${nomeInstancia}', '${elementId}')" class="ph-bold ph-trash text-2xl sm:text-3xl hover:cursor-pointer rounded-lg hover:bg-slate-300 size-10 sm:size-12 flex items-center justify-center duration-150 transition-all"></i>
-                            <i onclick="openEditInstanceForm('${uuid}', '${endereco_mac}', '${elementId}')" class="ph-bold ph-note-pencil text-2xl sm:text-3xl hover:cursor-pointer rounded-lg hover:bg-slate-300 size-10 sm:size-12 flex items-center justify-center duration-150 transition-all"></i>
+                            <i onclick="openEditInstanceForm('${uuid}', '${nome}', '${endereco_mac}', '${tipo_uuid}', '${tipo}', '${cpu}', '${ram}', '${microsservico_uuid}', '${microsservico}')" class="ph-bold ph-note-pencil text-2xl sm:text-3xl hover:cursor-pointer rounded-lg hover:bg-slate-300 size-10 sm:size-12 flex items-center justify-center duration-150 transition-all"></i>
                         </div>
                     </div>
                     <div class="border border-slate-950"></div>
@@ -113,6 +113,374 @@ const getInstances = async () => {
         showToast("Algo deu errado ao carregar as instâncias.", "error");
     }
 };
+
+const openEditInstanceForm = async (uuid, nome, endereco_mac, tipo_uuid, tipo, cpu, ram, microsservico_uuid, microsservico) => {
+    resetFormState();
+    const componentes = await getComponents("edit", uuid);
+    const microsservicos = await getMicroservices();
+    const tipos = await getTypes();
+    const instanceVolumes = await getInstanceVolumes(uuid, "edit");
+
+    let volumesLi = "";
+
+    instanceVolumes.forEach(volume => {
+        const { uuid, armazenamento } = volume;
+        volume.id = uuid
+        volume.existiaAntes = 1
+
+        volumesArray.push(volume);
+
+        volumesLi += `
+            <li class="pl-1" id="${uuid}">
+                <div class="inline-flex items-center gap-2">
+                    <span>${armazenamento} GiB</span>
+                    <span onclick="deleteInstanceVolume('${uuid}')" class="ph-bold ph-trash text-xl text-slate-400 hover:text-slate-100 cursor-pointer duration-150 transition-colors"></span>
+                </div>
+            </li>
+        `
+    })
+
+    let nomeInstancia = "";
+
+    if (nome == "null") {
+        nome = "";
+        nomeInstancia = endereco_mac;
+    } else {
+        nomeInstancia = nome;
+    }
+
+    const popUpBody = `
+        <div class="flex flex-col justify-around gap-4">
+            <form class="flex flex-col md:flex-row gap-6 w-full">
+
+                <div class="flex flex-col gap-1.5 w-full md:w-2/3">
+                    <span class="text-xs sm:text-sm text-slate-300">Componentes monitorados</span> 
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
+                        ${componentes}
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-3 w-full md:w-1/3 shrink-0">
+                    <div class="flex flex-col gap-1.5">
+                        <label for="instanceName" class="text-xs sm:text-sm text-slate-300">Nome</label> 
+                        <input type="text" id="instanceName" placeholder="Nome da instância" value="${nome}" class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                        <label for="instanceMACAddress" class="text-xs sm:text-sm text-slate-300">Endereço MAC</label> 
+                        <input type="text" id="instanceMACAddress" placeholder="00:00:00:00:00:00" value="${endereco_mac}" class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                        <label for="instanceType" class="text-xs sm:text-sm text-slate-300">Tipo</label> 
+                        <div class="relative w-full">
+                            <select id="instanceType"
+                                class="w-full px-4 py-3 pr-10 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer text-sm sm:text-base">
+                                <option value="${tipo_uuid}" selected >${tipo} (${cpu}, ${ram})</option>
+                                ${tipos}
+                            </select>
+                            <span class="ph-bold ph-caret-down text-xl text-slate-400 pointer-events-none absolute top-1/2 end-3 -translate-y-1/2"></span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                        <label for="instanceMicroservice" class="text-xs sm:text-sm text-slate-300">Microsserviço</label> 
+                        <div class="relative w-full">
+                            <select id="instanceMicroservice"
+                                class="w-full px-4 py-3 pr-10 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer text-sm sm:text-base">
+                                <option value="${microsservico_uuid}" selected>${microsservico}</option>
+                                ${microsservicos}
+                            </select>
+                            <span class="ph-bold ph-caret-down text-xl text-slate-400 pointer-events-none absolute top-1/2 end-3 -translate-y-1/2"></span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                        <label for="instanceVolume" class="text-xs sm:text-sm text-slate-300">Volume</label> 
+                        <div class="relative w-full">
+                            <input type="text" id="instanceVolume" placeholder="100 GiB" class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
+                            <span onclick="newVolume()"
+                                class="ph-bold ph-plus text-xl text-slate-400 hover:text-slate-100 hover:cursor-pointer absolute top-1/2 end-3 -translate-y-1/2 duration-150 transition-all"></span>
+                        </div>
+                        <div class="flex flex-col gap-1.5 mb-8">
+                            <ol id="newVolumesList"
+                                class="list-decimal list-inside space-y-2 text-xs sm:text-sm text-slate-300">
+                                ${volumesLi}
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+      
+      <div class="flex flex-col gap-2 mt-1 items-end">
+        <button
+          onclick="updateInstance('${uuid}')"
+          id="updateInstanceButton"
+          class="w-full py-2.5 sm:py-3 border-2 border-blue-600 hover:bg-blue-600 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
+          <span class="font-medium">Salvar</span>
+        </button>
+        <button
+          onclick="closePopUp()"
+          class="w-full py-2.5 sm:py-3 border-2 border-red-600 hover:bg-red-600 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
+          <span class="font-medium">Cancelar</span>
+        </button>
+      </div>
+    </div>
+  `;
+
+    showPopUp(`Editando "${nomeInstancia}"`, popUpBody);
+};
+
+const updateInstance = async (instance_uuid) => {
+    const token = sessionStorage.getItem('JWT_TOKEN');
+    const userData = getUserSession();
+
+    if (!token || !userData) {
+        logout();
+        return showToast("Sessão inválida, faça login novamente", "warning");
+    }
+
+    const button = document.getElementById("updateInstanceButton")
+    const name = document.getElementById("instanceName").value.trim()
+    const mac = document.getElementById("instanceMACAddress").value.trim()
+    const type = document.getElementById("instanceType").value
+    const microservice = document.getElementById("instanceMicroservice").value
+
+    toggleDisableButton(button)
+
+    if (mac.length != 17) {
+        toggleDisableButton(button)
+        return showToast("O endereço MAC deve ter exatamente 17 caracteres.", "error");
+    }
+
+    for (let i = 0; i < componentsArray.length; i++) {
+        let componenteUUID = document.getElementById(`${componentsArray[i].uuid}`).checked;
+        let limiteMax = document.getElementById(`max${componentsArray[i].uuid}`).value;
+        let limiteMin = document.getElementById(`min${componentsArray[i].uuid}`).value;
+
+        if (componenteUUID) {
+            if (!limiteMax && !limiteMin) {
+                toggleDisableButton(button)
+                return showToast("Para monitorar o componente, algum limite deve ser definido.", "error");
+            }
+        }
+    }
+
+    const body = {
+        "nome": name,
+        "endereco_mac": mac,
+        "tipo_uuid": type,
+        "microsservico_uuid": microservice,
+        "uuid": instance_uuid
+    }
+
+    try {
+        const atualizar = await fetch("/instances/atualizar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(body)
+        })
+
+        if (atualizar.status === 401 || atualizar.status === 403) {
+            logout();
+            return;
+        }
+
+        const response = await atualizar.json()
+
+        if (atualizar.status === 500) {
+            toggleDisableButton(button)
+            return showToast(response.message, "error")
+        }
+
+        if (atualizar.status === 400) {
+            toggleDisableButton(button)
+            return showToast(response.message, "warning")
+        }
+
+        if (!atualizar.ok) {
+            toggleDisableButton(button)
+            return showToast(response.message, "error")
+        }
+
+        for (let i = 0; i < volumesArray.length; i++) {
+            if (volumesArray[i].existiaAntes) {
+                continue;
+            }
+
+            let armazenamento = volumesArray[i].storage;
+
+            const body = {
+                "armazenamento": armazenamento,
+                "instancia_uuid": instance_uuid
+            }
+
+            try {
+                const cadastrar = await fetch("/instances/cadastrar-volume", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(body)
+                })
+
+                if (cadastrar.status === 401 || cadastrar.status === 403) {
+                    logout();
+                    return;
+                }
+
+                const response = await cadastrar.json()
+
+                if (cadastrar.status === 500) {
+                    toggleDisableButton(button)
+                    return showToast(response.message, "error")
+                }
+
+                if (cadastrar.status === 400) {
+                    toggleDisableButton(button)
+                    return showToast(response.message, "warning")
+                }
+
+                if (!cadastrar.ok) {
+                    toggleDisableButton(button)
+                    return showToast(response.message, "error")
+                }
+
+            } catch (e) {
+                console.error(e)
+                return showToast("Algo deu errado. Tente novamente mais tarde", "error")
+            }
+        }
+
+        for (let i = 0; i < componentsArray.length; i++) {
+            let componenteUUID = document.getElementById(`${componentsArray[i].uuid}`).checked;
+            let limiteMax = document.getElementById(`max${componentsArray[i].uuid}`).value;
+            let limiteMin = document.getElementById(`min${componentsArray[i].uuid}`).value;
+            let monitorado = 0;
+
+            if (componenteUUID) {
+                monitorado = 1;
+            }
+
+            if (!monitorado) {
+                limiteMax = null;
+                limiteMin = null;
+            }
+
+            const body = {
+                "componente_uuid": componentsArray[i].uuid,
+                "instancia_uuid": instance_uuid,
+                "limite_maximo": limiteMax,
+                "limite_minimo": limiteMin,
+                "monitorado": monitorado
+            }
+
+            try {
+                const cadastrar = await fetch("/instances/atualizar-componente-instancia", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(body)
+                })
+
+                if (cadastrar.status === 401 || cadastrar.status === 403) {
+                    logout();
+                    return;
+                }
+
+                const response = await cadastrar.json()
+
+                if (cadastrar.status === 500) {
+                    toggleDisableButton(button)
+                    return showToast(response.message, "error")
+                }
+
+                if (cadastrar.status === 400) {
+                    toggleDisableButton(button)
+                    return showToast(response.message, "warning")
+                }
+
+                if (!cadastrar.ok) {
+                    toggleDisableButton(button)
+                    return showToast(response.message, "error")
+                }
+            } catch (e) {
+                console.error(e)
+                return showToast("Algo deu errado. Tente novamente mais tarde", "error")
+            }
+        }
+
+        closePopUp()
+        reloadPage()
+        showToast(response.message, "success")
+    } catch (e) {
+        console.error(e)
+        return showToast("Algo deu errado. Tente novamente mais tarde", "error")
+    }
+}
+
+const deleteInstanceVolume = async (uuid) => {
+    const token = sessionStorage.getItem('JWT_TOKEN');
+    const userData = getUserSession();
+
+    if (!token || !userData) {
+        logout();
+        return showToast("Sessão inválida, faça login novamente", "warning");
+    }
+
+    const body = {
+        "uuid": uuid
+    }
+
+    try {
+        const apagar = await fetch("/instances/apagar-volume", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(body)
+        })
+
+        if (apagar.status === 401 || apagar.status === 403) {
+            logout();
+            return;
+        }
+
+        const response = await apagar.json()
+
+        if (apagar.status === 500) {
+            toggleDisableButton(button)
+            return showToast(response.message, "error")
+        }
+
+        if (apagar.status === 400) {
+            toggleDisableButton(button)
+            return showToast(response.message, "warning")
+        }
+
+        if (!apagar.ok) {
+            toggleDisableButton(button)
+            return showToast(response.message, "error")
+        }
+
+        document.getElementById(uuid).remove();
+        deleteVolumeFromList(uuid);
+        console.log(volumesArray)
+        showToast(response.message, "success")
+    } catch (e) {
+        console.error(e)
+        return showToast("Algo deu errado. Tente novamente mais tarde", "error")
+    }
+}
 
 const openDeleteInstanceForm = (nome, instance_uuid) => {
     const popUpBody = `
@@ -194,7 +562,7 @@ const deleteInstance = async (instance_uuid) => {
     }
 }
 
-const getInstanceVolumes = async (instance_uuid) => {
+const getInstanceVolumes = async (instance_uuid, edit) => {
     const token = sessionStorage.getItem('JWT_TOKEN');
     const userData = getUserSession();
 
@@ -233,6 +601,10 @@ const getInstanceVolumes = async (instance_uuid) => {
 
         const data = body.data || [];
 
+        if (edit) {
+            return data;
+        }
+
         let element = "";
 
         let contador = 1;
@@ -261,7 +633,54 @@ const getInstanceVolumes = async (instance_uuid) => {
     }
 }
 
+const getMonitoredComponents = async (instance_uuid) => {
+    const token = sessionStorage.getItem('JWT_TOKEN');
+    const userData = getUserSession();
+
+    if (!token || !userData) {
+        logout();
+        return showToast("Sessão inválida, faça login novamente", "warning");
+    }
+
+    try {
+        const response = await fetch(`/instances/listar-componentes-monitorados/${instance_uuid}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.status === 401 || response.status === 403) {
+            logout();
+            return;
+        }
+
+        if (response.status === 204) {
+            return showToast("Não há nenhum componente monitorado", "warning");
+        }
+
+        const body = await response.json();
+
+        if (response.status === 400) {
+            return showToast(body.message || "Requisição inválida", "warning");
+        }
+
+        if (response.status === 500) {
+            return showToast(body.message || "Erro interno do servidor", "error");
+        }
+
+        const data = body.data || [];
+
+        return data;
+    } catch (e) {
+        console.error(e);
+        showToast("Algo deu errado ao carregar os componentes monitorados.", "error");
+    }
+}
+
 const openNewInstanceForm = async () => {
+    resetFormState();
     let componentes = await getComponents();
     let microsservicos = await getMicroservices();
     let tipos = await getTypes();
@@ -375,9 +794,9 @@ const newInstance = async () => {
     }
 
     for (let i = 0; i < componentsArray.length; i++) {
-        let componenteUUID = document.getElementById(`${componentsArray[i]}`).checked;
-        let limiteMax = document.getElementById(`max${componentsArray[i]}`).value;
-        let limiteMin = document.getElementById(`min${componentsArray[i]}`).value;
+        let componenteUUID = document.getElementById(`${componentsArray[i].uuid}`).checked;
+        let limiteMax = document.getElementById(`max${componentsArray[i].uuid}`).value;
+        let limiteMin = document.getElementById(`min${componentsArray[i].uuid}`).value;
 
         if (componenteUUID) {
             if (!limiteMax && !limiteMin) {
@@ -428,7 +847,6 @@ const newInstance = async () => {
 
         uuid_nova_instancia = response.instance_uuid;
 
-        showToast(response.message, "success")
 
         for (let i = 0; i < volumesArray.length; i++) {
             let armazenamento = volumesArray[i].storage;
@@ -474,14 +892,12 @@ const newInstance = async () => {
                 console.error(e)
                 return showToast("Algo deu errado. Tente novamente mais tarde", "error")
             }
-
-            showToast(response.message, "success")
         }
 
         for (let i = 0; i < componentsArray.length; i++) {
-            let componenteUUID = document.getElementById(`${componentsArray[i]}`).checked;
-            let limiteMax = document.getElementById(`max${componentsArray[i]}`).value;
-            let limiteMin = document.getElementById(`min${componentsArray[i]}`).value;
+            let componenteUUID = document.getElementById(`${componentsArray[i].uuid}`).checked;
+            let limiteMax = document.getElementById(`max${componentsArray[i].uuid}`).value;
+            let limiteMin = document.getElementById(`min${componentsArray[i].uuid}`).value;
             let monitorado = 0;
 
             if (componenteUUID) {
@@ -489,7 +905,7 @@ const newInstance = async () => {
             }
 
             const body = {
-                "componente_uuid": componentsArray[i],
+                "componente_uuid": componentsArray[i].uuid,
                 "instancia_uuid": uuid_nova_instancia,
                 "limite_maximo": limiteMax,
                 "limite_minimo": limiteMin,
@@ -549,7 +965,7 @@ const newVolume = () => {
     const list = document.getElementById("newVolumesList");
     const inputElement = document.getElementById("instanceVolume");
     const rawValue = inputElement.value.trim();
-    const numberValue = Number(rawValue);
+    const numberValue = Number(rawValue).toFixed(2);
 
     if (!rawValue) {
         showToast("Insira a quantidade de armazenamento do volume.", "error");
@@ -581,7 +997,7 @@ const newVolume = () => {
         <li class="pl-1" id="${id}">
             <div class="inline-flex items-center gap-2">
                 <span>${numberValue} GiB</span>
-                <span onclick="deleteVolume(${id})" class="ph-bold ph-trash text-xl text-slate-400 hover:text-slate-100 cursor-pointer duration-150 transition-colors"></span>
+                <span onclick="deleteVolumeFromList(${id})" class="ph-bold ph-trash text-xl text-slate-400 hover:text-slate-100 cursor-pointer duration-150 transition-colors"></span>
             </div>
         </li>
     `;
@@ -593,7 +1009,7 @@ const newVolume = () => {
     inputElement.focus();
 };
 
-const deleteVolume = (id) => {
+const deleteVolumeFromList = (id) => {
     for (i = 0; i < volumesArray.length; i++) {
         if (volumesArray[i].id == id) {
             volumesArray.splice(i, 1);
@@ -714,7 +1130,7 @@ const getMicroservices = async () => {
 
 let componentsArray = [];
 
-const getComponents = async () => {
+const getComponents = async (edit, instance_uuid) => {
     componentsArray = [];
     const token = sessionStorage.getItem('JWT_TOKEN');
     const userData = getUserSession();
@@ -756,16 +1172,52 @@ const getComponents = async () => {
 
         let element = "";
 
+        let componentesMonitorados = "";
+
+        if (edit) {
+            componentesMonitorados = await getMonitoredComponents(instance_uuid);
+        }
+
         data.forEach(componente => {
             const { uuid, nome, nome_tecnico, unidade_medida } = componente;
 
-            componentsArray.push(uuid);
+            componentsArray.push({
+                "uuid": uuid
+            });
+
+            let monitorado = "";
+            let limite_maximo = "";
+            let limite_minimo = "";
+
+            if (edit) {
+                let componenteMonitorado = false;
+
+                for (let i = 0; i < componentesMonitorados.length; i++) {
+                    if (componentesMonitorados[i].componente_uuid == uuid) {
+
+                        if (componentesMonitorados[i].limite_maximo) {
+                            limite_maximo = Number(componentesMonitorados[i].limite_maximo)
+                        }
+
+                        if (componentesMonitorados[i].limite_minimo) {
+                            limite_minimo = Number(componentesMonitorados[i].limite_minimo)
+                        }
+                        
+                        componenteMonitorado = true;
+                        break;
+                    }
+                }
+
+                if (componenteMonitorado) {
+                    monitorado = "checked";
+                }
+            }
 
             element += `
                 <div class="flex flex-col gap-2.5 p-2.5 bg-slate-800 border border-slate-700 rounded-lg group has-[:checked]:bg-slate-800/80 transition-colors">
                     <label class="flex items-center gap-3 cursor-pointer select-none">
                         <div class="relative flex items-center shrink-0">
-                            <input type="checkbox" id="${uuid}" class="peer sr-only">
+                            <input type="checkbox" id="${uuid}" ${monitorado} class="peer sr-only">
                             <div class="w-5 h-5 border border-slate-600 bg-slate-900 rounded peer-checked:bg-blue-600 peer-checked:border-blue-600 peer-focus:ring-2 peer-focus:ring-blue-500 transition-all flex items-center justify-center peer-checked:[&>span]:block">
                                 <span class="ph-bold ph-check text-white text-xs hidden"></span>
                             </div>
@@ -780,6 +1232,7 @@ const getComponents = async () => {
                                 type="number" 
                                 id="max${uuid}" 
                                 placeholder="0 ${unidade_medida}" 
+                                value="${limite_maximo}"
                                 class="w-full px-3 py-1.5 text-xs sm:text-sm bg-slate-900 border border-slate-700 rounded-md text-slate-200 placeholder-slate-500 outline-none focus:border-blue-500 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                         </div>
 
@@ -789,12 +1242,21 @@ const getComponents = async () => {
                                 type="number" 
                                 id="min${uuid}" 
                                 placeholder="0 ${unidade_medida}" 
+                                value="${limite_minimo}"
                                 class="w-full px-3 py-1.5 text-xs sm:text-sm bg-slate-900 border border-slate-700 rounded-md text-slate-200 placeholder-slate-500 outline-none focus:border-blue-500 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                         </div>
                     </div>
                 </div>
             `
         });
+
+        for (let i = 0; i < componentsArray.length; i++) {
+            for (let j = 0; j < componentesMonitorados.length; j++) {
+                if (componentsArray[i].uuid == componentesMonitorados[j].componente_uuid) {
+                    componentsArray[i].existiaAntes = 1;
+                }
+            }
+        }
 
         return element;
     } catch (e) {
@@ -838,6 +1300,8 @@ const closePopUp = (deleteInstance) => {
         document.getElementById("deletePopUpContent").innerHTML = ""
         return
     }
+
+    resetFormState();
     document.getElementById("popUpContainer").classList.replace("flex", "hidden")
     document.getElementById("popUpContent").innerHTML = ""
 }
@@ -855,3 +1319,11 @@ const toggleDisableButton = (button) => {
 const openMicroservicesPage = () => {
     window.location.href = "/app/microservices/index.html";
 }
+
+const resetFormState = () => {
+    volumesArray = [];
+    componentsArray = [];
+    count = 0;
+    const list = document.getElementById("newVolumesList");
+    if (list) list.innerHTML = "";
+};
