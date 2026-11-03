@@ -15,12 +15,20 @@ const navItems = [
     mobile: document.getElementById("navItemReportsMobile")
   },
   {
+    desktop: document.getElementById("navItemInstanceAnalysis"),
+    mobile: document.getElementById("navItemInstanceAnalysisMobile")
+  },
+  {
     desktop: document.getElementById("navItemAlerts"),
     mobile: document.getElementById("navItemAlertsMobile")
   },
   {
     desktop: document.getElementById("navItemFinances"),
     mobile: document.getElementById("navItemFinancesMobile")
+  },
+  {
+    desktop: document.getElementById("navItemAnalysis"),
+    mobile: document.getElementById("navItemAnalysisMobile")
   },
   {
     desktop: document.getElementById("navItemMicroservices"),
@@ -47,8 +55,10 @@ const navItems = [
 const pages = [
   "/app/index.html",
   "/app/reports/index.html",
+  "/app/instance-analysis/index.html",
   "/app/alerts/index.html",
   "/app/finances/index.html", // página de financas
+  "/app/analysis/index.html",
   "/app/microservices/index.html",
   "/app/instances/index.html",
   "/app/users/index.html",
@@ -59,10 +69,12 @@ const pages = [
 const roleAccess = [
   [0, 1, 2, 3],
   [0, 1],
+  [0, 1, 3],
   [0, 1, 3],  
   [0, 1, 2], // página de financas
+  [0, 1, 2],
   [0, 1, 3],
-  [0, 1, 2, 3],
+  [0, 1, 3],
   [0, 1],
   [0, 1],
   [0, 1]
