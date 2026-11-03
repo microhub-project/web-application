@@ -233,37 +233,149 @@ selectVolume.addEventListener('click', function () {
             
             }
             const element = `
-                <div id="${elementId}" class="grid grid-cols-[3fr_2fr_2fr] bg-white w-full border-2 border-slate-400 h-80 rounded-xl">
-                    <div id="title" class=" h-full w-full grid grid-rows-3 text-3xl">
-                        <div class="flex justify-center items-center gap-6">
-                            <div id="nome_inst" class="text-4xl">${nomeInstancia}</div>
-                            ${exibirMac ? `<div id="mac">${endereco_mac}</div>` : ""}
-                        </div>
-                        <div class="pl-24 grid grid-rows-2 items-center justify-start">
-                            <div id="tipo_instancia" class="self-start">${tipo}</div>
-                            <div id="list_microsservico" class="flex ">Microsserviços: <span>${nomeMicrosservico}</span></div>
-                        </div>
-                        <div class="flex items-center justify-center">
-                            Criado em: <span id="creation" class="text-green-400">${dataCriacao}</span>
-                        </div>
-                    </div>
-                    <div id="exclusao" class="h-full w-full flex flex-col items-center justify-evenly text-3xl">
-                        <div class="flex items-center justify-center">Deletado em:  <span id="data_del" class="text-red-400 text-4xl">${dataExclusao}</span>
-                        </div>
-                        <div class="flex items-center justify-center flex-col">
-                            <div>Exclusão permanente em </div>
-                            <div class="text-5xl"><span id="days">${diasRestantes}</span> DIAS</div>
-                        </div>
-                    </div>
-                    <div id="quest" class=" h-full w-full flex flex-col justify-between items-center py-24 text-3xl">
-                        <div class="">Deseja recuperar?</div>
-                        <div class="flex justify-center gap-6 w-full">
-                            <div class="h-full rounded-2xl border-blue-600 hover:cursor-pointer hover:bg-blue-600 hover:text-white border-2 py-3 px-5" onclick="RecuperarInstancia('${uuid}')">Sim</div>
-                            <div class="h-full rounded-2xl border-red-500  hover:cursor-pointer hover:bg-red-500 hover:text-white border-2 py-3 px-5" onclick="ExcluirInstancia('${uuid}')">Não (Apagar)</div>
-                        </div>
-                    </div>
+    <div id="${elementId}"
+        class="grid grid-cols-1 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,2fr)]
+        bg-white w-full min-w-0 border-2 border-slate-400 min-h-80 h-auto xl:h-80
+        rounded-xl overflow-hidden">
+
+        <!-- INFORMAÇÕES DA INSTÂNCIA -->
+        <div id="title"
+            class="h-full w-full min-w-0 overflow-hidden
+            grid grid-rows-[auto_auto_auto] xl:grid-rows-3
+            text-base sm:text-lg xl:text-xl 2xl:text-3xl">
+
+            <!-- NOME E MAC -->
+            <div class="flex flex-wrap justify-center items-center
+                gap-2 sm:gap-4 xl:gap-6 text-center
+                px-2 py-3 xl:py-0 min-w-0">
+
+                <div id="nome_inst"
+                    class="text-2xl sm:text-3xl 2xl:text-4xl
+                    break-words min-w-0">
+                    ${nomeInstancia}
                 </div>
-            `;
+
+                ${
+                    exibirMac
+                    ? `
+                        <div id="mac"
+                            class="text-sm sm:text-base xl:text-lg 2xl:text-2xl
+                            break-all min-w-0">
+                            ${endereco_mac}
+                        </div>
+                    `
+                    : ""
+                }
+            </div>
+
+            <!-- TIPO E MICROSSERVIÇO -->
+            <div class="px-3 sm:px-6 xl:px-4 2xl:px-6
+                py-3 xl:py-0
+                grid grid-rows-[auto_auto]
+                items-start justify-start min-w-0 gap-3">
+
+                <div id="tipo_instancia"
+                    class="self-start break-words min-w-0">
+                    ${tipo}
+                </div>
+
+                <div id="list_microsservico"
+                    class="flex flex-wrap gap-x-1 gap-y-2
+                    min-w-0 break-words">
+
+                    Microsserviços:
+
+                    <span class="${microsservicoAtribuido} break-words">
+                        ${nomeMicrosservico}
+                    </span>
+                </div>
+            </div>
+
+            <!-- DATA DE CRIAÇÃO -->
+            <div class="flex flex-wrap items-center justify-center
+                text-center px-2 py-3 xl:py-0 gap-1 min-w-0">
+
+                Criado em:
+
+                <span id="creation"
+                    class="text-green-400 break-words">
+                    ${dataCriacao}
+                </span>
+            </div>
+        </div>
+
+        <!-- INFORMAÇÕES DE EXCLUSÃO -->
+        <div id="exclusao"
+            class="h-full w-full min-w-0
+            flex flex-col items-center justify-evenly
+            text-base sm:text-lg xl:text-xl 2xl:text-3xl
+            gap-3 py-5 xl:py-0 px-2
+            border-t border-b
+            xl:border-t-0 xl:border-b-0 xl:border-l xl:border-r
+            border-slate-200 overflow-hidden">
+
+            <div class="flex flex-wrap items-center justify-center
+                text-center gap-1 min-w-0">
+
+                Deletado em:
+
+                <span id="data_del"
+                    class="text-red-400 text-xl sm:text-2xl 2xl:text-4xl
+                    break-words">
+                    ${dataExclusao}
+                </span>
+            </div>
+
+            <div class="flex items-center justify-center
+                flex-col text-center min-w-0">
+
+                <div class="break-words">
+                    Exclusão permanente em
+                </div>
+
+                <div class="text-3xl sm:text-4xl 2xl:text-5xl">
+                    <span id="days">${diasRestantes}</span> DIAS
+                </div>
+            </div>
+        </div>
+
+        <!-- AÇÕES -->
+        <div id="quest"
+            class="h-full w-full min-w-0
+            flex flex-col justify-evenly xl:justify-between
+            items-center py-5 xl:py-4 2xl:py-6
+            text-base sm:text-lg xl:text-xl 2xl:text-3xl
+            gap-4 overflow-hidden">
+
+            <div class="text-center">
+                Deseja recuperar?
+            </div>
+
+            <div class="flex flex-wrap justify-center
+                gap-3 sm:gap-4 xl:gap-3 2xl:gap-6
+                w-full px-2">
+
+                <div onclick="RecuperarInstancia('${uuid}')"
+                    class="rounded-2xl border-blue-600
+                    hover:cursor-pointer hover:bg-blue-600 hover:text-white
+                    border-2 py-2 sm:py-3 px-4 sm:px-5
+                    text-base xl:text-lg 2xl:text-xl text-center">
+
+                    Sim
+                </div>
+
+                <div onclick="ExcluirInstancia('${uuid}')"
+                    class="rounded-2xl border-red-500
+                    hover:cursor-pointer hover:bg-red-500 hover:text-white
+                    border-2 py-2 sm:py-3 px-4 sm:px-5
+                    text-base xl:text-lg 2xl:text-xl text-center">
+
+                    Não (Apagar)
+                </div>
+            </div>
+        </div>
+    </div>
+`;
             instancesContainer.innerHTML += element;
         };
     } catch (e) {
@@ -348,43 +460,139 @@ const loadMicros = async () => {
                 `;
             }
 
-            const element = `
-                <div id="${elementId}" class="grid grid-cols-[3fr_2fr_2fr] bg-white w-full border-2 border-slate-400 h-80 rounded-xl">
-                    <div id="title" class=" h-full w-full grid grid-rows-3 text-3xl">
-                        <div class="flex justify-center items-center gap-6">
-                            <div id="nome_micro" class="text-4xl">${nome}</div>
-                            <div id="desc" class="max-w-72">${descricao}</div>
-                        </div>
-                       <div class="px-24 flex flex-col justify-center gap-4 overflow-hidden">
-                            <div class="text-2xl">
-                                Instâncias associadas:
-                            </div>
+           const element = `
+    <div id="${elementId}"
+        class="grid grid-cols-1 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,2fr)]
+        bg-white w-full min-w-0 border-2 border-slate-400
+        min-h-80 h-auto xl:h-80 rounded-xl overflow-hidden">
 
-                            <div class="flex flex-wrap gap-3 max-h-24 overflow-y-auto">
-                                ${instanciasHTML}
-                            </div>
-                        </div>
-                         <div class="flex items-center justify-center">
-                            Criado em: <span id="creation" class="text-green-400">${dataCriacao}</span>
-                        </div>
-                    </div>
-                    <div id="exclusao" class="h-full w-full flex flex-col items-center justify-evenly text-3xl">
-                        <div class="flex items-center justify-center">Deletado em:  <span id="data_del" class="text-red-400 text-4xl">${dataExclusao}</span>
-                        </div>
-                        <div class="flex items-center justify-center flex-col">
-                            <div>Exclusão permanente em </div>
-                            <div class="text-5xl"><span id="days">${diasRestantes}</span> DIAS</div>
-                        </div>
-                    </div>
-                    <div id="quest" class=" h-full w-full flex flex-col justify-between items-center py-24 text-3xl">
-                        <div class="">Deseja recuperar?</div>
-                        <div class="flex justify-center gap-6 w-full">
-                            <div class="h-full rounded-2xl border-blue-600 hover:cursor-pointer hover:bg-blue-600 hover:text-white border-2 py-3 px-5" onclick="RecuperarMicro('${uuid}')">Sim</div>
-                            <div class="h-full rounded-2xl border-red-500  hover:cursor-pointer hover:bg-red-500 hover:text-white border-2 py-3 px-5" onclick="ExcluirMicro('${uuid}')">Não (Apagar)</div>
-                        </div>
-                    </div>
+        <!-- INFORMAÇÕES DO MICROSSERVIÇO -->
+        <div id="title"
+            class="h-full w-full min-w-0
+            grid grid-rows-[auto_auto_auto] xl:grid-rows-3
+            text-base sm:text-lg xl:text-xl 2xl:text-3xl">
+
+            <!-- NOME E DESCRIÇÃO -->
+            <div class="flex flex-wrap justify-center items-center
+                gap-2 sm:gap-4 xl:gap-6 text-center
+                px-2 py-3 xl:py-0 min-w-0">
+
+                <div id="nome_micro"
+                    class="text-2xl sm:text-3xl 2xl:text-4xl
+                    break-words min-w-0">
+                    ${nome}
                 </div>
-            `;
+
+                <div id="desc"
+                    class="text-sm sm:text-base xl:text-lg 2xl:text-2xl
+                    text-center break-words min-w-0">
+                    ${descricao}
+                </div>
+            </div>
+
+            <!-- INSTÂNCIAS ASSOCIADAS -->
+            <div class="px-3 sm:px-6 xl:px-4 2xl:px-6
+                py-3 xl:py-0
+                flex flex-col justify-center gap-3
+                min-w-0 overflow-hidden">
+
+                <div class="text-base sm:text-lg xl:text-xl 2xl:text-2xl
+                    break-words">
+                    Instâncias associadas:
+                </div>
+
+                <div class="flex flex-wrap gap-2 sm:gap-3
+                    max-h-24 overflow-y-auto min-w-0">
+
+                    ${instanciasHTML}
+                </div>
+            </div>
+
+            <!-- DATA DE CRIAÇÃO -->
+            <div class="flex flex-wrap items-center justify-center
+                text-center px-2 py-3 xl:py-0 gap-1 min-w-0">
+
+                Criado em:
+
+                <span id="creation"
+                    class="text-green-400 break-words">
+                    ${dataCriacao}
+                </span>
+            </div>
+        </div>
+
+        <!-- INFORMAÇÕES DE EXCLUSÃO -->
+        <div id="exclusao"
+            class="h-full w-full min-w-0
+            flex flex-col items-center justify-evenly
+            text-base sm:text-lg xl:text-xl 2xl:text-3xl
+            gap-3 py-5 xl:py-0 px-2
+            border-t border-b
+            xl:border-t-0 xl:border-b-0 xl:border-l xl:border-r
+            border-slate-200">
+
+            <div class="flex flex-wrap items-center justify-center
+                text-center gap-1 min-w-0">
+
+                Deletado em:
+
+                <span id="data_del"
+                    class="text-red-400 text-xl sm:text-2xl 2xl:text-4xl
+                    break-words">
+                    ${dataExclusao}
+                </span>
+            </div>
+
+            <div class="flex items-center justify-center
+                flex-col text-center min-w-0">
+
+                <div class="break-words">
+                    Exclusão permanente em
+                </div>
+
+                <div class="text-3xl sm:text-4xl 2xl:text-5xl">
+                    <span id="days">${diasRestantes}</span> DIAS
+                </div>
+            </div>
+        </div>
+
+        <!-- AÇÕES -->
+        <div id="quest"
+            class="h-full w-full min-w-0
+            flex flex-col justify-evenly xl:justify-between
+            items-center py-5 xl:py-4 2xl:py-6
+            text-base sm:text-lg xl:text-xl 2xl:text-3xl
+            gap-4">
+
+            <div class="text-center">
+                Deseja recuperar?
+            </div>
+
+            <div class="flex flex-wrap justify-center
+                gap-3 sm:gap-4 xl:gap-3 2xl:gap-6
+                w-full px-2">
+
+                <div onclick="RecuperarMicro('${uuid}')"
+                    class="rounded-2xl border-blue-600
+                    hover:cursor-pointer hover:bg-blue-600 hover:text-white
+                    border-2 py-2 sm:py-3 px-4 sm:px-5
+                    text-base xl:text-lg 2xl:text-xl text-center">
+
+                    Sim
+                </div>
+
+                <div onclick="ExcluirMicro('${uuid}')"
+                    class="rounded-2xl border-red-500
+                    hover:cursor-pointer hover:bg-red-500 hover:text-white
+                    border-2 py-2 sm:py-3 px-4 sm:px-5
+                    text-base xl:text-lg 2xl:text-xl text-center">
+
+                    Não (Apagar)
+                </div>
+            </div>
+        </div>
+    </div>
+`;
             microContainer.innerHTML += element;
         };
     } catch (e) {
@@ -449,38 +657,139 @@ const loadCompos = async () => {
 
             const diasRestantes = calcularDiasRestantes(deletado_em);        
 
-            const element = `
-               <div id="${elementId}" class="grid grid-cols-[3fr_2fr_2fr] bg-white w-full border-2 border-slate-400 h-80 rounded-xl">
-                      <div id="title" class=" h-full w-full grid grid-rows-3 text-3xl">
-                        <div class="flex justify-center items-center gap-6">
-                            <div id="nome_compo" class="text-4xl">${nome}</div>
-                            <div id="limites" class="text-red-500">Max-<span id="max">${limite_maximo}</span>  Min-<span id="min">${limite_minimo}</span></div>
-                        </div>
-                        <div class="pl-24 grid grid-rows-2 grid-cols-4 items-center justify-center">
-                            <div class="flex self-start col-span-4">Instância: </div>
-                            <div class="flex justify-center col-span-3">${instancia_associada}</div>
-                        </div>
-                         <div class="flex items-center justify-center">
-                            Criado em: <span id="creation" class="text-green-400">${dataCriacao}</span>
-                        </div>
-                    </div>
-                    <div id="exclusao" class="h-full w-full flex flex-col items-center justify-evenly text-3xl">
-                        <div class="flex items-center justify-center">Deletado em:  <span id="data_del" class="text-red-400 text-4xl">${dataExclusao}</span>
-                        </div>
-                        <div class="flex items-center justify-center flex-col">
-                            <div>Exclusão permanente em </div>
-                            <div class="text-5xl"><span id="days">${diasRestantes}</span> DIAS</div>
-                        </div>
-                    </div>
-                    <div id="quest" class=" h-full w-full flex flex-col justify-between items-center py-24 text-3xl">
-                        <div class="">Deseja recuperar?</div>
-                        <div class="flex justify-center gap-6 w-full">
-                            <div class="h-full rounded-2xl border-blue-600 hover:cursor-pointer hover:bg-blue-600 hover:text-white border-2 py-3 px-5" onclick="RecuperarCompo('${uuid}', '${instancia_uuid}')">Sim</div>
-                            <div class="h-full rounded-2xl border-red-500  hover:cursor-pointer hover:bg-red-500 hover:text-white border-2 py-3 px-5" onclick="ExcluirCompo('${uuid}', '${instancia_uuid}')">Não (Apagar)</div>
-                        </div>
-                    </div>
+           const element = `
+    <div id="${elementId}"
+        class="grid grid-cols-1 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,2fr)]
+        bg-white w-full min-w-0 border-2 border-slate-400
+        min-h-80 h-auto xl:h-80 rounded-xl overflow-hidden">
+
+        <!-- INFORMAÇÕES DO COMPONENTE -->
+        <div id="title"
+            class="h-full w-full min-w-0
+            grid grid-rows-[auto_auto_auto] xl:grid-rows-3
+            text-base sm:text-lg xl:text-xl 2xl:text-3xl">
+
+            <!-- NOME E LIMITES -->
+            <div class="flex flex-wrap justify-center items-center
+                gap-2 sm:gap-4 xl:gap-6 text-center
+                px-2 py-3 xl:py-0 min-w-0">
+
+                <div id="nome_compo"
+                    class="text-2xl sm:text-3xl 2xl:text-4xl
+                    break-words min-w-0">
+                    ${nome}
                 </div>
-            `;
+
+                <div id="limites"
+                    class="text-red-500 text-base sm:text-lg xl:text-xl 2xl:text-3xl
+                    break-words">
+
+                    Max-<span id="max">${limite_maximo}</span>
+
+                    Min-<span id="min">${limite_minimo}</span>
+                </div>
+            </div>
+
+            <!-- INSTÂNCIA ASSOCIADA -->
+            <div class="px-3 sm:px-6 xl:px-4 2xl:px-6
+                py-3 xl:py-0
+                grid grid-rows-[auto_auto]
+                items-start justify-start min-w-0 gap-3">
+
+                <div class="flex self-start break-words">
+                    Instância:
+                </div>
+
+                <div class="flex break-words min-w-0">
+                    ${instancia_associada}
+                </div>
+            </div>
+
+            <!-- DATA DE CRIAÇÃO -->
+            <div class="flex flex-wrap items-center justify-center
+                text-center px-2 py-3 xl:py-0 gap-1 min-w-0">
+
+                Criado em:
+
+                <span id="creation"
+                    class="text-green-400 break-words">
+                    ${dataCriacao}
+                </span>
+            </div>
+        </div>
+
+        <!-- INFORMAÇÕES DE EXCLUSÃO -->
+        <div id="exclusao"
+            class="h-full w-full min-w-0
+            flex flex-col items-center justify-evenly
+            text-base sm:text-lg xl:text-xl 2xl:text-3xl
+            gap-3 py-5 xl:py-0 px-2
+            border-t border-b
+            xl:border-t-0 xl:border-b-0 xl:border-l xl:border-r
+            border-slate-200">
+
+            <div class="flex flex-wrap items-center justify-center
+                text-center gap-1 min-w-0">
+
+                Deletado em:
+
+                <span id="data_del"
+                    class="text-red-400 text-xl sm:text-2xl 2xl:text-4xl
+                    break-words">
+                    ${dataExclusao}
+                </span>
+            </div>
+
+            <div class="flex items-center justify-center
+                flex-col text-center min-w-0">
+
+                <div class="break-words">
+                    Exclusão permanente em
+                </div>
+
+                <div class="text-3xl sm:text-4xl 2xl:text-5xl">
+                    <span id="days">${diasRestantes}</span> DIAS
+                </div>
+            </div>
+        </div>
+
+        <!-- AÇÕES -->
+        <div id="quest"
+            class="h-full w-full min-w-0
+            flex flex-col justify-evenly xl:justify-between
+            items-center py-5 xl:py-4 2xl:py-6
+            text-base sm:text-lg xl:text-xl 2xl:text-3xl
+            gap-4">
+
+            <div class="text-center">
+                Deseja recuperar?
+            </div>
+
+            <div class="flex flex-wrap justify-center
+                gap-3 sm:gap-4 xl:gap-3 2xl:gap-6
+                w-full px-2">
+
+                <div onclick="RecuperarCompo('${uuid}', '${instancia_uuid}')"
+                    class="rounded-2xl border-blue-600
+                    hover:cursor-pointer hover:bg-blue-600 hover:text-white
+                    border-2 py-2 sm:py-3 px-4 sm:px-5
+                    text-base xl:text-lg 2xl:text-xl text-center">
+
+                    Sim
+                </div>
+
+                <div onclick="ExcluirCompo('${uuid}', '${instancia_uuid}')"
+                    class="rounded-2xl border-red-500
+                    hover:cursor-pointer hover:bg-red-500 hover:text-white
+                    border-2 py-2 sm:py-3 px-4 sm:px-5
+                    text-base xl:text-lg 2xl:text-xl text-center">
+
+                    Não (Apagar)
+                </div>
+            </div>
+        </div>
+    </div>
+`;
             compoContainer.innerHTML += element;
         };
     } catch (e) {
@@ -546,37 +855,131 @@ const loadUsuarios = async () => {
             const diasRestantes = calcularDiasRestantes(deletado_em);        
 
             const element = `
-               <div id="${elementId}" class="grid grid-cols-[3fr_2fr_2fr] bg-white w-full border-2 border-slate-400 h-80 rounded-xl">
-                     <div id="title" class=" h-full w-full grid grid-rows-3 text-3xl">
-                        <div class="flex justify-center items-center gap-6">
-                            <div id="nome_user" class="text-4xl justify-self-start">${nome}</div>
-                            
-                        </div>
-                        <div class="pl-24 grid grid-rows-2 grid-cols-4 items-center justify-center">
-                            <div id="cargo" class="col-span-4 self-start">${cargo}</div>
-                            <div class="flex">${email}</div>
-                        </div>
-                         <div class="flex items-center justify-center">
-                            Criado em: <span id="creation" class="text-green-400">${dataCriacao}</span>
-                        </div>
-                    </div>
-                    <div id="exclusao" class="h-full w-full flex flex-col items-center justify-evenly text-3xl">
-                        <div class="flex items-center justify-center">Deletado em:  <span id="data_del" class="text-red-400 text-4xl">${dataExclusao}</span>
-                        </div>
-                        <div class="flex items-center justify-center flex-col">
-                            <div>Exclusão permanente em </div>
-                            <div class="text-5xl"><span id="days">${diasRestantes}</span> DIAS</div>
-                        </div>
-                    </div>
-                    <div id="quest" class=" h-full w-full flex flex-col justify-between items-center py-24 text-3xl">
-                        <div class="">Deseja recuperar?</div>
-                        <div class="flex justify-center gap-6 w-full">
-                            <div class="h-full rounded-2xl border-blue-600 hover:cursor-pointer hover:bg-blue-600 hover:text-white border-2 py-3 px-5" onclick="RecuperarUsuario('${uuid}')">Sim</div>
-                            <div class="h-full rounded-2xl border-red-500  hover:cursor-pointer hover:bg-red-500 hover:text-white border-2 py-3 px-5" onclick="ExcluirUsuario('${uuid}')">Não (Apagar)</div>
-                        </div>
-                    </div>
+    <div id="${elementId}"
+        class="grid grid-cols-1 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,2fr)]
+        bg-white w-full min-w-0 border-2 border-slate-400
+        min-h-80 h-auto xl:h-80 rounded-xl overflow-hidden">
+
+        <!-- INFORMAÇÕES DO USUÁRIO -->
+        <div id="title"
+            class="h-full w-full min-w-0
+            grid grid-rows-[auto_auto_auto] xl:grid-rows-3
+            text-base sm:text-lg xl:text-xl 2xl:text-3xl">
+
+            <!-- NOME -->
+            <div class="flex flex-wrap justify-center items-center
+                gap-2 sm:gap-4 xl:gap-6 text-center
+                px-2 py-3 xl:py-0 min-w-0">
+
+                <div id="nome_user"
+                    class="text-2xl sm:text-3xl 2xl:text-4xl
+                    break-words min-w-0">
+                    ${nome}
                 </div>
-            `;
+            </div>
+
+            <!-- CARGO E EMAIL -->
+            <div class="px-3 sm:px-6 xl:px-4 2xl:px-6
+                py-3 xl:py-0
+                grid grid-rows-[auto_auto]
+                items-start justify-start min-w-0 gap-3">
+
+                <div id="cargo"
+                    class="self-start break-words min-w-0">
+                    ${cargo}
+                </div>
+
+                <div class="flex text-sm sm:text-base xl:text-lg 2xl:text-2xl
+                    break-all min-w-0">
+                    ${email}
+                </div>
+            </div>
+
+            <!-- DATA DE CRIAÇÃO -->
+            <div class="flex flex-wrap items-center justify-center
+                text-center px-2 py-3 xl:py-0 gap-1 min-w-0">
+
+                Criado em:
+
+                <span id="creation"
+                    class="text-green-400 break-words">
+                    ${dataCriacao}
+                </span>
+            </div>
+        </div>
+
+        <!-- INFORMAÇÕES DE EXCLUSÃO -->
+        <div id="exclusao"
+            class="h-full w-full min-w-0
+            flex flex-col items-center justify-evenly
+            text-base sm:text-lg xl:text-xl 2xl:text-3xl
+            gap-3 py-5 xl:py-0 px-2
+            border-t border-b
+            xl:border-t-0 xl:border-b-0 xl:border-l xl:border-r
+            border-slate-200">
+
+            <div class="flex flex-wrap items-center justify-center
+                text-center gap-1 min-w-0">
+
+                Deletado em:
+
+                <span id="data_del"
+                    class="text-red-400 text-xl sm:text-2xl 2xl:text-4xl
+                    break-words">
+                    ${dataExclusao}
+                </span>
+            </div>
+
+            <div class="flex items-center justify-center
+                flex-col text-center min-w-0">
+
+                <div class="break-words">
+                    Exclusão permanente em
+                </div>
+
+                <div class="text-3xl sm:text-4xl 2xl:text-5xl">
+                    <span id="days">${diasRestantes}</span> DIAS
+                </div>
+            </div>
+        </div>
+
+        <!-- AÇÕES -->
+        <div id="quest"
+            class="h-full w-full min-w-0
+            flex flex-col justify-evenly xl:justify-between
+            items-center py-5 xl:py-4 2xl:py-6
+            text-base sm:text-lg xl:text-xl 2xl:text-3xl
+            gap-4">
+
+            <div class="text-center">
+                Deseja recuperar?
+            </div>
+
+            <div class="flex flex-wrap justify-center
+                gap-3 sm:gap-4 xl:gap-3 2xl:gap-6
+                w-full px-2">
+
+                <div onclick="RecuperarUsuario('${uuid}')"
+                    class="rounded-2xl border-blue-600
+                    hover:cursor-pointer hover:bg-blue-600 hover:text-white
+                    border-2 py-2 sm:py-3 px-4 sm:px-5
+                    text-base xl:text-lg 2xl:text-xl text-center">
+
+                    Sim
+                </div>
+
+                <div onclick="ExcluirUsuario('${uuid}')"
+                    class="rounded-2xl border-red-500
+                    hover:cursor-pointer hover:bg-red-500 hover:text-white
+                    border-2 py-2 sm:py-3 px-4 sm:px-5
+                    text-base xl:text-lg 2xl:text-xl text-center">
+
+                    Não (Apagar)
+                </div>
+            </div>
+        </div>
+    </div>
+`;
             usuarioContainer.innerHTML += element;
         };
     } catch (e) {
@@ -642,38 +1045,150 @@ const loadVolumes = async () => {
             const diasRestantes = calcularDiasRestantes(deletado_em);        
 
             const element = `
-              <div id="${elementId}" class="grid grid-cols-[3fr_2fr_2fr] bg-white w-full border-2 border-slate-400 h-80 rounded-xl">
-                    <div id="title" class=" h-full w-full grid grid-rows-3 text-3xl">
-                        <div class="flex justify-center items-center gap-6">
-                            <div id="volume" class="text-4xl"><span id="vol">${armazenamento}</span>GB</div>
-                        </div>
-                        <div class="pl-24 grid grid-rows-2 grid-cols-4 items-center justify-center">
-                            <div class="flex self-start row-span-1 col-span-1">Instância: </div>
-                            <div class="flex col-span-3 row-span-1 self-start">${instancia_associada}</div>
-                            <div class="flex col-span-2 row-span-1">Custo:</div>
-                            <div class="flex col-span-2 pl-5 row-span-1 justify-self-start">R$ <span id="custo">${custo_volume}</span></div>
-                        </div>
-                         <div class="flex items-center justify-center">
-                            Criado em: <span id="creation" class="text-green-400">${dataCriacao}</span>
-                        </div>
-                    </div>
-                    <div id="exclusao" class="h-full w-full flex flex-col items-center justify-evenly text-3xl">
-                        <div class="flex items-center justify-center">Deletado em:  <span id="data_del" class="text-red-400 text-4xl">${dataExclusao}</span>
-                        </div>
-                        <div class="flex items-center justify-center flex-col">
-                            <div>Exclusão permanente em </div>
-                            <div class="text-5xl"><span id="days">${diasRestantes}</span> DIAS</div>
-                        </div>
-                    </div>
-                    <div id="quest" class=" h-full w-full flex flex-col justify-between items-center py-24 text-3xl">
-                        <div class="">Deseja recuperar?</div>
-                        <div class="flex justify-center gap-6 w-full">
-                            <div class="h-full rounded-2xl border-blue-600 hover:cursor-pointer hover:bg-blue-600 hover:text-white border-2 py-3 px-5" onclick="RecuperarVolume('${uuid}')">Sim</div>
-                            <div class="h-full rounded-2xl border-red-500  hover:cursor-pointer hover:bg-red-500 hover:text-white border-2 py-3 px-5" onclick="ExcluirVolume('${uuid}')">Não (Apagar)</div>
-                        </div>
-                    </div>
-                    </div>
-            `;
+    <div id="${elementId}"
+        class="grid grid-cols-1 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,2fr)]
+        bg-white w-full min-w-0 border-2 border-slate-400
+        min-h-80 h-auto xl:h-80 rounded-xl overflow-hidden">
+
+        <!-- INFORMAÇÕES DO VOLUME -->
+        <div id="title"
+            class="h-full w-full min-w-0
+            grid grid-rows-[auto_auto_auto] xl:grid-rows-3
+            text-base sm:text-lg xl:text-xl 2xl:text-3xl">
+
+            <!-- ARMAZENAMENTO -->
+            <div class="flex flex-wrap justify-center items-center
+                gap-2 sm:gap-4 xl:gap-6 text-center
+                px-2 py-3 xl:py-0 min-w-0">
+
+                <div id="volume"
+                    class="text-2xl sm:text-3xl 2xl:text-4xl
+                    break-words min-w-0">
+
+                    <span id="vol">${armazenamento}</span>GB
+                </div>
+            </div>
+
+            <!-- INSTÂNCIA E CUSTO -->
+            <div class="px-3 sm:px-6 xl:px-4 2xl:px-6
+                py-3 xl:py-0
+                grid grid-cols-2 sm:grid-cols-4
+                grid-rows-[auto_auto]
+                items-start justify-center
+                min-w-0 gap-x-2 gap-y-3">
+
+                <div class="flex self-start col-span-1 sm:col-span-2
+                    min-w-0 break-words">
+
+                    Instância:
+                </div>
+
+                <div class="flex col-span-1 sm:col-span-2
+                    self-start min-w-0 break-words">
+
+                    ${instancia_associada}
+                </div>
+
+                <div class="flex col-span-1 sm:col-span-2
+                    min-w-0 break-words">
+
+                    Custo Giga:
+                </div>
+
+                <div class="flex col-span-1 sm:col-span-2
+                    justify-self-start min-w-0 break-words">
+
+                    R$ <span id="custo" class="break-words">
+                        ${custo_volume}
+                    </span>
+                </div>
+            </div>
+
+            <!-- DATA DE CRIAÇÃO -->
+            <div class="flex flex-wrap items-center justify-center
+                text-center px-2 py-3 xl:py-0 gap-1 min-w-0">
+
+                Criado em:
+
+                <span id="creation"
+                    class="text-green-400 break-words">
+                    ${dataCriacao}
+                </span>
+            </div>
+        </div>
+
+        <!-- INFORMAÇÕES DE EXCLUSÃO -->
+        <div id="exclusao"
+            class="h-full w-full min-w-0
+            flex flex-col items-center justify-evenly
+            text-base sm:text-lg xl:text-xl 2xl:text-3xl
+            gap-3 py-5 xl:py-0 px-2
+            border-t border-b
+            xl:border-t-0 xl:border-b-0 xl:border-l xl:border-r
+            border-slate-200 overflow-hidden">
+
+            <div class="flex flex-wrap items-center justify-center
+                text-center gap-1 min-w-0">
+
+                Deletado em:
+
+                <span id="data_del"
+                    class="text-red-400 text-xl sm:text-2xl 2xl:text-4xl
+                    break-words">
+                    ${dataExclusao}
+                </span>
+            </div>
+
+            <div class="flex items-center justify-center
+                flex-col text-center min-w-0">
+
+                <div class="break-words">
+                    Exclusão permanente em
+                </div>
+
+                <div class="text-3xl sm:text-4xl 2xl:text-5xl">
+                    <span id="days">${diasRestantes}</span> DIAS
+                </div>
+            </div>
+        </div>
+
+        <!-- AÇÕES -->
+        <div id="quest"
+            class="h-full w-full min-w-0
+            flex flex-col justify-evenly xl:justify-between
+            items-center py-5 xl:py-4 2xl:py-6
+            text-base sm:text-lg xl:text-xl 2xl:text-3xl
+            gap-4 overflow-hidden">
+
+            <div class="text-center">
+                Deseja recuperar?
+            </div>
+
+            <div class="flex flex-wrap justify-center
+                gap-3 sm:gap-4 xl:gap-3 2xl:gap-6
+                w-full px-2">
+
+                <div onclick="RecuperarVolume('${uuid}')"
+                    class="rounded-2xl border-blue-600
+                    hover:cursor-pointer hover:bg-blue-600 hover:text-white
+                    border-2 py-2 sm:py-3 px-4 sm:px-5
+                    text-base xl:text-lg 2xl:text-xl text-center">
+
+                    Sim
+                </div>
+
+                <div onclick="ExcluirVolume('${uuid}')"
+                    class="rounded-2xl border-red-500
+                    hover:cursor-pointer hover:bg-red-500 hover:text-white
+                    border-2 py-2 sm:py-3 px-4 sm:px-5
+                    text-base xl:text-lg 2xl:text-xl text-center">
+
+                    Não (Apagar)
+                </div>
+            </div>
+        </div>
+    </div>
+`;
             volumeContainer.innerHTML += element;
         };
     } catch (e) {
@@ -1170,4 +1685,4 @@ window.RecuperarInstancia = RecuperarInstancia;
 window.RecuperarMicro = RecuperarMicro;
 window.RecuperarCompo = RecuperarCompo;
 window.RecuperarUsuario = RecuperarUsuario;
-window.RecuperarVolume = RecuperarVolume;
+window.RecuperarVolume = RecuperarVolume; 
