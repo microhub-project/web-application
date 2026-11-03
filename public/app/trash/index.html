@@ -171,7 +171,7 @@
 
         <!-- CONTEÚDO PRINCIPAL -->
         <main
-            class="overflow-hidden md:max-lg:pr-24 text-slate-900 flex flex-col p-4 sm:p-5 md:p-6 lg:p-8 h-dvh min-h-0 gap-5 sm:gap-6 md:gap-8 lg:gap-10 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
+            class="overflow-y-scroll md:max-lg:pr-24 text-slate-900 flex flex-col p-4 sm:p-5 md:p-6 lg:p-8 h-dvh min-h-0 gap-5 sm:gap-6 md:gap-8 lg:gap-10 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
 
             <!-- TÍTULO -->
             <div class="flex flex-col gap-2 sm:gap-4 w-full shrink-0">
@@ -214,7 +214,7 @@
 
             <!-- VIEWER INSTÂNCIAS -->
             <div id="viewerInst"
-                class="viewer-trash ativo flex-1 min-h-0 flex-col border-2 border-slate-400 w-full rounded-2xl overflow-y-auto p-3 sm:p-5 md:p-6 xl:p-8 2xl:p-14 gap-4 sm:gap-6 lg:gap-8">
+                class="scroll-smooth md:scroll-auto viewer-trash ativo flex-col border-2 border-slate-400 w-full rounded-2xl p-3 sm:p-5 md:p-6 xl:p-8 2xl:p-14 gap-4 sm:gap-6 lg:gap-8">
 
                 <div
                     class="grid grid-cols-1 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,2fr)] bg-white w-full min-w-0 border-2 border-slate-400 min-h-80 h-auto xl:h-80 rounded-xl overflow-hidden">
@@ -295,7 +295,7 @@
 
             <!-- VIEWER MICROSSERVIÇOS -->
             <div id="viewerMicro"
-                class="viewer-trash desativado flex-1 min-h-0 flex-col border-2 border-slate-400 w-full rounded-2xl overflow-y-auto p-3 sm:p-5 md:p-6 xl:p-8 2xl:p-14 gap-4 sm:gap-6 lg:gap-8">
+                class="scroll-smooth md:scroll-auto viewer-trash ativo flex-col border-2 border-slate-400 w-full rounded-2xl p-3 sm:p-5 md:p-6 xl:p-8 2xl:p-14 gap-4 sm:gap-6 lg:gap-8">
 
                 <div
                     class="grid grid-cols-1 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,2fr)] bg-white w-full border-2 border-slate-400 min-h-80 h-auto xl:h-80 rounded-xl">
@@ -456,83 +456,72 @@
                 </div>
             </div>
 
-            <!-- VIEWER USUÁRIOS -->
-            <div id="viewerUser"
-                class="viewer-trash desativado flex-1 min-h-0 flex-col border-2 border-slate-400 w-full rounded-2xl overflow-y-auto p-3 sm:p-5 md:p-6 xl:p-8 2xl:p-14 gap-4 sm:gap-6 lg:gap-8">
+<div id="viewerUser"
+    class="scroll-smooth md:scroll-auto viewer-trash ativo flex-col border-2 border-slate-400 w-full rounded-2xl p-3 sm:p-5 md:p-6 xl:p-8 2xl:p-14 gap-4 sm:gap-6 lg:gap-8">
 
-                <div
-                    class="grid grid-cols-1 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,2fr)] bg-white w-full border-2 border-slate-400 min-h-80 h-auto xl:h-80 rounded-xl">
+    <!-- Card Principal: Removido h-80/xl:h-80 e adicionado h-auto com flex/items-stretch -->
+    <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,2fr)] bg-white w-full border-2 border-slate-400 h-auto rounded-xl shadow-sm overflow-hidden mb-4">
 
-                    <div id="title"
-                        class="h-full w-full grid grid-rows-[auto_auto_auto] xl:grid-rows-3 text-base sm:text-lg xl:text-xl 2xl:text-3xl min-w-0">
-
-                        <div
-                            class="flex flex-wrap justify-center items-center gap-2 sm:gap-4 xl:gap-6 text-center px-2 py-3 xl:py-0">
-
-                            <div id="nome_user" class="text-2xl sm:text-3xl 2xl:text-4xl break-words">
-                                Bolanos
-                            </div>
-                        </div>
-
-                        <div
-                            class="px-4 sm:px-8 xl:pl-12 2xl:pl-24 py-3 xl:py-0 grid grid-rows-2 grid-cols-4 items-center justify-center min-w-0 gap-2">
-
-                            <div id="cargo" class="col-span-4 self-start">
-                                Gerente TI
-                            </div>
-
-                            <div class="flex col-span-4 sm:col-span-3 break-all text-sm sm:text-base xl:text-lg 2xl:text-2xl">
-                                roberto@gmail.com
-                            </div>
-                        </div>
-
-                        <div
-                            class="flex flex-wrap items-center justify-center text-center px-2 py-3 xl:py-0 gap-1">
-                            Criado em:
-                            <span id="creation" class="text-green-400">dd/mm/aaaa</span>
-                        </div>
-                    </div>
-
-                    <div id="exclusao"
-                        class="h-full w-full flex flex-col items-center justify-evenly text-base sm:text-lg xl:text-xl 2xl:text-3xl gap-3 py-5 xl:py-0 px-2 min-w-0 border-t border-b xl:border-t-0 xl:border-b-0 xl:border-l xl:border-r border-slate-200">
-
-                        <div class="flex flex-wrap items-center justify-center text-center gap-1">
-                            Deletado em:
-                            <span id="data_del" class="text-red-400 text-xl sm:text-2xl xl:text-2xl 2xl:text-4xl">
-                                dd/mm/aaaa
-                            </span>
-                        </div>
-
-                        <div class="flex items-center justify-center flex-col text-center">
-                            <div>Exclusão permanente em</div>
-                            <div class="text-3xl sm:text-4xl 2xl:text-5xl">
-                                <span id="days">X</span> DIAS
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="quest"
-                        class="h-full w-full flex flex-col justify-evenly xl:justify-between items-center py-5 xl:py-4 2xl:py-24 text-base sm:text-lg xl:text-xl 2xl:text-3xl gap-4 min-w-0">
-
-                        <div class="text-center">
-                            Deseja recuperar?
-                        </div>
-
-                        <div class="flex flex-wrap justify-center gap-3 sm:gap-4 xl:gap-3 2xl:gap-6 w-full px-2">
-                            <div
-                                class="rounded-2xl border-blue-600 hover:cursor-pointer hover:bg-blue-600 hover:text-white border-2 py-2 sm:py-3 px-4 sm:px-5 text-base xl:text-lg 2xl:text-xl">
-                                Sim
-                            </div>
-
-                            <div
-                                class="rounded-2xl border-red-500 hover:cursor-pointer hover:bg-red-500 hover:text-white border-2 py-2 sm:py-3 px-4 sm:px-5 text-base xl:text-lg 2xl:text-xl text-center">
-                                Não (Apagar)
-                            </div>
-                        </div>
-                    </div>
+        <!-- Coluna 1: Nome, Cargo e Email -->
+        <div id="title"
+            class="w-full flex flex-col justify-between p-5 sm:p-6 gap-4 text-base sm:text-lg xl:text-xl min-w-0">
+            <div class="flex flex-col items-center xl:items-start text-center xl:text-left gap-1">
+                <div id="nome_user" class="text-2xl sm:text-3xl font-bold break-words text-slate-800">
+                    Bolanos
+                </div>
+                <div id="cargo" class="text-sm sm:text-base font-semibold text-slate-600">
+                    Gerente TI
                 </div>
             </div>
 
+            <div class="break-all text-sm sm:text-base xl:text-lg text-slate-700 text-center xl:text-left">
+                roberto@gmail.com
+            </div>
+
+            <div class="flex items-center justify-center xl:justify-start gap-1 text-sm text-slate-500">
+                Criado em:
+                <span id="creation" class="text-green-600 font-medium">dd/mm/aaaa</span>
+            </div>
+        </div>
+
+        <!-- Coluna 2: Status de Exclusão -->
+        <div id="exclusao"
+            class="w-full flex flex-col items-center justify-center p-5 gap-3 border-t border-b xl:border-t-0 xl:border-b-0 xl:border-l xl:border-r border-slate-200 bg-slate-50/50 min-w-0">
+            <div class="flex items-center justify-center text-center gap-1 text-sm text-slate-600">
+                Deletado em:
+                <span id="data_del" class="text-red-500 font-medium text-base sm:text-lg">
+                    dd/mm/aaaa
+                </span>
+            </div>
+
+            <div class="flex items-center justify-center flex-col text-center">
+                <div class="text-xs sm:text-sm text-slate-500 font-medium">Exclusão permanente em</div>
+                <div class="text-2xl sm:text-3xl font-bold text-slate-800 mt-1">
+                    <span id="days">30</span> DIAS
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna 3: Botões de Ação -->
+        <div id="quest"
+            class="w-full flex flex-col justify-center items-center p-5 gap-4 min-w-0">
+            <div class="text-center font-medium text-slate-700 text-sm sm:text-base">
+                Deseja recuperar?
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-3 w-full">
+                <div class="rounded-xl border-blue-600 hover:cursor-pointer hover:bg-blue-600 hover:text-white border-2 py-2 px-4 text-sm sm:text-base transition-colors font-medium text-blue-600 text-center">
+                    Sim
+                </div>
+
+                <div class="rounded-xl border-red-500 hover:cursor-pointer hover:bg-red-500 hover:text-white border-2 py-2 px-4 text-sm sm:text-base transition-colors font-medium text-red-500 text-center">
+                    Não (Apagar)
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
             <!-- VIEWER VOLUMES -->
             <div id="viewerVol"
                 class="viewer-trash desativado flex-1 min-h-0 flex-col border-2 border-slate-400 w-full rounded-2xl overflow-y-auto p-3 sm:p-5 md:p-6 xl:p-8 2xl:p-14 gap-4 sm:gap-6 lg:gap-8">

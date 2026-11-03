@@ -858,7 +858,7 @@ const loadUsuarios = async () => {
     <div id="${elementId}"
         class="grid grid-cols-1 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,2fr)]
         bg-white w-full min-w-0 border-2 border-slate-400
-        min-h-80 h-auto xl:h-80 rounded-xl overflow-hidden">
+        min-h-80 h-auto xl:h-80 rounded-xl">
 
         <!-- INFORMAÇÕES DO USUÁRIO -->
         <div id="title"
@@ -1129,9 +1129,7 @@ const loadVolumes = async () => {
 
             <div class="flex flex-wrap items-center justify-center
                 text-center gap-1 min-w-0">
-
                 Deletado em:
-
                 <span id="data_del"
                     class="text-red-400 text-xl sm:text-2xl 2xl:text-4xl
                     break-words">
