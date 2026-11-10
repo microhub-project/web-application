@@ -12,6 +12,7 @@
         href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
     <link rel="stylesheet" type="text/css"
         href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <script type="module">
         import { fillUserInfos, verifyIfUserCanAccess } from "../../js/session.js";
@@ -155,20 +156,86 @@
             </nav>
         </header>
 
-        <main
-            class="text-slate-900 flex flex-col p-8 min-h-dvh gap-12 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
+          <main
+            class="text-slate-900 grid grid-cols-[0.9fr_2.1fr] p-8 min-h-dvh w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
 
             <div class="flex flex-col gap-4 w-full">
-                <div class="">
-                    <h1 class="text-2xl font-extrabold">Instâncias</h1>
+                <div class="flex flex-col justify-center">
+                    <h1 class="text-2xl font-extrabold">Análise Individual</h1>
+                    <h3 class="text-base">Análise de previsibilidade e custo por instância</h3>
                 </div>
-                <hr class="border-t border-slate-400 my-5">
+                <div id="menu" class="flex flex-col bg-slate-100 border-2 border-blue-900 rounded-2xl h-full w-full p-5">
+                    <div id="serchField" class="grid grid-cols-2 grid-rows-2 relative gap-3">
+                        <input placeholder="Buscar" class="p-2 rounded-lg border-2 border-slate-400 col-span-2 h-full  max-h-10"></input>
+                        <i class="absolute right-4 translate-y-3 text-slate-600 z-40 fa-solid fa-magnifying-glass"></i>
+                        <div class="col-span-1 flex flex-col items-start ">
+                            <span class="text-slate-500 text-sm">Custo</span>
+                            <select name="" id="" class="w-full right-3 rounded-lg border-2 border-slate-400 h-10">
+                                <option selected value="">Todos</option>
+                            </select>
+                        </div>
+                        <div class="col-span-1 flex flex-col items-start">
+                            <span class="text-slate-500 text-sm">Status</span>
+                            <select name="" id="" class="w-full right-3 rounded-lg border-2 border-slate-400 h-10">
+                                <option selected value="">Todos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="allInstances" class="flex flex-col scroll-auto overflow-y-scroll h-full gap-3 mt-4">
+                        <div class="w-full flex flex-col rounded-xl border-2 border-slate-400 p-4 bg-white">
+                            <div class="flex flex-row items-center justify-between">
+                                <span class="">autenticação-01</span>
+                                <span class="pr-4 text-sm text-slate-500">Custo: <span class="text-black">$00.00</span></span>
+                            </div>
+                            <div class="flex flex-row items-center justify-between">
+                                <span class="text-sm text-slate-500">t3.medium</span>
+                                <div class="rounded-3xl border-[1px] border-yellow-500 text-yellow-500 text-lg bg-yellow-100 p-1">Sub-utilizada</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div
-                class="fixed inset-0 z-30 lg:ml-72 max-lg:mr-20 h-dvh backdrop-blur-lg bg-slate-950/10 flex flex-col justify-center items-center text-slate-900 pointer-events-auto">
-                <i class="ph ph-barricade text-[16rem] max-sm:text-[8rem]"></i>
-                <h1 class="text-3xl font-bold max-sm:text-2xl">Em desenvolvimento</h1>
+            <div class="grid grid-cols-[2fr_1fr] w-full h-full pl-8">
+                <div class="flex flex-col gap-6">
+                    <div class="flex flex-col items-start justify-between h-28">
+                        <span id="instanceName" class="text-2xl font-extrabold">autenticação-01</span>
+                        <span id="typeName" class="text-xl">t3.medium</span>
+                        <span class="text-slate-400">Microsserviço: <span id="microsserviceName">Pagamento</span></span>
+                    </div>
+                    <div class="flex flex-col w-full h-80 bg-white border-[1px] border-blue-900 rounded-lg p-2">
+                        <span class="ml-4 font-bold">Capacidade da instância</span>
+                    </div>
+                    <div id="verticalContainer" class="flex flex-col gap-4 w-full">
+                        <div class="w-full rounded-lg p-2 bg-blue-400 border-[1px] border-blue-900 flex justify-center items-center text-xl font-bold">Vertical</div>
+                        <div class="flex gap-4 justify-center items-center">
+                            <div class="grid grid-cols-3 grid-rows-3 items-center justify-center bg-white border-[1px] border-slate-500 rounded-xl p-4 h-36">
+                                <span class="font-bold">t3.medium</span>
+                                <span class="justify-self-end pr-8">></span>
+                                <span class="font-bold">t3.small</span>
+                                <span>2 CPU</span>
+                                <span class="justify-self-end pr-8">></span>
+                                <span>2 CPU</span>
+                                <span>4 RAM</span>
+                                <span class="justify-self-end pr-8">></span>
+                                <span>2 RAM</span>
+                            </div>
+                            <div class="flex flex-col justify-center gap-5">
+                                <div class="flex justify-center gap-3 items-center bg-white border-[1px] border-slate-500 rounded-xl p-4 h-36">
+                                    <span id="">$80</span>
+                                    <span>></span>
+                                    <span id="">$40</span>
+                                </div>
+                                <div class="bg-green-50 border-[1px] border-lime-700 rounded-2xl text-lime-700"></div>
+                            </div>
+                        </div>
+                    </div>
+                     <div id="horizontalContainer" class="">
+
+                     </div>
+                </div>
+                
             </div>
+
         </main>
         <div id="toast-container"
             class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">
