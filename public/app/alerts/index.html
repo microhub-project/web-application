@@ -158,17 +158,41 @@
         <main
             class="text-slate-900 flex flex-col p-8 min-h-dvh gap-12 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
 
-            <div class="flex flex-col gap-4 w-full">
-                <div class="">
-                    <h1 class="text-2xl font-extrabold">Alertas</h1>
-                </div>
-                <hr class="border-t border-slate-400 my-5">
+        <div class="flex justify-between items-center w-full mb-2 flex-col md:flex-row">
+
+            <div>
+              <h1 class="text-3xl text-blue-950 font-extrabold mb-2">Alertas</h1>
+              <h2 class="text-xl text-blue-950 font-thin">Visão dos alertas das instâncias</h2>
             </div>
+
             <div
-                class="fixed inset-0 z-30 lg:ml-72 max-lg:mr-20 h-dvh backdrop-blur-lg bg-slate-950/10 flex flex-col justify-center items-center text-slate-900 pointer-events-auto">
-                <i class="ph ph-barricade text-[16rem] max-sm:text-[8rem]"></i>
-                <h1 class="text-3xl font-bold max-sm:text-2xl">Em desenvolvimento</h1>
+              class="flex items-center gap-3 text-base text-slate-500 bg-slate-100 px-5 py-3 rounded-xl border border-slate-200 shadow-sm max-md:mt-4">
+              <i class="ph ph-clock text-2xl text-slate-400"></i>
+              <span>Última atualização: <span id="data-atualizacao"
+                  class="font-bold text-slate-800">Carregando...</span></span>
             </div>
+        </div>
+
+        <div class="flex flex-row gap-x-4">
+            <div id="card-alerta" class="flex flex-col p-5 bg-slate-100 border border-blue-900 rounded-xl shadow-sm w-64 gap-2">
+                        <span id="texto-alerta" class="text-sm font-semibold text-slate-500">
+                            Alertas ativos
+                        </span>
+                    <i id="icone-alerta"
+                    class=""></i>
+                    <span id="valor-alerta"></span>
+            </div>
+            <div>
+                Críticos
+            </div>
+            <div>
+                Atenção
+            </div>
+            <div>
+                Resolvidos hoje
+            </div>
+        </div>
+
         </main>
         <div id="toast-container"
             class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">
