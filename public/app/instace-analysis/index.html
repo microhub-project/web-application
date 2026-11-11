@@ -27,7 +27,7 @@
 
 </head>
 
-<body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
+<body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh overflow-y-hidden">
 
     <div class="flex min-h-screen">
 
@@ -208,7 +208,7 @@
                     <div id="verticalContainer" class="flex flex-col gap-4 w-full">
                         <div class="w-full rounded-lg p-2 bg-blue-400 border-[1px] border-blue-900 flex justify-center items-center text-xl font-bold">Vertical</div>
                         <div class="flex gap-4 justify-center items-center">
-                            <div class="grid grid-cols-3 grid-rows-3 items-center justify-center bg-white border-[1px] border-slate-500 rounded-xl p-4 h-36">
+                            <div class="grid grid-cols-3 grid-rows-3 items-center justify-center bg-white border-[1px] border-slate-500 rounded-xl p-4 h-36 text-xl">
                                 <span class="font-bold">t3.medium</span>
                                 <span class="justify-self-end pr-8">></span>
                                 <span class="font-bold">t3.small</span>
@@ -219,21 +219,44 @@
                                 <span class="justify-self-end pr-8">></span>
                                 <span>2 RAM</span>
                             </div>
-                            <div class="flex flex-col justify-center gap-5">
-                                <div class="flex justify-center gap-3 items-center bg-white border-[1px] border-slate-500 rounded-xl p-4 h-36">
+                            <div class="flex flex-col justify-center gap-5  bg-white border-[1px] border-slate-500 rounded-xl p-4 h-36">
+                                <div class="flex justify-center gap-3 text-3xl font-bold">
                                     <span id="">$80</span>
-                                    <span>></span>
+                                    <span class="mx-5">></span>
                                     <span id="">$40</span>
                                 </div>
-                                <div class="bg-green-50 border-[1px] border-lime-700 rounded-2xl text-lime-700"></div>
+                                <div class="bg-green-50 border-[1px] border-lime-700 rounded-2xl text-lime-700 p-1 px-1 flex justify-center items-center">-$40 (-50%)</div>
+                            </div>
+                            <div class="flex flex-col justify-center items-center gap-3 bg-white border-[1px] border-slate-500 rounded-xl pb-4 px-6 h-full">
+                                <div class="text-slate-500">Desperdício</div>
+                                <div class="text-5xl font-semibold text-lime-600">15%</div>
                             </div>
                         </div>
                     </div>
-                     <div id="horizontalContainer" class="">
-
+                     <div id="horizontalContainer" class="flex flex-col gap-4 w-full">
+                        <div class="w-full rounded-lg p-2 bg-blue-400 border-[1px] border-blue-900 flex justify-center items-center text-xl font-bold">Horizontal</div>
+                        <div class="bg-white flex h-full w-full rounded-xl border-[1px] border-slate-500 flex justify-center items-center min-h-36">A escalabilidade horizontal só é indicada em casos de super-utilização.</div>
                      </div>
                 </div>
                 
+
+                <div class="grid grid-rows-2 pl-8">
+                    <div class="flex flex-col gap-5 h-vh">
+                        <div class="bg-white rounded-2xl border-[1px] border-slate-500 w-full flex flex-col items-center justify-center gap-3 py-4">
+                            <div class="text-slate-400">Custo total</div>
+                            <div class="text-5xl font-bold">$80.00</div>
+                        </div>
+                        <div class="bg-white rounded-2xl border-[1px] border-slate-500 w-full flex flex-col items-center justify-center gap-3 py-7">
+                            <div class="text-slate-400">Desperdício</div>
+                            <div class="text-6xl font-bold text-red-700">20%</div>
+                        </div>
+                        <div class="bg-white rounded-2xl border-[1px] border-slate-500 w-full flex flex-col items-center justify-center gap-3 py-8">
+                               <div class="text-slate-400">Status da instância</div>
+                            <div class="text-4xl font-bold text-orange-500">Sub-utilizada</div>
+                        </div>
+                        <div class="h-full mt-1 bg-white rounded-2xl border-[1px] border-slate-500 w-full flex flex-col items-center justify-center gap-3 py-8"></div>
+                    </div>
+                </div>
             </div>
 
         </main>
