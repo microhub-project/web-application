@@ -30,9 +30,15 @@ CREATE TABLE IF NOT EXISTS `microhub`.`tipo` (
   `uuid` BINARY(16) NOT NULL,
   `nome` VARCHAR(45) NOT NULL,
   `cpu` INT NOT NULL,
-  `ram` INT NOT NULL,
+  `ram` DECIMAL(10,2) NOT NULL,
   `custo_computacao` DECIMAL(10,2) NOT NULL,
+  `criado_em` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `atualizado_em` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`uuid`));
+  
+-- alter table tipo add column `criado_em` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+-- alter table tipo add column `atualizado_em` DATETIME NULL DEFAULT NULL;
+-- alter table tipo modify column `ram` DECIMAL(10,2) NOT NULL;
 
 INSERT INTO `microhub`.`tipo` (`uuid`, `nome`, `cpu`, `ram`, `custo_computacao`) VALUES
     (UUID_TO_BIN('ef9f4280-b9af-402b-bcaa-dcbc45462ab0'), 't3.medium', 2, 4, 18.83),
