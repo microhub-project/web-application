@@ -1,5 +1,5 @@
 {
-  "name": "web-data-viz",
+  "name": "microhub",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "start": "node app.js"
   },
-  "author": "Feito pelos desenvolvedores @ São Paulo Tech School / Bandtec Digital School",
+  "author": "Feito pelos desenvolvedores @ São Paulo Tech School",
   "license": "MIT",
   "dependencies": {
     "@tailwindcss/cli": "^4.3.3",
