@@ -173,25 +173,51 @@
             </div>
         </div>
 
-        <div class="flex flex-row gap-x-4">
-            <div id="card-alerta" class="flex flex-col p-5 bg-slate-100 border border-blue-900 rounded-xl shadow-sm w-64 gap-2">
-                        <span id="texto-alerta" class="text-sm font-semibold text-slate-500">
-                            Alertas ativos
-                        </span>
-                    <i id="icone-alerta"
-                    class=""></i>
-                    <span id="valor-alerta"></span>
-            </div>
-            <div>
-                Críticos
-            </div>
-            <div>
-                Atenção
-            </div>
-            <div>
-                Resolvidos hoje
-            </div>
+<div class="flex flex-row gap-x-14">
+    <!--Card de alertas ativos-->
+    <div id="card-ativos" class="flex flex-col justify-between px-4 py-3 bg-slate-100 border border-blue-900 rounded-xl shadow-sm w-64 h-32">
+        <div class="flex items-center justify-between w-full">
+            <span id="texto-ativos" class="text-slate-900 font-semibold">Alertas ativos</span>
+            <i id="icone-ativos" class="ph ph-bell text-xl border border-blue-950 rounded-xl p-1 px-2 text-slate-900"></i>
         </div>
+        <div class="flex justify-center items-center my-auto">
+            <span id="valor-ativos" class="text-5xl text-slate-900">3</span>
+        </div>
+    </div>
+
+    <!--Card de alertas críticos-->
+    <div id="card-criticos" class="flex flex-col justify-between px-4 py-3 bg-pink-100 border border-red-700 rounded-xl shadow-sm w-64 h-32">
+        <div class="flex items-center justify-between w-full">
+            <span id="texto-criticos" class="text-red-700 font-semibold">Críticos</span>
+            <i id="icone-criticos" class="ph ph-warning-circle text-xl border border-red-700 rounded-xl p-1 px-2 text-red-700"></i>
+        </div>
+        <div class="flex justify-center items-center my-auto">
+            <span id="valor-criticos" class="text-5xl text-red-700">2</span>
+        </div>
+    </div>
+
+    <!--Card de atenção-->
+    <div id="card-atencao" class="flex flex-col justify-between px-4 py-3 bg-amber-50 border border-amber-500 rounded-xl shadow-sm w-64 h-32">
+        <div class="flex items-center justify-between w-full">
+            <span id="texto-atencao" class="text-amber-600 font-semibold">Atenção</span>
+            <i id="icone-atencao" class="ph ph-warning text-xl border border-amber-500 rounded-xl p-1 px-2 text-amber-600"></i>
+        </div>
+        <div class="flex justify-center items-center my-auto">
+            <span id="valor-atencao" class="text-5xl text-amber-600">1</span>
+        </div>
+    </div>
+
+    <!--Resolvidos hoje-->
+    <div id="card-resolvidos" class="flex flex-col justify-between px-4 py-3 bg-slate-100 border border-blue-900 rounded-xl shadow-sm w-64 h-32">
+        <div class="flex items-center justify-between w-full">
+            <span id="texto-resolvidos" class="text-slate-900 font-semibold">Resolvidos hoje</span>
+            <i id="icone-resolvidos" class="ph ph-check-circle text-xl border border-blue-950 rounded-xl p-1 px-2 text-slate-900"></i>
+        </div>
+        <div class="flex justify-center items-center my-auto">
+            <span id="valor-resolvidos" class="text-5xl text-slate-900">1</span>
+        </div>
+    </div>
+</div>
 
         </main>
         <div id="toast-container"
