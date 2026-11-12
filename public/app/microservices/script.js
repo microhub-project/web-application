@@ -187,20 +187,18 @@ const openNewMicroserviceForm = () => {
 
 const openDeleteMicroserviceForm = (nome, microservice_uuid) => {
     const popUpBody = `
-    <div class="flex flex-col justify-around gap-4">
-      <div class="flex flex-col gap-2 mt-1">
-        <button
-          onclick="deleteMicroservice('${microservice_uuid}')"
-          id="deleteMicroserviceButton"
-          class="w-full py-2.5 sm:py-3 border-2 bg-red-600 border-red-600 hover:bg-red-800 hover:border-red-800 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
-          <span class="font-medium">Apagar</span>
-        </button>
-        <button
-          onclick="closePopUp('deleteMicroservice')"
-          class="w-full py-2.5 sm:py-3 border-2 border-red-600 hover:bg-red-600 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
-          <span class="font-medium">Cancelar</span>
-        </button>
-      </div>
+     <div class="flex flex-col sm:flex-row justify-around gap-2 sm:gap-4 mt-2">
+      <button 
+        onclick="closePopUp('deleteMicroservice')"
+        class="w-full py-2.5 sm:py-3 border border-slate-600 hover:bg-slate-800 text-slate-200 rounded-xl font-medium transition-colors cursor-pointer text-center">
+        <span class="font-normal sm:font-medium">Cancelar</span>
+      </button>
+      <button 
+        onclick="deleteMicroservice('${microservice_uuid}')"
+        id="disableCodeConfirmedButton"
+        class="w-full py-2.5 sm:py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-colors cursor-pointer text-center">
+        <span class="font-normal sm:font-medium">Apagar</span>
+      </button>
     </div>
   `;
 
@@ -444,12 +442,7 @@ const showPopUp = (title, popUpBody, deleteMicroservice) => {
     popUpContainer.classList.replace("hidden", "flex");
     popUpContent.innerHTML = `
     <h1 class="text-lg sm:text-2xl font-bold pb-4 pr-8 break-words">${title}</h1>
-    <button 
-      type="button" 
-      ${onClick}
-      class="absolute top-4 right-4 sm:top-5 sm:right-5 text-slate-400 hover:text-white cursor-pointer transition-all duration-300"> 
-      <i class="ph ph-x text-2xl sm:text-3xl"></i>
-    </button>
+ 
   `;
 
     popUpContent.innerHTML += popUpBody;

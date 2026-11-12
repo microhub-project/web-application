@@ -114,6 +114,21 @@ const getInstances = async () => {
     }
 };
 
+const setInstanceTypeUUID = () => {
+    const input = document.getElementById("instanceType");
+    const uuidInput = document.getElementById("instanceTypeUUID");
+    const options = document.querySelectorAll("#instanceTypes option");
+
+    uuidInput.value = "";
+
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].value === input.value) {
+            uuidInput.value = options[i].dataset.uuid;
+            break;
+        }
+    }
+};
+
 const openEditInstanceForm = async (uuid, nome, endereco_mac, tipo_uuid, tipo, cpu, ram, microsservico_uuid, microsservico) => {
     resetFormState();
     const componentes = await getComponents("edit", uuid);
@@ -172,15 +187,24 @@ const openEditInstanceForm = async (uuid, nome, endereco_mac, tipo_uuid, tipo, c
                         <input type="text" id="instanceMACAddress" placeholder="00:00:00:00:00:00" value="${endereco_mac}" class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
                     </div>
 
-                    <div class="flex flex-col gap-1.5">
-                        <label for="instanceType" class="text-xs sm:text-sm text-slate-300">Tipo</label> 
+                   <div class="flex flex-col gap-1.5">
+                        <label for="instanceType" class="text-xs sm:text-sm text-slate-300">Tipo</label>
+
                         <div class="relative w-full">
-                            <select id="instanceType"
+                            <input
+                                list="instanceTypes"
+                                id="instanceType"
+                                value="${tipo} (${cpu}, ${ram})"
+                                oninput="setInstanceTypeUUID()"
                                 class="w-full px-4 py-3 pr-10 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer text-sm sm:text-base">
-                                <option value="${tipo_uuid}" selected >${tipo} (${cpu}, ${ram})</option>
+
+                            <input type="hidden" id="instanceTypeUUID" value="${tipo_uuid}">
+
+                            <datalist id="instanceTypes">
+                                <option value="${tipo} (${cpu}, ${ram})" data-uuid="${tipo_uuid}"></option>
                                 ${tipos}
-                            </select>
-                            <span class="ph-bold ph-caret-down text-xl text-slate-400 pointer-events-none absolute top-1/2 end-3 -translate-y-1/2"></span>
+                            </datalist>
+
                         </div>
                     </div>
 
@@ -245,10 +269,15 @@ const updateInstance = async (instance_uuid) => {
     const button = document.getElementById("updateInstanceButton")
     const name = document.getElementById("instanceName").value.trim()
     const mac = document.getElementById("instanceMACAddress").value.trim()
-    const type = document.getElementById("instanceType").value
+    const type = document.getElementById("instanceTypeUUID").value
     const microservice = document.getElementById("instanceMicroservice").value
 
     toggleDisableButton(button)
+
+    if (!type) {
+    toggleDisableButton(button);
+    return showToast("Selecione um tipo válido para a instância.", "error");
+    }
 
     if (mac.length != 17) {
         toggleDisableButton(button)
@@ -484,20 +513,19 @@ const deleteInstanceVolume = async (uuid) => {
 
 const openDeleteInstanceForm = (nome, instance_uuid) => {
     const popUpBody = `
-    <div class="flex flex-col justify-around gap-4">
-      <div class="flex flex-col gap-2 mt-1">
-        <button
-          onclick="deleteInstance('${instance_uuid}')"
-          id="deleteInstanceButton"
-          class="w-full py-2.5 sm:py-3 border-2 bg-red-600 border-red-600 hover:bg-red-800 hover:border-red-800 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
-          <span class="font-medium">Apagar</span>
-        </button>
-        <button
-          onclick="closePopUp('deleteInstanceButton')"
-          class="w-full py-2.5 sm:py-3 border-2 border-red-600 hover:bg-red-600 rounded-lg font-medium text-sm sm:text-base transition-colors cursor-pointer flex gap-2 items-center justify-center">
-          <span class="font-medium">Cancelar</span>
-        </button>
-      </div>
+   
+     <div class="flex flex-col sm:flex-row justify-around gap-2 sm:gap-4 mt-2">
+      <button 
+        onclick="closePopUp('deleteInstanceButton')"
+        class="w-full py-2.5 sm:py-3 border border-slate-600 hover:bg-slate-800 text-slate-200 rounded-xl font-medium transition-colors cursor-pointer text-center">
+        <span class="font-normal sm:font-medium">Cancelar</span>
+      </button>
+      <button 
+        onclick="deleteInstance('${instance_uuid}')"
+        id="disableCodeConfirmedButton"
+        class="w-full py-2.5 sm:py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-colors cursor-pointer text-center">
+        <span class="font-normal sm:font-medium">Apagar</span>
+      </button>
     </div>
   `;
 
@@ -708,16 +736,23 @@ const openNewInstanceForm = async () => {
                         <input type="text" id="instanceMACAddress" placeholder="00:00:00:00:00:00" class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-slate-800 border border-slate-700 rounded-lg outline-none focus:border-blue-500 transition-colors">
                     </div>
 
-                    <div class="flex flex-col gap-1.5">
-                        <label for="instanceType" class="text-xs sm:text-sm text-slate-300">Tipo</label> 
+                   <div class="flex flex-col gap-1.5">
+                        <label for="instanceType" class="text-xs sm:text-sm text-slate-300">Tipo</label>
+
                         <div class="relative w-full">
-                            <select id="instanceType"
-                                class="w-full px-4 py-3 pr-10 bg-slate-800 border border-slate-700 rounded-lg text-gray-400 outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer text-sm sm:text-base"
-                                onchange="this.classList.toggle('text-gray-400', !this.value); this.classList.toggle('text-slate-100', !!this.value);">
-                                <option value="" disabled selected class="text-gray-400 bg-slate-800">Selecione um tipo</option>
+                            <input
+                                list="instanceTypes"
+                                id="instanceType"
+                                placeholder="Selecione um tipo"
+                                oninput="setInstanceTypeUUID()"
+                                class="w-full px-4 py-3 pr-10 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer text-sm sm:text-base">
+
+                            <input type="hidden" id="instanceTypeUUID">
+
+                            <datalist id="instanceTypes">
                                 ${tipos}
-                            </select>
-                            <span class="ph-bold ph-caret-down text-xl text-slate-400 pointer-events-none absolute top-1/2 end-3 -translate-y-1/2"></span>
+                            </datalist>
+
                         </div>
                     </div>
 
@@ -782,11 +817,17 @@ const newInstance = async () => {
     const button = document.getElementById("newInstanceButton")
     const name = document.getElementById("instanceName").value.trim()
     const mac = document.getElementById("instanceMACAddress").value.trim()
-    const type = document.getElementById("instanceType").value
+    const type = document.getElementById("instanceTypeUUID").value
     const microservice = document.getElementById("instanceMicroservice").value
     let uuid_nova_instancia = "";
 
     toggleDisableButton(button)
+
+
+    if (!type) {
+        toggleDisableButton(button);
+        return showToast("Selecione um tipo válido para a instância.", "error");
+    }
 
     if (mac.length != 17) {
         toggleDisableButton(button)
@@ -1064,7 +1105,7 @@ const getTypes = async () => {
         data.forEach(tipo => {
             const { uuid, nome, cpu, ram } = tipo;
 
-            element += `<option value="${uuid}">${nome} (${cpu}, ${ram})</option>`;
+            element += `<option value="${nome} (${cpu}, ${ram})" data-uuid="${uuid}"></option>`;
         });
 
         return element;
@@ -1283,12 +1324,7 @@ const showPopUp = (title, popUpBody, deleteInstance) => {
     popUpContainer.classList.replace("hidden", "flex");
     popUpContent.innerHTML = `
     <h1 class="text-lg sm:text-2xl font-bold pb-4 pr-8 break-words">${title}</h1>
-    <button 
-      type="button" 
-      ${onClick}
-      class="absolute top-4 right-4 sm:top-5 sm:right-5 text-slate-400 hover:text-white cursor-pointer transition-all duration-300"> 
-      <i class="ph ph-x text-2xl sm:text-3xl"></i>
-    </button>
+    
   `;
 
     popUpContent.innerHTML += popUpBody;
