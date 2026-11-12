@@ -185,7 +185,8 @@
             </div>
 
             <div>
-                <h2 class="text-xl font-bold mb-8">Sugestões - <span class="text-xl font-bold" id="month-suggestion">Janeiro</span></h2>
+                <h2 class="text-xl font-bold mb-8">Visão - <span class="text-xl font-bold"
+                        id="month-suggestion">Janeiro</span></h2>
                 <div class="w-full flex gap-8">
                     <div class="w-1/2">
                         <div
@@ -195,72 +196,95 @@
                         </div>
                         <div class="w-full flex gap-4 mb-4">
                             <div class="w-1/2">
-                                <div
-                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg cursor-help mb-4">
+                                <div onclick="if(window.innerWidth < 768) this.querySelector('p').classList.toggle('ativo')"
+                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg max-md:cursor-pointer md:cursor-help mb-4 select-none">
                                     <div class="flex w-full items-center justify-center gap-2">
                                         <i class="ph-bold ph-thumbs-up text-xl"></i>
                                         <h2 class="text-lg font-bold">Simplicidade</h2>
                                     </div>
-                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
-                                        Fácil de implementar: exige apenas poucos cliques ou a alteração do tipo de instância no provedor de nuvem.
+                                    <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
+                                        [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
+                                        md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
+                                        Fácil de aplicar: basta alterar o tamanho da instância na nuvem em poucos
+                                        cliques.
                                     </p>
                                 </div>
-                                <div
-                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg cursor-help mb-4">
+
+                                <div onclick="if(window.innerWidth < 768) this.querySelector('p').classList.toggle('ativo')"
+                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg max-md:cursor-pointer md:cursor-help mb-4 select-none">
                                     <div class="flex w-full items-center justify-center gap-2">
                                         <i class="ph-bold ph-thumbs-up text-xl"></i>
                                         <h2 class="text-lg font-bold">Centralização</h2>
                                     </div>
-                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
-                                        A aplicação continua rodando em um único ambiente, sem a necessidade de adaptar o software para lidar com ambientes distribuídos.
+                                    <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
+                                        [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
+                                        md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
+                                        A aplicação roda em um único ambiente, sem precisar adaptar o código para
+                                        sistemas distribuídos.
                                     </p>
                                 </div>
-                                <div
-                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg cursor-help mb-4">
+
+                                <div onclick="if(window.innerWidth < 768) this.querySelector('p').classList.toggle('ativo')"
+                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg max-md:cursor-pointer md:cursor-help select-none">
                                     <div class="flex w-full items-center justify-center gap-2">
                                         <i class="ph-bold ph-thumbs-up text-xl"></i>
                                         <h2 class="text-lg font-bold">Rede</h2>
                                     </div>
-                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
-                                        Não exige balanceadores de carga complexos, sincronização de dados entre múltiplos nós ou particionamento de banco de dados.
+                                    <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
+                                        [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
+                                        md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
+                                        Dispensa balanceadores de carga, sincronização entre nós ou particionamento de
+                                        banco.
                                     </p>
                                 </div>
                             </div>
 
                             <div class="w-1/2">
-                                <div
-                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg cursor-help mb-4">
+                                <div onclick="if(window.innerWidth < 768) this.querySelector('p').classList.toggle('ativo')"
+                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg max-md:cursor-pointer md:cursor-help mb-4 select-none">
                                     <div class="flex w-full items-center justify-center gap-2">
                                         <i class="ph-bold ph-thumbs-down text-xl"></i>
                                         <h2 class="text-lg font-bold">Downtime</h2>
                                     </div>
-                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
-                                        Redimensionar uma instância exige reiniciar o servidor, tirando o sistema do ar temporariamente.
+                                    <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
+                                        [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
+                                        md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
+                                        Redimensionar a máquina exige reiniciar o servidor, tirando o sistema do ar
+                                        temporariamente.
                                     </p>
                                 </div>
-                                <div
-                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg cursor-help mb-4">
+
+                                <div onclick="if(window.innerWidth < 768) this.querySelector('p').classList.toggle('ativo')"
+                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg max-md:cursor-pointer md:cursor-help mb-4 select-none">
                                     <div class="flex w-full items-center justify-center gap-2">
                                         <i class="ph-bold ph-thumbs-down text-xl"></i>
                                         <h2 class="text-lg font-bold">Centralização</h2>
                                     </div>
-                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
-                                        Se o servidor apresentar algum problema ou hardware falhar, toda a aplicação cai junto
+                                    <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
+                                        [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
+                                        md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
+                                        Ponto único de falha: se o servidor ou hardware falhar, toda a aplicação sai do
+                                        ar.
                                     </p>
                                 </div>
-                                <div
-                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg cursor-help mb-4">
+
+                                <div onclick="if(window.innerWidth < 768) this.querySelector('p').classList.toggle('ativo')"
+                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg max-md:cursor-pointer md:cursor-help select-none">
                                     <div class="flex w-full items-center justify-center gap-2">
                                         <i class="ph-bold ph-thumbs-down text-xl"></i>
                                         <h2 class="text-lg font-bold">Custo</h2>
                                     </div>
-                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
-                                        Servidores com quantidades massivas de CPU e RAM costumam ficar desproporcionalmente caros em comparação à soma de várias máquinas menores.
+                                    <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
+                                        [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
+                                        md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
+                                        Máquinas com muita CPU e RAM custam bem mais caro que várias instâncias menores
+                                        somadas.
                                     </p>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="w-1/2">
                         <div
                             class="w-full h-fit mb-4 rounded-xl flex justify-center items-center gap-2 p-2 bg-blue-300 border-blue-800 border text-blue-950">
@@ -269,67 +293,88 @@
                         </div>
                         <div class="w-full flex gap-4 mb-4">
                             <div class="w-1/2">
-                                <div
-                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg cursor-help mb-4">
+                                <div onclick="if(window.innerWidth < 768) this.querySelector('p').classList.toggle('ativo')"
+                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg max-md:cursor-pointer md:cursor-help mb-4 select-none">
                                     <div class="flex w-full items-center justify-center gap-2">
                                         <i class="ph-bold ph-thumbs-up text-xl"></i>
                                         <h2 class="text-lg font-bold">Disponibilidade</h2>
                                     </div>
-                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
-                                        Se um dos servidores falha, os outros continuam operando e o tráfego é redirecionado, evitando a queda total do sistema.
+                                    <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
+                                        [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
+                                        md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
+                                        Se um servidor falha, os outros assumem o tráfego e evitam a queda total do
+                                        sistema.
                                     </p>
                                 </div>
-                                <div
-                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg cursor-help mb-4">
+
+                                <div onclick="if(window.innerWidth < 768) this.querySelector('p').classList.toggle('ativo')"
+                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg max-md:cursor-pointer md:cursor-help mb-4 select-none">
                                     <div class="flex w-full items-center justify-center gap-2">
                                         <i class="ph-bold ph-thumbs-up text-xl"></i>
                                         <h2 class="text-lg font-bold">Escalabilidade</h2>
                                     </div>
-                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
-                                        Novos nós podem ser adicionados ou removidos em tempo real (muitas vezes de forma automatizada via auto-scaling) sem derrubar o serviço.
+                                    <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
+                                        [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
+                                        md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
+                                        Adiciona ou remove nós em tempo real (via auto-scaling) sem derrubar o serviço.
                                     </p>
                                 </div>
-                                <div
-                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg cursor-help mb-4">
+
+                                <div onclick="if(window.innerWidth < 768) this.querySelector('p').classList.toggle('ativo')"
+                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg max-md:cursor-pointer md:cursor-help select-none">
                                     <div class="flex w-full items-center justify-center gap-2">
                                         <i class="ph-bold ph-thumbs-up text-xl"></i>
                                         <h2 class="text-lg font-bold">Custo</h2>
                                     </div>
-                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
-                                        Utilizar várias instâncias menores ou spot/commodities na nuvem é mais barato do que contratar uma super-instância vertical.
+                                    <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
+                                        [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
+                                        md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
+                                        Usar várias instâncias menores ou spot na nuvem sai mais barato que uma
+                                        super-máquina.
                                     </p>
                                 </div>
                             </div>
 
                             <div class="w-1/2">
-                                <div
-                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg cursor-help mb-4">
+                                <div onclick="if(window.innerWidth < 768) this.querySelector('p').classList.toggle('ativo')"
+                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg max-md:cursor-pointer md:cursor-help mb-4 select-none">
                                     <div class="flex w-full items-center justify-center gap-2">
                                         <i class="ph-bold ph-thumbs-down text-xl"></i>
                                         <h2 class="text-lg font-bold">Complexidade</h2>
                                     </div>
-                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
-                                        A aplicação precisa ser preparada para rodar em múltiplos servidores simultaneamente (exigindo controle de sessões, gerenciamento de estado e replicação de dados).
+                                    <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
+                                        [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
+                                        md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
+                                        O software exige controle de sessão, estado e replicação de dados para rodar em
+                                        múltiplos nós.
                                     </p>
                                 </div>
-                                <div
-                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg cursor-help mb-4">
+
+                                <div onclick="if(window.innerWidth < 768) this.querySelector('p').classList.toggle('ativo')"
+                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg max-md:cursor-pointer md:cursor-help mb-4 select-none">
                                     <div class="flex w-full items-center justify-center gap-2">
                                         <i class="ph-bold ph-thumbs-down text-xl"></i>
                                         <h2 class="text-lg font-bold">Componentes extras</h2>
                                     </div>
-                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
-                                        Exige o uso obrigatório de balanceadores de carga (load balancers) e monitoramento avançado para gerenciar o tráfego e a saúde dos nós.
+                                    <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
+                                        [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
+                                        md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
+                                        Exige load balancers e monitoramento avançado para distribuir o tráfego e vigiar
+                                        os nós.
                                     </p>
                                 </div>
-                                <div
-                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg cursor-help mb-4">
+
+                                <div onclick="if(window.innerWidth < 768) this.querySelector('p').classList.toggle('ativo')"
+                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg max-md:cursor-pointer md:cursor-help select-none">
                                     <div class="flex w-full items-center justify-center gap-2">
                                         <i class="ph-bold ph-thumbs-down text-xl"></i>
                                         <h2 class="text-lg font-bold">Sincronização</h2>
                                     </div>
-                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
-                                        Manter logs centralizados, backups e consistência de dados em um ambiente distribuído é muito mais trabalhoso para a equipe de TI/DevOps.
+                                    <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
+                                        [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
+                                        md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
+                                        Logs centralizados, backups e consistência de dados dão muito mais trabalho para
+                                        a operação.
                                     </p>
                                 </div>
                             </div>
@@ -341,27 +386,39 @@
                         <div class="w-1/2">
                             <div id="UUIDVertical"
                                 class="w-full h-fit mb-4 rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
-                                <h2 class="w-full text-2xl text-center font-bold">00:00:00:00:00:00</h2>
                                 <div class="flex w-full">
                                     <div class="w-3/5">
-                                        <div class="flex w-full items-center justify-center gap-8 my-4">
-                                            <p class="flex-1 text-left ml-4">t3.small</p>
+                                        <div class="flex w-full items-center gap-2 my-4 ml-4">
+                                            <p class="font-bold">Instâncias:</p>
+                                            <p>10</p>
                                             <i class="ph-bold ph-arrow-right text-xl"></i>
-                                            <p class="flex-1 text-right mr-4">t3.medium</p>
+                                            <p>10</p>
+                                            <p
+                                                class="rounded-3xl bg-stone-100 text-stone-700 w-fit py-1 px-2 border border-stone-700">
+                                                +0 (+0%)</p>
                                         </div>
-                                        <div class="flex w-full items-center justify-center gap-8 mb-4">
-                                            <p class="flex-1 text-left ml-4"><span>2</span> vCPU</p>
+                                        <div class="flex w-full items-center gap-2 my-4 ml-4">
+                                            <p class="font-bold">CPUs:</p>
+                                            <p>10</p>
                                             <i class="ph-bold ph-arrow-right text-xl"></i>
-                                            <p class="flex-1 text-right mr-4"><span>2</span> vCPU</p>
+                                            <p>10</p>
+                                            <p
+                                                class="rounded-3xl bg-green-100 text-green-700 w-fit py-1 px-2 border border-green-700">
+                                                +$40 (+100%)</p>
                                         </div>
-                                        <div class="flex w-full items-center justify-center gap-8 mb-4">
-                                            <p class="flex-1 text-left ml-4"><span>2</span> GiB RAM</p>
+                                        <div class="flex w-full items-center gap-2 my-4 ml-4">
+                                            <p class="font-bold">RAM (GiB):</p>
+                                            <p>10</p>
                                             <i class="ph-bold ph-arrow-right text-xl"></i>
-                                            <p class="flex-1 text-right mr-4"><span>4</span> GiB RAM</p>
+                                            <p>10</p>
+                                            <p
+                                                class="rounded-3xl bg-green-100 text-green-700 w-fit py-1 px-2 border border-green-700">
+                                                +$40 (+100%)</p>
                                         </div>
                                     </div>
                                     <div class="border-l border-blue-950 my-5"></div>
                                     <div class="w-2/5 text-center m-auto">
+                                        <h2 class="w-full text-2xl text-center font-bold">Custo:</h2>
                                         <div class="flex w-full items-center justify-center gap-4 mb-4">
                                             <p class="flex-1 text-left ml-4 text-4xl font-bold">$<span>40</span></p>
                                             <i class="ph-bold ph-arrow-right text-xl"></i>
@@ -375,38 +432,52 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="UUIDHorizontal"
-                            class="w-1/2 h-fit text-center mb-4 rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
-                            <h2 class="w-full text-2xl font-bold">00:00:00:00:00:00</h2>
-                            <div class="flex w-full">
-                                <div class="w-3/5">
-                                    <div class="flex w-full items-center justify-center gap-8 my-4">
-                                        <p class="flex-1 text-left ml-4">t3.small</p>
-                                        <i class="ph-bold ph-arrow-right text-xl"></i>
-                                        <p class="flex-1 text-right mr-4">t3.medium</p>
+                        <div class="w-1/2">
+                            <div id="UUIDVertical"
+                                class="w-full h-fit mb-4 rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
+                                <div class="flex w-full">
+                                    <div class="w-3/5">
+                                        <div class="flex w-full items-center gap-2 my-4 ml-4">
+                                            <p class="font-bold">Instâncias:</p>
+                                            <p>10</p>
+                                            <i class="ph-bold ph-arrow-right text-xl"></i>
+                                            <p>10</p>
+                                            <p
+                                                class="rounded-3xl bg-stone-100 text-stone-700 w-fit py-1 px-2 border border-stone-700">
+                                                +0 (+0%)</p>
+                                        </div>
+                                        <div class="flex w-full items-center gap-2 my-4 ml-4">
+                                            <p class="font-bold">CPUs:</p>
+                                            <p>10</p>
+                                            <i class="ph-bold ph-arrow-right text-xl"></i>
+                                            <p>10</p>
+                                            <p
+                                                class="rounded-3xl bg-green-100 text-green-700 w-fit py-1 px-2 border border-green-700">
+                                                +$40 (+100%)</p>
+                                        </div>
+                                        <div class="flex w-full items-center gap-2 my-4 ml-4">
+                                            <p class="font-bold">RAM (GiB):</p>
+                                            <p>10</p>
+                                            <i class="ph-bold ph-arrow-right text-xl"></i>
+                                            <p>10</p>
+                                            <p
+                                                class="rounded-3xl bg-green-100 text-green-700 w-fit py-1 px-2 border border-green-700">
+                                                +$40 (+100%)</p>
+                                        </div>
                                     </div>
-                                    <div class="flex w-full items-center justify-center gap-8 mb-4">
-                                        <p class="flex-1 text-left ml-4"><span>2</span> vCPU</p>
-                                        <i class="ph-bold ph-arrow-right text-xl"></i>
-                                        <p class="flex-1 text-right mr-4"><span>2</span> vCPU</p>
+                                    <div class="border-l border-blue-950 my-5"></div>
+                                    <div class="w-2/5 text-center m-auto">
+                                        <h2 class="w-full text-2xl text-center font-bold">Custo:</h2>
+                                        <div class="flex w-full items-center justify-center gap-4 mb-4">
+                                            <p class="flex-1 text-left ml-4 text-4xl font-bold">$<span>40</span></p>
+                                            <i class="ph-bold ph-arrow-right text-xl"></i>
+                                            <p class="flex-1 text-right mr-4 text-4xl font-bold text-red-700">
+                                                $<span>80</span></p>
+                                        </div>
+                                        <p
+                                            class="rounded-3xl bg-red-100 text-red-700 mx-auto w-fit py-1 px-2 border border-red-700">
+                                            +$40 (+100%)</p>
                                     </div>
-                                    <div class="flex w-full items-center justify-center gap-8 mb-4">
-                                        <p class="flex-1 text-left ml-4"><span>2</span> GiB RAM</p>
-                                        <i class="ph-bold ph-arrow-right text-xl"></i>
-                                        <p class="flex-1 text-right mr-4"><span>4</span> GiB RAM</p>
-                                    </div>
-                                </div>
-                                <div class="border-l border-blue-950 my-5"></div>
-                                <div class="w-2/5 text-center m-auto">
-                                    <div class="flex w-full items-center justify-center gap-4 mb-4">
-                                        <p class="flex-1 text-left ml-4 text-4xl font-bold">$<span>40</span></p>
-                                        <i class="ph-bold ph-arrow-right text-xl"></i>
-                                        <p class="flex-1 text-right mr-4 text-4xl font-bold text-red-700">
-                                            $<span>80</span></p>
-                                    </div>
-                                    <p
-                                        class="rounded-3xl bg-red-100 text-red-700 mx-auto w-fit py-1 px-2 border border-red-700">
-                                        +$40 (+100%)</p>
                                 </div>
                             </div>
                         </div>
