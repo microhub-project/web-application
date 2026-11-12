@@ -12,7 +12,6 @@
         href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
     <link rel="stylesheet" type="text/css"
         href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css" />
-
     <script type="module">
         import { fillUserInfos, verifyIfUserCanAccess } from "../../js/session.js";
 
@@ -21,7 +20,9 @@
             verifyIfUserCanAccess();
         });
     </script>
-    <script src="./script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels" defer></script>
+    <script src="./script.js" defer></script>
     <script src="../../js/toast.js"></script>
 
 </head>
@@ -156,18 +157,261 @@
         </header>
 
         <main
-            class="text-slate-900 flex flex-col p-8 min-h-dvh gap-12 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
+            class="text-slate-900 flex flex-col p-8 min-h-dvh gap-4 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
 
-            <div class="flex flex-col gap-4 w-full">
+            <div class="flex justify-between items-center w-full mb-2 flex-col md:flex-row">
                 <div class="">
-                    <h1 class="text-2xl font-extrabold">Finanças</h1>
+                    <h1 class="text-2xl font-extrabold mb-2">Finanças</h1>
+                    <h2 class="text-md text-slate-500 font-thin">Custos e previsibilidade de uso da infraestrutura de
+                        microsserviços</h2>
                 </div>
-                <hr class="border-t border-slate-400 my-5">
+
+                <div
+                    class="flex items-center gap-3 text-base text-slate-500 bg-slate-100 px-5 py-3 rounded-xl border border-slate-200 shadow-sm max-md:mt-4">
+                    <i class="ph ph-clock text-2xl text-slate-400"></i>
+                    <span>Última atualização: <span id="data-atualizacao"
+                            class="font-bold text-slate-800">Carregando...</span></span>
+                </div>
+                <!-- <hr class="border-t border-slate-400 my-5"> -->
             </div>
+
             <div
-                class="fixed inset-0 z-30 lg:ml-72 max-lg:mr-20 h-dvh backdrop-blur-lg bg-slate-950/10 flex flex-col justify-center items-center text-slate-900 pointer-events-auto">
-                <i class="ph ph-barricade text-[16rem] max-sm:text-[8rem]"></i>
-                <h1 class="text-3xl font-bold max-sm:text-2xl">Em desenvolvimento</h1>
+                class="col-span-1 lg:col-span-2 min-w-0 w-full bg-slate-100 rounded-2xl border border-blue-900 p-3 md:p-6 mb-8 flex flex-col text-slate-900 h-fit">
+                <h2 class="text-xl font-bold mb-8">Previsibilidade de uso da infraestrutura</h2>
+
+                <div class="flex-1 relative w-full min-w-0 min-h-0">
+                    <canvas id="months-graph"></canvas>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-xl font-bold mb-8">Sugestões - <span class="text-xl font-bold" id="month-suggestion">Janeiro</span></h2>
+                <div class="w-full flex gap-8">
+                    <div class="w-1/2">
+                        <div
+                            class="w-full h-fit mb-4 rounded-xl flex justify-center items-center gap-2 p-2 bg-blue-300 border-blue-800 border text-blue-950">
+                            <i class="ph-bold ph-arrow-up text-xl"></i>
+                            <p class="font-bold text-xl">Vertical</p>
+                        </div>
+                        <div class="w-full flex gap-4 mb-4">
+                            <div class="w-1/2">
+                                <div
+                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg cursor-help mb-4">
+                                    <div class="flex w-full items-center justify-center gap-2">
+                                        <i class="ph-bold ph-thumbs-up text-xl"></i>
+                                        <h2 class="text-lg font-bold">Simplicidade</h2>
+                                    </div>
+                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
+                                        Fácil de implementar: exige apenas poucos cliques ou a alteração do tipo de instância no provedor de nuvem.
+                                    </p>
+                                </div>
+                                <div
+                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg cursor-help mb-4">
+                                    <div class="flex w-full items-center justify-center gap-2">
+                                        <i class="ph-bold ph-thumbs-up text-xl"></i>
+                                        <h2 class="text-lg font-bold">Centralização</h2>
+                                    </div>
+                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
+                                        A aplicação continua rodando em um único ambiente, sem a necessidade de adaptar o software para lidar com ambientes distribuídos.
+                                    </p>
+                                </div>
+                                <div
+                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg cursor-help mb-4">
+                                    <div class="flex w-full items-center justify-center gap-2">
+                                        <i class="ph-bold ph-thumbs-up text-xl"></i>
+                                        <h2 class="text-lg font-bold">Rede</h2>
+                                    </div>
+                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
+                                        Não exige balanceadores de carga complexos, sincronização de dados entre múltiplos nós ou particionamento de banco de dados.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="w-1/2">
+                                <div
+                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg cursor-help mb-4">
+                                    <div class="flex w-full items-center justify-center gap-2">
+                                        <i class="ph-bold ph-thumbs-down text-xl"></i>
+                                        <h2 class="text-lg font-bold">Downtime</h2>
+                                    </div>
+                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
+                                        Redimensionar uma instância exige reiniciar o servidor, tirando o sistema do ar temporariamente.
+                                    </p>
+                                </div>
+                                <div
+                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg cursor-help mb-4">
+                                    <div class="flex w-full items-center justify-center gap-2">
+                                        <i class="ph-bold ph-thumbs-down text-xl"></i>
+                                        <h2 class="text-lg font-bold">Centralização</h2>
+                                    </div>
+                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
+                                        Se o servidor apresentar algum problema ou hardware falhar, toda a aplicação cai junto
+                                    </p>
+                                </div>
+                                <div
+                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg cursor-help mb-4">
+                                    <div class="flex w-full items-center justify-center gap-2">
+                                        <i class="ph-bold ph-thumbs-down text-xl"></i>
+                                        <h2 class="text-lg font-bold">Custo</h2>
+                                    </div>
+                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
+                                        Servidores com quantidades massivas de CPU e RAM costumam ficar desproporcionalmente caros em comparação à soma de várias máquinas menores.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-1/2">
+                        <div
+                            class="w-full h-fit mb-4 rounded-xl flex justify-center items-center gap-2 p-2 bg-blue-300 border-blue-800 border text-blue-950">
+                            <i class="ph-bold ph-plus text-xl"></i>
+                            <p class="font-bold text-xl">Horizontal</p>
+                        </div>
+                        <div class="w-full flex gap-4 mb-4">
+                            <div class="w-1/2">
+                                <div
+                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg cursor-help mb-4">
+                                    <div class="flex w-full items-center justify-center gap-2">
+                                        <i class="ph-bold ph-thumbs-up text-xl"></i>
+                                        <h2 class="text-lg font-bold">Disponibilidade</h2>
+                                    </div>
+                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
+                                        Se um dos servidores falha, os outros continuam operando e o tráfego é redirecionado, evitando a queda total do sistema.
+                                    </p>
+                                </div>
+                                <div
+                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg cursor-help mb-4">
+                                    <div class="flex w-full items-center justify-center gap-2">
+                                        <i class="ph-bold ph-thumbs-up text-xl"></i>
+                                        <h2 class="text-lg font-bold">Escalabilidade</h2>
+                                    </div>
+                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
+                                        Novos nós podem ser adicionados ou removidos em tempo real (muitas vezes de forma automatizada via auto-scaling) sem derrubar o serviço.
+                                    </p>
+                                </div>
+                                <div
+                                    class="group p-2 text-center bg-green-100 border border-green-600 text-green-800 rounded-lg cursor-help mb-4">
+                                    <div class="flex w-full items-center justify-center gap-2">
+                                        <i class="ph-bold ph-thumbs-up text-xl"></i>
+                                        <h2 class="text-lg font-bold">Custo</h2>
+                                    </div>
+                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
+                                        Utilizar várias instâncias menores ou spot/commodities na nuvem é mais barato do que contratar uma super-instância vertical.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="w-1/2">
+                                <div
+                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg cursor-help mb-4">
+                                    <div class="flex w-full items-center justify-center gap-2">
+                                        <i class="ph-bold ph-thumbs-down text-xl"></i>
+                                        <h2 class="text-lg font-bold">Complexidade</h2>
+                                    </div>
+                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
+                                        A aplicação precisa ser preparada para rodar em múltiplos servidores simultaneamente (exigindo controle de sessões, gerenciamento de estado e replicação de dados).
+                                    </p>
+                                </div>
+                                <div
+                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg cursor-help mb-4">
+                                    <div class="flex w-full items-center justify-center gap-2">
+                                        <i class="ph-bold ph-thumbs-down text-xl"></i>
+                                        <h2 class="text-lg font-bold">Componentes extras</h2>
+                                    </div>
+                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
+                                        Exige o uso obrigatório de balanceadores de carga (load balancers) e monitoramento avançado para gerenciar o tráfego e a saúde dos nós.
+                                    </p>
+                                </div>
+                                <div
+                                    class="group p-2 text-center bg-red-100 border border-red-600 text-red-800 rounded-lg cursor-help mb-4">
+                                    <div class="flex w-full items-center justify-center gap-2">
+                                        <i class="ph-bold ph-thumbs-down text-xl"></i>
+                                        <h2 class="text-lg font-bold">Sincronização</h2>
+                                    </div>
+                                    <p class="text-md max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
+                                        Manter logs centralizados, backups e consistência de dados em um ambiente distribuído é muito mais trabalhoso para a equipe de TI/DevOps.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="suggestions-container">
+                    <div id="UUID" class="w-full flex gap-8">
+                        <div class="w-1/2">
+                            <div id="UUIDVertical"
+                                class="w-full h-fit mb-4 rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
+                                <h2 class="w-full text-2xl text-center font-bold">00:00:00:00:00:00</h2>
+                                <div class="flex w-full">
+                                    <div class="w-3/5">
+                                        <div class="flex w-full items-center justify-center gap-8 my-4">
+                                            <p class="flex-1 text-left ml-4">t3.small</p>
+                                            <i class="ph-bold ph-arrow-right text-xl"></i>
+                                            <p class="flex-1 text-right mr-4">t3.medium</p>
+                                        </div>
+                                        <div class="flex w-full items-center justify-center gap-8 mb-4">
+                                            <p class="flex-1 text-left ml-4"><span>2</span> vCPU</p>
+                                            <i class="ph-bold ph-arrow-right text-xl"></i>
+                                            <p class="flex-1 text-right mr-4"><span>2</span> vCPU</p>
+                                        </div>
+                                        <div class="flex w-full items-center justify-center gap-8 mb-4">
+                                            <p class="flex-1 text-left ml-4"><span>2</span> GiB RAM</p>
+                                            <i class="ph-bold ph-arrow-right text-xl"></i>
+                                            <p class="flex-1 text-right mr-4"><span>4</span> GiB RAM</p>
+                                        </div>
+                                    </div>
+                                    <div class="border-l border-blue-950 my-5"></div>
+                                    <div class="w-2/5 text-center m-auto">
+                                        <div class="flex w-full items-center justify-center gap-4 mb-4">
+                                            <p class="flex-1 text-left ml-4 text-4xl font-bold">$<span>40</span></p>
+                                            <i class="ph-bold ph-arrow-right text-xl"></i>
+                                            <p class="flex-1 text-right mr-4 text-4xl font-bold text-red-700">
+                                                $<span>80</span></p>
+                                        </div>
+                                        <p
+                                            class="rounded-3xl bg-red-100 text-red-700 mx-auto w-fit py-1 px-2 border border-red-700">
+                                            +$40 (+100%)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="UUIDHorizontal"
+                            class="w-1/2 h-fit text-center mb-4 rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
+                            <h2 class="w-full text-2xl font-bold">00:00:00:00:00:00</h2>
+                            <div class="flex w-full">
+                                <div class="w-3/5">
+                                    <div class="flex w-full items-center justify-center gap-8 my-4">
+                                        <p class="flex-1 text-left ml-4">t3.small</p>
+                                        <i class="ph-bold ph-arrow-right text-xl"></i>
+                                        <p class="flex-1 text-right mr-4">t3.medium</p>
+                                    </div>
+                                    <div class="flex w-full items-center justify-center gap-8 mb-4">
+                                        <p class="flex-1 text-left ml-4"><span>2</span> vCPU</p>
+                                        <i class="ph-bold ph-arrow-right text-xl"></i>
+                                        <p class="flex-1 text-right mr-4"><span>2</span> vCPU</p>
+                                    </div>
+                                    <div class="flex w-full items-center justify-center gap-8 mb-4">
+                                        <p class="flex-1 text-left ml-4"><span>2</span> GiB RAM</p>
+                                        <i class="ph-bold ph-arrow-right text-xl"></i>
+                                        <p class="flex-1 text-right mr-4"><span>4</span> GiB RAM</p>
+                                    </div>
+                                </div>
+                                <div class="border-l border-blue-950 my-5"></div>
+                                <div class="w-2/5 text-center m-auto">
+                                    <div class="flex w-full items-center justify-center gap-4 mb-4">
+                                        <p class="flex-1 text-left ml-4 text-4xl font-bold">$<span>40</span></p>
+                                        <i class="ph-bold ph-arrow-right text-xl"></i>
+                                        <p class="flex-1 text-right mr-4 text-4xl font-bold text-red-700">
+                                            $<span>80</span></p>
+                                    </div>
+                                    <p
+                                        class="rounded-3xl bg-red-100 text-red-700 mx-auto w-fit py-1 px-2 border border-red-700">
+                                        +$40 (+100%)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
         <div id="toast-container"
