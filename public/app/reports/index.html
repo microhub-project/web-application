@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microhub</title>
+    <title>Microhub - Relatórios</title>
     <link rel="stylesheet" href="../../tailwind/output.css">
     <link rel="shortcut icon" href="/assets/img/logo/icon-128.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css"
@@ -21,6 +21,7 @@
             verifyIfUserCanAccess();
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="./script.js"></script>
     <script src="../../js/toast.js"></script>
 
@@ -42,7 +43,7 @@
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
                         <i class="ph ph-house text-2xl"></i> Painel
                     </a>
-                    <a href="#" id="navItemReports"
+                    <a href="../reports/index.html" id="navItemReports"
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
                         <i class="ph ph-files text-2xl"></i> Relatórios
                     </a>
@@ -58,7 +59,7 @@
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
                         <i class="ph ph-money text-2xl"></i> Finanças
                     </a>
-                    <a href="../analysis/index.html" id="navItemAnalysis"
+                    <a href="#" id="navItemAnalysis"
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
                         <i class="ph ph-chart-pie-slice text-2xl"></i> Análises
                     </a>
@@ -106,7 +107,7 @@
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center justify-center text-xl cursor-pointer">
                         <i class="ph ph-house text-3xl"></i>
                     </a>
-                    <a href="#" id="navItemReportsMobile"
+                    <a href="../reports/index.html" id="navItemReportsMobile"
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center justify-center text-xl cursor-pointer">
                         <i class="ph ph-files text-3xl"></i>
                     </a>
@@ -122,7 +123,7 @@
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center justify-center text-xl cursor-pointer">
                         <i class="ph ph-money text-3xl"></i>
                     </a>
-                    <a href="../analysis/index.html" id="navItemAnalysisMobile"
+                    <a href="#" id="navItemAnalysisMobile"
                         class="text-slate-300 hover:text-blue-400 font-medium transition-colors flex items-center gap-3 text-xl cursor-pointer">
                         <i class="ph ph-chart-pie-slice text-3xl"></i>
                     </a>
@@ -156,19 +157,62 @@
         </header>
 
         <main
-            class="text-slate-900 flex flex-col p-8 min-h-dvh gap-12 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
+            class="text-slate-900 flex flex-col p-8 min-h-dvh gap-6 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
 
-            <div class="flex flex-col gap-4 w-full">
-                <div class="">
-                    <h1 class="text-2xl font-extrabold">Relatórios</h1>
+            <!-- Título + última atualização -->
+            <div class="flex flex-wrap items-center justify-between gap-4 w-full">
+                <h1 class="text-2xl font-extrabold">Relatórios</h1>
+                <div
+                    class="flex items-center gap-2 text-xs text-slate-500 bg-slate-100 border border-slate-300 rounded-lg px-3 py-2">
+                    <i class="ph ph-clock text-base"></i>
+                    <span>Última atualização:</span>
+                    <span id="lastUpdate" class="text-slate-700 font-medium">--</span>
                 </div>
-                <hr class="border-t border-slate-400 my-5">
             </div>
-            <div
-                class="fixed inset-0 z-30 lg:ml-72 max-lg:mr-20 h-dvh backdrop-blur-lg bg-slate-950/10 flex flex-col justify-center items-center text-slate-900 pointer-events-auto">
-                <i class="ph ph-barricade text-[16rem] max-sm:text-[8rem]"></i>
-                <h1 class="text-3xl font-bold max-sm:text-2xl">Em desenvolvimento</h1>
+
+            <!-- Switch + botão de download completo -->
+            <div class="flex flex-wrap items-center justify-between gap-4 w-full">
+                <div class="inline-flex p-0.5 rounded-lg border-2 border-blue-400 bg-slate-100">
+                    <button type="button" id="btnEmployees" onclick="showEmployees()">Funcionários</button>
+                    <button type="button" id="btnInstances" onclick="showInstances()">Instâncias</button>
+                </div>
+
+                <button type="button" id="btnDownloadFull"
+                    class="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-slate-50 text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors cursor-pointer">
+                    <i class="ph ph-download-simple text-lg"></i> Baixar arquivo completo
+                </button>
             </div>
+
+            <!-- Resumo: gráfico + ranking + cards laterais -->
+            <section class="grid grid-cols-1 lg:grid-cols-12 gap-4 w-full">
+                <div class="lg:col-span-5 bg-slate-100 border border-blue-300 rounded-lg p-4 flex flex-col gap-3 min-w-0">
+                    <h2 id="chartTitle" class="text-xs font-bold"></h2>
+                    <div class="relative h-52 w-full">
+                        <canvas id="mainChart"></canvas>
+                    </div>
+                </div>
+
+                <div id="rankCard"
+                    class="lg:col-span-4 bg-slate-100 border border-blue-300 rounded-lg p-4 flex flex-col gap-4">
+                    <h2 id="rankTitle" class="text-xs font-bold"></h2>
+                    <ul id="rankList" class="flex flex-col justify-around flex-1 gap-3 px-4"></ul>
+                </div>
+
+                <div id="sideCards" class="lg:col-span-3 flex flex-col gap-4"></div>
+            </section>
+
+            <hr class="border-t border-slate-400">
+
+            <!-- Botão de download da lista -->
+            <div class="flex justify-end w-full">
+                <button type="button" id="btnDownloadList"
+                    class="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-slate-50 text-sm font-semibold px-5 py-2 rounded-lg transition-colors cursor-pointer">
+                    <i class="ph ph-download-simple text-lg"></i> Baixar arquivo
+                </button>
+            </div>
+
+            <!-- Lista de cards detalhados -->
+            <section id="detailList" class="flex flex-col gap-4 w-full"></section>
         </main>
         <div id="toast-container"
             class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">
