@@ -119,6 +119,8 @@ const generateSummary = async () => {
         "infra_multiplier": 1.23
     }
 
+    const container = document.getElementById("summary-container")
+
     try {
         const summary = await fetch("http://localhost:8000/predict-infra/", {
             method: "POST",
@@ -158,12 +160,10 @@ const generateSummary = async () => {
 
         console.log(response)
 
-        const container = document.getElementById("summary-container")
-
         container.innerHTML = generateSummaryHTML(current_instances, current_cpus, current_ram, current_cost, vertical_cpus, vertical_ram, vertical_cost, horizontal_instances, horizontal_cpus, horizontal_ram, horizontal_cost)
     } catch (e) {
         console.error(e)
-        return showToast("Algo deu errado. Tente novamente mais tarde", "error")
+        container.innerHTML = errorSummaryHTML;
     }
 }
 
@@ -303,4 +303,49 @@ const generateSummaryHTML = (
     `;
 };
 
+const errorSummaryHTML = `
+    <div class="w-full flex gap-8">
+        <div class="w-1/2">
+            <div class="w-full h-fit mb-4 rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
+                <div class="flex w-full items-center justify-center h-32">
+                    <h1 class="text-center">O servico <span class="font-bold">FinOps Predictability</span> está fora do ar no momento.
+                        <br>
+                        Tente novamente mais tarde.
+                    </h1>
+                </div>
+            </div>
+        </div>
+        <div class="w-1/2">
+            <div class="w-full h-fit mb-4 rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
+                <div class="flex w-full items-center justify-center h-32">
+                    <h1 class="text-center">O servico <span class="font-bold">FinOps Predictability</span> está fora do ar no momento.
+                        <br>
+                        Tente novamente mais tarde.
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+`
+
+const atualizarDataHora = () => {
+  const elementoData = document.getElementById('data-atualizacao');
+  if (!elementoData) return;
+
+  const agora = new Date();
+
+  const opcoes = {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  };
+
+  let dataFormatada = agora.toLocaleDateString('pt-BR', opcoes);
+
+  elementoData.innerText = dataFormatada;
+};
+
+atualizarDataHora()
 generateSummary()
