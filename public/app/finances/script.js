@@ -108,16 +108,80 @@ const config = {
 
 let months_graph = new Chart(document.getElementById('months-graph'), config)
 
+let volumes_cost = 0
+
+const getInstances = async () => {
+    const token = sessionStorage.getItem('JWT_TOKEN');
+    const userData = getUserSession();
+
+    if (!token || !userData) {
+        logout();
+        return showToast("Sessão inválida, faça login novamente", "warning");
+    }
+
+    try {
+        const response = await fetch('/instances/listar', {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.status === 401 || response.status === 403) {
+            logout();
+            return;
+        }
+
+        if (response.status === 204) {
+            return showToast("Não há nenhuma instância", "warning");
+        }
+
+        const body = await response.json();
+
+        if (response.status === 400) {
+            return showToast(body.message || "Requisição inválida", "warning");
+        }
+
+        if (response.status === 500) {
+            return showToast(body.message || "Erro interno do servidor", "error");
+        }
+
+        const data = body.data || [];
+
+        let instances = []
+
+        volumes_cost = 0
+
+        for (const instance of data) {
+            const { endereco_mac, custo_armazenamento, custo_computacao, cpu, ram } = instance;
+
+            instances.push({
+                "mac": endereco_mac,
+                "cpu": cpu,
+                "ram": ram,
+                "monthly_cost": custo_computacao
+            })
+
+            volumes_cost += parseFloat(custo_armazenamento)
+        };
+
+        return instances
+    } catch (e) {
+        console.error(e);
+        showToast("Algo deu errado ao carregar as instâncias.", "error");
+    }
+};
+
 const generateSummary = async () => {
+    const instances = await getInstances();
+
     const body = {
-        "instances": [
-            { "mac": "00:00:00:00:00:00", "cpu": 2, "ram": 4, "monthly_cost": 18.83 },
-            { "mac": "00:00:00:00:00:01", "cpu": 2, "ram": 4, "monthly_cost": 18.83 },
-            { "mac": "00:00:00:00:00:02", "cpu": 2, "ram": 4, "monthly_cost": 18.83 },
-            { "mac": "00:00:00:00:00:03", "cpu": 2, "ram": 4, "monthly_cost": 18.83 }
-        ],
+        "instances": instances,
         "infra_multiplier": 1.23
     }
+
+    console.log(body)
 
     const container = document.getElementById("summary-container")
 
@@ -132,10 +196,21 @@ const generateSummary = async () => {
 
         const response = await summary.json()
 
-        let current_instances = 4
-        let current_cpus = 8
-        let current_ram = 16
-        let current_cost = 75.32
+        let current_instances = instances.length
+
+        let current_cpus = 0
+        let current_ram = 0
+        let current_cost = 0
+
+        instances.forEach(instance => {
+            const { cpu, ram, monthly_cost } = instance;
+
+            current_cpus += cpu
+            current_ram += parseFloat(ram)
+            current_cost += parseFloat(monthly_cost)
+        })
+
+        current_cost += volumes_cost
 
         let vertical_cpus = 0
         let vertical_ram = 0
@@ -146,8 +221,8 @@ const generateSummary = async () => {
         let horizontal_ram = 0
         let horizontal_cost = 0
 
-        response.forEach(instancia => {
-            const { mac, vertical, horizontal } = instancia;
+        response.forEach(instance => {
+            const { vertical, horizontal } = instance;
 
             vertical_cost += vertical.final_cost
             vertical_cpus += vertical.new_instance.cpus
@@ -157,6 +232,9 @@ const generateSummary = async () => {
             horizontal_cpus += horizontal.new_instance.cpus
             horizontal_ram += horizontal.new_instance.memory
         })
+
+        vertical_cost += volumes_cost
+        horizontal_cost += volumes_cost
 
         console.log(response)
 
@@ -218,6 +296,9 @@ const generateSummaryHTML = (
     const [vertical_cost_style, horizontal_cost_style] = getComparisonStyle(vertical_cost_increase, horizontal_cost_increase, false);
     const vertical_cost_text = vertical_cost_increase === horizontal_cost_increase ? 'text-stone-700' : (vertical_cost_increase < horizontal_cost_increase ? 'text-green-700' : 'text-red-700');
     const horizontal_cost_text = vertical_cost_increase === horizontal_cost_increase ? 'text-stone-700' : (horizontal_cost_increase < vertical_cost_increase ? 'text-green-700' : 'text-red-700');
+
+    vertical_cost = round2(vertical_cost);
+    horizontal_cost = round2(horizontal_cost);
 
     return `
     <div class="w-full flex gap-8">
