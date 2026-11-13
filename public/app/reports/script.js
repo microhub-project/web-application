@@ -1,25 +1,3 @@
-/* =====================================================
-   Tela de Relatórios (Funcionários / Instâncias)
-   Os dados abaixo são de exemplo. Depois é só trocar
-   por dados que vierem do backend (fetch).
-   ===================================================== */
-
-
-/* ---------- DADOS DE EXEMPLO: FUNCIONÁRIOS ---------- */
-
-var employeesChartLabels = ["João", "Thais", "Flávia", "Pedro"];
-var employeesChartValues = [8, 18, 12, 3];
-
-var employeesRanking = [
-    { name: "Thais", value: "20:00" },
-    { name: "Pedro", value: "30:00" },
-    { name: "João", value: "40:00" },
-    { name: "Flávia", value: "50:00" }
-];
-
-var employeesMin = { name: "Thais", time: "00:15" };
-var employeesMax = { name: "Flávia", time: "01:10" };
-
 var employeesList = [
     { name: "João", initials: "JS", avgTime: "00:40", count: 8, minTime: "00:20", maxTime: "01:00" },
     { name: "Thais", initials: "TB", avgTime: "00:20", count: 18, minTime: "00:10", maxTime: "00:30" },
@@ -27,8 +5,6 @@ var employeesList = [
     { name: "Pedro", initials: "PL", avgTime: "00:30", count: 3, minTime: "00:15", maxTime: "00:45" }
 ];
 
-
-/* ---------- DADOS DE EXEMPLO: INSTÂNCIAS ---------- */
 
 var instancesChartLabels = ["autenticação-03", "pagamento-01", "notificação-01", "carrinho-02"];
 var instancesChartValues = [2, 6, 4, 2];
@@ -50,20 +26,13 @@ var instancesList = [
     { name: "carrinho-02", totalTime: "00:40", count: 2, longest: "00:25", component: "Memória Swap" }
 ];
 
-
-/* ---------- VARIÁVEIS GLOBAIS ---------- */
-
-// guarda o gráfico atual para podermos apagar antes de criar outro
 var myChart = null;
 
-// classes do Tailwind que se repetem bastante
 var cardClass = "bg-slate-100 border border-blue-300 rounded-lg";
 var switchBase = "px-4 py-1.5 rounded-md text-sm font-semibold transition-colors cursor-pointer";
 var switchActive = switchBase + " bg-white text-slate-900 shadow-sm";
 var switchInactive = switchBase + " text-blue-500";
 
-
-/* ---------- QUANDO A PÁGINA CARREGA ---------- */
 
 window.addEventListener("DOMContentLoaded", function () {
     lastUpdate.innerHTML = getCurrentDateText();
@@ -71,18 +40,74 @@ window.addEventListener("DOMContentLoaded", function () {
 });
 
 
-/* ---------- FUNÇÕES DO SWITCH ---------- */
 
-function showEmployees() {
-    // muda o visual dos botões
-    btnEmployees.className = switchActive;
-    btnInstances.className = switchInactive;
+async function showEmployees() {
 
-    // monta cada parte da tela
-    drawChart("Quantidade de alertas atendidos por funcionário/mês", employeesChartLabels, employeesChartValues);
-    drawRanking("Média de tempo de resolução por mês", employeesRanking);
-    drawEmployeesSideCards();
-    drawEmployeesList();
+    const token = sessionStorage.getItem('JWT_TOKEN');
+
+    try{ 
+        const response = await fetch('/reports/getGeralFunc', {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const body = await response.json();
+
+        var employeesRanking = []
+        var employeesChartLabels = []
+        var employeesChartValues = []
+        var employeesMax = {}
+        var employeesMin = {}
+        var max = 0
+        var min = 10000
+
+
+        for(let i = 0; i < 5; i++){
+            var pessoa = body.data[i]
+
+            employeesRanking[i] = {"name": pessoa.funcionario,
+                "value": pessoa.media
+            }
+            employeesChartLabels[i] = `${pessoa.funcionario}`
+            employeesChartValues[i] = pessoa.alertas_resolvidos 
+        }
+
+        for(let i = 0; i < body.data.length; i++){
+            var pessoa = body.data[i]
+            var tempoMax = pessoa.alertaMax
+            var tempoMin = pessoa.alertaMin
+
+            if(tempoMax > max){
+                employeesMax = {
+                    name: pessoa.funcionario,
+                    time: tempoMax
+                }
+                max = tempoMax
+            }
+            if(tempoMin < min){
+                employeesMin = {
+                    name: pessoa.funcionario,
+                    time: tempoMin
+                }
+                min = tempoMin
+            }
+        }
+
+
+        btnEmployees.className = switchActive;
+        btnInstances.className = switchInactive;
+
+        drawChart("Top 5 funcionários com mais alertas resolvidos/mês", employeesChartLabels, employeesChartValues);
+        drawRanking("Top 5 melhores médias de tempo de resolução/mês", employeesRanking);
+        drawEmployeesSideCards(employeesMin, employeesMax);
+        drawEmployeesList();
+    } catch (e){
+        console.log("caquinha")
+    }
+    
 }
 
 function showInstances() {
@@ -95,8 +120,6 @@ function showInstances() {
     drawInstancesList();
 }
 
-
-/* ---------- DATA DA ÚLTIMA ATUALIZAÇÃO ---------- */
 
 function twoDigits(number) {
     if (number < 10) {
@@ -119,17 +142,14 @@ function getCurrentDateText() {
 }
 
 
-/* ---------- GRÁFICO ---------- */
 
 function drawChart(title, labels, values) {
     chartTitle.innerHTML = title;
 
-    // se já existe um gráfico, apaga ele antes de criar o novo
     if (myChart != null) {
         myChart.destroy();
     }
 
-    // descobre qual é o maior valor
     var biggest = values[0];
     for (var i = 0; i < values.length; i++) {
         if (values[i] > biggest) {
@@ -137,7 +157,6 @@ function drawChart(title, labels, values) {
         }
     }
 
-    // a barra do maior valor fica azul escuro, as outras azul claro
     var colors = [];
     for (var i = 0; i < values.length; i++) {
         if (values[i] == biggest) {
@@ -170,15 +189,31 @@ function drawChart(title, labels, values) {
     });
 }
 
-
-/* ---------- CARD DO MEIO (RANKING) ---------- */
-
 function drawRanking(title, items) {
     rankTitle.innerHTML = title;
 
     var html = "";
 
     for (var i = 0; i < items.length; i++) {
+        var horaAtual = items[i].value
+        var tempo = "" + convertTime(horaAtual)
+        
+        if(items[i].value < 60){
+            items[i].value = `00:${items[i].value}`
+        }else{
+            var horas = 0
+            var minutos = items[i].value
+            while(minutos > 60){
+                minutos -= 60
+                horas++
+            }
+            if(horas < 10){
+                items[i].value = `0${horas}:${minutos}`
+            } else {
+                items[i].value = `${horas}:${minutos}`
+            }
+            
+        }
         html += `
             <li class="flex items-center justify-between">
                 <span class="text-base">${items[i].name}</span>
@@ -189,26 +224,60 @@ function drawRanking(title, items) {
     rankList.innerHTML = html;
 }
 
+function convertTime(horario){
+    var minutos = horario
+    var hrs = 0
+    var convertido = ""
 
-/* ---------- CARDS DA DIREITA ---------- */
+    if(minutos < 60){
+        if(minutos < 10){
+            convertido = `00:0${minutos}`
+        } else{
+            tempoMin = `00:${minutos}`
+        }
+    } else {
+        while(minutos >= 60){
+            hrs++
+            minutos -= 60
+        }
+        if(hrs < 10){
+            if(minutos < 10){
+                convertido = `0${hrs}:0${minutos}`
+            } else {
+                convertido = `0${hrs}:${minutos}`
+            }
+        } else {
+            if(minutos < 10){
+                convertido = `${hrs}:0${minutos}`
+            } else {
+                convertido = `${hrs}:${minutos}`
+            }
+        }
+    }
+    return convertido;
+}
 
-function drawEmployeesSideCards() {
+function drawEmployeesSideCards(min, max) {
+    
+    var tempoMax = convertTime(max.time)
+    var tempoMin = convertTime(min.time)
+
     sideCards.innerHTML = `
         <div class="${cardClass} p-4 flex flex-col gap-3 flex-1">
             <h2 class="text-xs font-bold">Menor tempo de resolução</h2>
             <div class="flex items-center justify-between gap-2 flex-1 px-2">
-                <span class="text-xl font-semibold">${employeesMin.name}</span>
+                <span class="text-xl font-semibold">${min.name}</span>
                 <span class="flex items-center gap-2 text-2xl font-semibold text-green-600">
-                    <i class="ph ph-clock text-base text-slate-400"></i>${employeesMin.time}
+                    <i class="ph ph-clock text-base text-slate-400"></i>${tempoMin}
                 </span>
             </div>
         </div>
         <div class="${cardClass} p-4 flex flex-col gap-3 flex-1">
             <h2 class="text-xs font-bold">Maior tempo de resolução</h2>
             <div class="flex items-center justify-between gap-2 flex-1 px-2">
-                <span class="text-xl font-semibold">${employeesMax.name}</span>
+                <span class="text-xl font-semibold">${max.name}</span>
                 <span class="flex items-center gap-2 text-2xl font-semibold text-red-600">
-                    <i class="ph ph-clock text-base text-slate-400"></i>${employeesMax.time}
+                    <i class="ph ph-clock text-base text-slate-400"></i>${tempoMax}
                 </span>
             </div>
         </div>`;
@@ -230,9 +299,6 @@ function drawInstancesSideCards() {
             </div>
         </div>`;
 }
-
-
-/* ---------- LISTA DE CARDS DE BAIXO ---------- */
 
 function drawEmployeesList() {
     var html = "";
@@ -281,7 +347,6 @@ function drawInstancesList() {
     detailList.innerHTML = html;
 }
 
-// monta um bloquinho de métrica (título pequeno em cima, valor grande embaixo)
 function buildMetric(label, value, size, color) {
     return `
         <div class="flex flex-col items-center justify-between gap-3 text-center px-2">

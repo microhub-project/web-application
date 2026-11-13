@@ -7,3 +7,5 @@ const router = express.Router();
 router.use(verifyJWT);
 
 router.get("/getGeralFunc", reportsController.listarFunc);
+
+export default router;

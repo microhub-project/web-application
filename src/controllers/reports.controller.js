@@ -1,4 +1,4 @@
-import model from "../models/reports.model"
+import model from "../models/reports.model.js"
 
 async function listarFunc(req, res) {
     const empresaUUID = req.companyUUID;
@@ -20,3 +20,7 @@ async function listarFunc(req, res) {
         });
     }
 }
+
+export default {
+  listarFunc,
+};
