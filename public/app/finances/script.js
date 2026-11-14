@@ -1,4 +1,5 @@
-const labels = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+const labels = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+const forecast = [1.23, 1.45, 1.8, 1.47, 2.07, 1.9, 2.06, 1.67, 1.66, 1.77, 6.65, 2.57]
 
 const alignLineToFirstBar = {
     id: 'alignLineToFirstBar',
@@ -21,7 +22,7 @@ const data = {
     datasets: [
         {
             label: 'Previsão',
-            data: [1.23, 1.45, 1.8, 1.47, 2.07, 1.9, 2.06, 1.67, 1.66, 1.77, 6.65, 2.57],
+            data: forecast,
             borderRadius: 7.5,
             backgroundColor: '#FFFFFF',
             borderColor: '#1E3A8A',
@@ -40,7 +41,7 @@ const data = {
             borderSkipped: false
         },
         {
-            data: [1.23, 1.45, 1.8, 1.47, 2.07, 1.9, 2.06, 1.67, 1.66, 1.77, 6.65, 2.57],
+            data: forecast,
             backgroundColor: '#D9D9D9',
             borderColor: '#1E3A8A',
             borderWidth: 1,
@@ -62,6 +63,19 @@ const config = {
         responsive: true,
         maintainAspectRatio: true,
         aspectRatio: 3,
+        onClick: (event, elements, chart) => {
+            if (elements.length > 0) {
+                const monthIndex = elements[0].index;
+
+                const selectedMonth = chart.data.labels[monthIndex];
+                const infraMultiplier = chart.data.datasets[0].data[monthIndex];
+
+                generateSummary(selectedMonth, infraMultiplier);
+            }
+        },
+        onHover: (event, elements) => {
+            event.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
+        },
         plugins: {
             legend: {
                 display: true,
@@ -173,12 +187,16 @@ const getInstances = async () => {
     }
 };
 
-const generateSummary = async () => {
+const generateSummary = async (month, infra_multiplier) => {
+    const month_name = document.getElementById("month")
+
+    month_name.innerHTML = month
+
     const instances = await getInstances();
 
     const body = {
         "instances": instances,
-        "infra_multiplier": 1.23
+        "infra_multiplier": infra_multiplier
     }
 
     console.log(body)
@@ -303,7 +321,7 @@ const generateSummaryHTML = (
     return `
     <div class="w-full flex gap-8">
         <div class="w-1/2">
-            <div class="w-full h-fit mb-4 rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
+            <div class="w-full h-fit mb-4 rounded-xl py-2 bg-slate-100 border-blue-800 border text-blue-950">
                 <div class="flex w-full">
                     <div class="w-3/5">
                         <div class="flex w-full items-center gap-2 my-4 ml-4">
@@ -342,7 +360,7 @@ const generateSummaryHTML = (
             </div>
         </div>
         <div class="w-1/2">
-            <div class="w-full h-fit mb-4 rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
+            <div class="w-full h-fit mb-4 rounded-xl py-2 bg-slate-100 border-blue-800 border text-blue-950">
                 <div class="flex w-full">
                     <div class="w-3/5">
                         <div class="flex w-full items-center gap-2 my-4 ml-4">
@@ -410,23 +428,32 @@ const errorSummaryHTML = `
 `
 
 const atualizarDataHora = () => {
-  const elementoData = document.getElementById('data-atualizacao');
-  if (!elementoData) return;
+    const elementoData = document.getElementById('data-atualizacao');
+    if (!elementoData) return;
 
-  const agora = new Date();
+    const agora = new Date();
 
-  const opcoes = {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  };
+    const opcoes = {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
 
-  let dataFormatada = agora.toLocaleDateString('pt-BR', opcoes);
+    let dataFormatada = agora.toLocaleDateString('pt-BR', opcoes);
 
-  elementoData.innerText = dataFormatada;
+    elementoData.innerText = dataFormatada;
+
+    const opcao_mes = {
+        month: 'long'
+    }
+
+    const mes_atual = agora.toLocaleDateString('pt-BR', opcao_mes)
+
+    const mes_atual_formatado = mes_atual.charAt(0).toUpperCase() + mes_atual.slice(1)
+
+    generateSummary(mes_atual_formatado, forecast[labels.indexOf(mes_atual_formatado)])
 };
 
 atualizarDataHora()
-generateSummary()
