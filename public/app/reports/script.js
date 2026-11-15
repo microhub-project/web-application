@@ -1,31 +1,3 @@
-var employeesList = [
-    { name: "João", initials: "JS", avgTime: "00:40", count: 8, minTime: "00:20", maxTime: "01:00" },
-    { name: "Thais", initials: "TB", avgTime: "00:20", count: 18, minTime: "00:10", maxTime: "00:30" },
-    { name: "Flávia", initials: "FC", avgTime: "00:50", count: 12, minTime: "00:25", maxTime: "01:10" },
-    { name: "Pedro", initials: "PL", avgTime: "00:30", count: 3, minTime: "00:15", maxTime: "00:45" }
-];
-
-
-var instancesChartLabels = ["autenticação-03", "pagamento-01", "notificação-01", "carrinho-02"];
-var instancesChartValues = [2, 6, 4, 2];
-
-var instancesRanking = [
-    { name: "CPU", value: "7" },
-    { name: "RAM", value: "3" },
-    { name: "Disco", value: "2" },
-    { name: "Memória Swap", value: "2" }
-];
-
-var instancesTotal = 14;
-var instancesLongest = { name: "pagamento-01", time: "01:10" };
-
-var instancesList = [
-    { name: "pagamento-01", totalTime: "02:40", count: 6, longest: "01:10", component: "CPU" },
-    { name: "notificação-01", totalTime: "01:30", count: 4, longest: "00:40", component: "RAM" },
-    { name: "autenticação-03", totalTime: "00:50", count: 2, longest: "00:30", component: "Disco" },
-    { name: "carrinho-02", totalTime: "00:40", count: 2, longest: "00:25", component: "Memória Swap" }
-];
-
 var myChart = null;
 
 var cardClass = "bg-slate-100 border border-blue-300 rounded-lg";
@@ -45,7 +17,7 @@ async function showEmployees() {
 
     const token = sessionStorage.getItem('JWT_TOKEN');
 
-    try{ 
+    try {
         const response = await fetch('/reports/getGeralFunc', {
             method: "GET",
             headers: {
@@ -65,29 +37,30 @@ async function showEmployees() {
         var min = 10000
 
 
-        for(let i = 0; i < 5; i++){
+        for (let i = 0; i < 5; i++) {
             var pessoa = body.data[i]
 
-            employeesRanking[i] = {"name": pessoa.funcionario,
+            employeesRanking[i] = {
+                "name": pessoa.funcionario,
                 "value": pessoa.media
             }
             employeesChartLabels[i] = `${pessoa.funcionario}`
-            employeesChartValues[i] = pessoa.alertas_resolvidos 
+            employeesChartValues[i] = pessoa.alertas_resolvidos
         }
 
-        for(let i = 0; i < body.data.length; i++){
+        for (let i = 0; i < body.data.length; i++) {
             var pessoa = body.data[i]
             var tempoMax = pessoa.alertaMax
             var tempoMin = pessoa.alertaMin
 
-            if(tempoMax > max){
+            if (tempoMax > max) {
                 employeesMax = {
                     name: pessoa.funcionario,
                     time: tempoMax
                 }
                 max = tempoMax
             }
-            if(tempoMin < min){
+            if (tempoMin < min) {
                 employeesMin = {
                     name: pessoa.funcionario,
                     time: tempoMin
@@ -101,23 +74,121 @@ async function showEmployees() {
         btnInstances.className = switchInactive;
 
         drawChart("Top 5 funcionários com mais alertas resolvidos/mês", employeesChartLabels, employeesChartValues);
-        drawRanking("Top 5 melhores médias de tempo de resolução/mês", employeesRanking);
+        drawRankingFunc("Top 5 melhores médias de tempo de resolução/mês", employeesRanking);
         drawEmployeesSideCards(employeesMin, employeesMax);
-        drawEmployeesList();
-    } catch (e){
+        drawEmployeesList(body.data);
+    } catch (e) {
         console.log("caquinha")
     }
-    
+
 }
 
-function showInstances() {
+async function showInstances() {
+
     btnEmployees.className = switchInactive;
     btnInstances.className = switchActive;
+    var maxKpi = {}
 
-    drawChart("Quantidade de alertas por instância (Mensal)", instancesChartLabels, instancesChartValues);
-    drawRanking("Componentes com mais alertas", instancesRanking);
-    drawInstancesSideCards();
-    drawInstancesList();
+    try {
+        const token = sessionStorage.getItem('JWT_TOKEN');
+        const response = await fetch('/reports/getGeralInst', {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const body = await response.json();
+        const dados = body.data
+        var instancesChartLabels = []
+        var instancesChartValues = []
+
+        if (dados.length < 5) {
+            for (let i = 0; i < dados.length; i++) {
+                var instacia = dados[i]
+                instancesChartLabels[i] = `${instacia.nome}`
+                instancesChartValues[i] = instacia.alertas
+            }
+        } else {
+            for (let i = 0; i < 5; i++) {
+                var instacia = dados[i]
+                instancesChartLabels[i] = `${instacia.nome}`
+                instancesChartValues[i] = instacia.alertas
+            }
+        }
+
+        for (let i = 0; i < dados.length; i++) {
+            var minutosMaior = dados[i].maior
+            var hrsMaior = 0
+            var hrsTotal = 0
+            var minutosTotal = dados[i].total
+
+            while (minutosMaior >= 60) {
+                hrsMaior++;
+                minutosMaior -= 60
+            }
+            while (minutosTotal >= 60) {
+                hrsTotal++
+                minutosTotal -= 60
+            }
+
+            dados[i].total = `${hrsTotal}:${twoDigits(minutosTotal)}`
+            dados[i].maior = `${hrsMaior}:${twoDigits(minutosMaior)}`
+        }
+
+        var max = dados[0].maior
+        var nomeMax = dados[0].nome
+
+        for (let i = 0; i < dados.length; i++) {
+            if (dados[i].maior > max) {
+                max = dados[i].maior
+                nomeMax = dados[i].nome
+            }
+        }
+
+        maxKpi = {
+            "nome": nomeMax,
+            "valor": max
+        }
+
+        drawChart("Top 5 instancias com mais alertas/mês", instancesChartLabels, instancesChartValues);
+        drawInstancesList(dados);
+    } catch (e) {
+        console.log('fodeo')
+    }
+    try{
+        const token = sessionStorage.getItem('JWT_TOKEN');
+        const response = await fetch('/reports/getTotalAlertas', {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const body = await response.json();
+
+        drawInstancesSideCards(maxKpi, body.data[0]);
+    } catch(e){
+        console.log("nhe")
+    }
+
+    try{
+        const token = sessionStorage.getItem('JWT_TOKEN');
+        const response = await fetch('/reports/getRankingAlertas', {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const body = await response.json();
+
+        drawRankingFunc("Componentes com mais alertas", body.data);
+    } catch(e){
+        console.log('sla')
+    }
+
 }
 
 
@@ -127,21 +198,6 @@ function twoDigits(number) {
     }
     return "" + number;
 }
-
-function getCurrentDateText() {
-    var months = ["jan.", "fev.", "mar.", "abr.", "mai.", "jun.", "jul.", "ago.", "set.", "out.", "nov.", "dez."];
-    var now = new Date();
-
-    var day = twoDigits(now.getDate());
-    var month = months[now.getMonth()];
-    var year = now.getFullYear();
-    var hour = twoDigits(now.getHours());
-    var minute = twoDigits(now.getMinutes());
-
-    return day + " de " + month + " de " + year + ", " + hour + ":" + minute;
-}
-
-
 
 function drawChart(title, labels, values) {
     chartTitle.innerHTML = title;
@@ -189,76 +245,53 @@ function drawChart(title, labels, values) {
     });
 }
 
-function drawRanking(title, items) {
+function drawRankingFunc(title, items) {
     rankTitle.innerHTML = title;
-
     var html = "";
 
-    for (var i = 0; i < items.length; i++) {
-        var horaAtual = items[i].value
-        var tempo = "" + convertTime(horaAtual)
-        
-        if(items[i].value < 60){
-            items[i].value = `00:${items[i].value}`
-        }else{
-            var horas = 0
-            var minutos = items[i].value
-            while(minutos > 60){
-                minutos -= 60
-                horas++
-            }
-            if(horas < 10){
-                items[i].value = `0${horas}:${minutos}`
-            } else {
-                items[i].value = `${horas}:${minutos}`
-            }
-            
-        }
-        html += `
+    if (title.toLowerCase().includes("médias")) {
+        for (var i = 0; i < items.length; i++) {
+
+            items[i].value = convertTime(items[i].value)
+            html += `
             <li class="flex items-center justify-between">
                 <span class="text-base">${items[i].name}</span>
                 <span class="text-base font-semibold">${items[i].value}</span>
             </li>`;
+        }
+    } else {
+        for (var i = 0; i < items.length; i++) {
+
+            html += `
+            <li class="flex items-center justify-between">
+                <span class="text-base">${items[i].name}</span>
+                <span class="text-base font-semibold">${items[i].value}</span>
+            </li>`;
+        }
     }
 
     rankList.innerHTML = html;
 }
 
-function convertTime(horario){
+function convertTime(horario) {
     var minutos = horario
     var hrs = 0
     var convertido = ""
 
-    if(minutos < 60){
-        if(minutos < 10){
-            convertido = `00:0${minutos}`
-        } else{
-            tempoMin = `00:${minutos}`
-        }
+    if (minutos < 60) {
+        convertido = `0:${twoDigits(minutos)}`
     } else {
-        while(minutos >= 60){
+        while (minutos >= 60) {
             hrs++
             minutos -= 60
         }
-        if(hrs < 10){
-            if(minutos < 10){
-                convertido = `0${hrs}:0${minutos}`
-            } else {
-                convertido = `0${hrs}:${minutos}`
-            }
-        } else {
-            if(minutos < 10){
-                convertido = `${hrs}:0${minutos}`
-            } else {
-                convertido = `${hrs}:${minutos}`
-            }
-        }
+        convertido = `${hrs}:${twoDigits(minutos)}`
     }
     return convertido;
 }
 
 function drawEmployeesSideCards(min, max) {
-    
+
     var tempoMax = convertTime(max.time)
     var tempoMin = convertTime(min.time)
 
@@ -283,40 +316,40 @@ function drawEmployeesSideCards(min, max) {
         </div>`;
 }
 
-function drawInstancesSideCards() {
+function drawInstancesSideCards(maior, total) {
     sideCards.innerHTML = `
         <div class="${cardClass} p-4 flex flex-col gap-3 flex-1">
             <h2 class="text-xs font-bold">Volume total de alertas no mês</h2>
             <div class="flex items-center justify-center flex-1">
-                <span class="text-5xl font-semibold">${instancesTotal}</span>
+                <span class="text-5xl font-semibold">${total.total}</span>
             </div>
         </div>
         <div class="${cardClass} p-4 flex flex-col gap-3 flex-1">
             <h2 class="text-xs font-bold">Instância com maior tempo em alerta</h2>
             <div class="flex items-center justify-between gap-2 flex-1 px-1">
-                <span class="text-lg font-semibold truncate">${instancesLongest.name}</span>
-                <span class="text-xl font-semibold text-red-600">${instancesLongest.time}</span>
+                <span class="text-lg font-semibold truncate">${maior.nome}</span>
+                <span class="text-xl font-semibold text-red-600">${maior.valor}</span>
             </div>
         </div>`;
 }
 
-function drawEmployeesList() {
+function drawEmployeesList(data) {
     var html = "";
 
-    for (var i = 0; i < employeesList.length; i++) {
-        var item = employeesList[i];
+    for (var i = 0; i < data.length; i++) {
+        var item = data[i];
 
         html += `
         <article class="${cardClass} px-6 py-5 flex flex-col lg:flex-row lg:items-center gap-6">
             <div class="flex items-center gap-4 lg:w-1/4 min-w-0">
-                <div class="rounded-full bg-slate-900 text-slate-50 size-12 shrink-0 flex justify-center items-center text-sm font-bold">${item.initials}</div>
-                <h3 class="text-3xl font-semibold truncate">${item.name}</h3>
+                <div class="rounded-full bg-slate-900 text-slate-50 size-12 shrink-0 flex justify-center items-center text-sm font-bold">${'cu'}</div>
+                <h3 class="text-3xl font-semibold truncate">${item.funcionario}</h3>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-y-5 flex-1 lg:divide-x lg:divide-slate-300">
-                ${buildMetric("Tempo médio de resolução", item.avgTime, "text-3xl", "text-slate-900")}
-                ${buildMetric("Quantidade de atendimentos/mês", item.count, "text-3xl", "text-slate-900")}
-                ${buildMetric("Menor tempo de resolução", item.minTime, "text-3xl", "text-slate-900")}
-                ${buildMetric("Maior tempo de resolução", item.maxTime, "text-3xl", "text-red-600")}
+                ${buildMetric("Tempo médio de resolução", convertTime(item.media), "text-3xl", "text-slate-900")}
+                ${buildMetric("Quantidade de atendimentos/mês", item.alertas_resolvidos, "text-3xl", "text-slate-900")}
+                ${buildMetric("Menor tempo de resolução", convertTime(item.alertaMin), "text-3xl", "text-slate-900")}
+                ${buildMetric("Maior tempo de resolução", convertTime(item.alertaMax), "text-3xl", "text-red-600")}
             </div>
         </article>`;
     }
@@ -324,22 +357,22 @@ function drawEmployeesList() {
     detailList.innerHTML = html;
 }
 
-function drawInstancesList() {
+function drawInstancesList(dados) {
     var html = "";
 
-    for (var i = 0; i < instancesList.length; i++) {
-        var item = instancesList[i];
+    for (var i = 0; i < dados.length; i++) {
+        var item = dados[i];
 
         html += `
         <article class="${cardClass} px-6 py-5 flex flex-col lg:flex-row lg:items-center gap-6">
             <div class="flex items-center gap-4 lg:w-1/4 min-w-0">
-                <h3 class="text-3xl font-semibold truncate">${item.name}</h3>
+                <h3 class="text-3xl font-semibold truncate">${item.nome}</h3>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-y-5 flex-1 lg:divide-x lg:divide-slate-300">
-                ${buildMetric("Tempo total em alerta", item.totalTime, "text-3xl", "text-slate-900")}
-                ${buildMetric("Quantidade de alertas/mês", item.count, "text-3xl", "text-slate-900")}
-                ${buildMetric("Alerta de maior duração", item.longest, "text-3xl", "text-slate-900")}
-                ${buildMetric("Componente com maior origem de alertas", item.component, "text-2xl", "text-red-600")}
+                ${buildMetric("Tempo total em alerta", item.total, "text-3xl", "text-slate-900")}
+                ${buildMetric("Quantidade de alertas/mês", item.alertas, "text-3xl", "text-slate-900")}
+                ${buildMetric("Alerta de maior duração", item.maior, "text-3xl", "text-slate-900")}
+                ${buildMetric("Componente com maior origem de alertas", item.componente, "text-2xl", "text-red-600")}
             </div>
         </article>`;
     }
@@ -354,3 +387,5 @@ function buildMetric(label, value, size, color) {
             <span class="${size} font-semibold ${color}">${value}</span>
         </div>`;
 }
+
+showEmployees();

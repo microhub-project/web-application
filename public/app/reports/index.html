@@ -159,18 +159,10 @@
         <main
             class="text-slate-900 flex flex-col p-8 min-h-dvh gap-6 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
 
-            <!-- Título + última atualização -->
             <div class="flex flex-wrap items-center justify-between gap-4 w-full">
                 <h1 class="text-2xl font-extrabold">Relatórios</h1>
-                <div
-                    class="flex items-center gap-2 text-xs text-slate-500 bg-slate-100 border border-slate-300 rounded-lg px-3 py-2">
-                    <i class="ph ph-clock text-base"></i>
-                    <span>Última atualização:</span>
-                    <span id="lastUpdate" class="text-slate-700 font-medium">--</span>
-                </div>
             </div>
 
-            <!-- Switch + botão de download completo -->
             <div class="flex flex-wrap items-center justify-between gap-4 w-full">
                 <div class="inline-flex p-0.5 rounded-lg border-2 border-blue-400 bg-slate-100">
                     <button type="button" id="btnEmployees" onclick="showEmployees()">Funcionários</button>
@@ -183,7 +175,6 @@
                 </button>
             </div>
 
-            <!-- Resumo: gráfico + ranking + cards laterais -->
             <section class="grid grid-cols-1 lg:grid-cols-12 gap-4 w-full">
                 <div class="lg:col-span-5 bg-slate-100 border border-blue-300 rounded-lg p-4 flex flex-col gap-3 min-w-0">
                     <h2 id="chartTitle" class="text-xs font-bold"></h2>
@@ -203,7 +194,6 @@
 
             <hr class="border-t border-slate-400">
 
-            <!-- Lista de cards detalhados -->
             <section id="detailList" class="flex flex-col gap-4 w-full"></section>
         </main>
         <div id="toast-container"

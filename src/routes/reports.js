@@ -8,4 +8,10 @@ router.use(verifyJWT);
 
 router.get("/getGeralFunc", reportsController.listarFunc);
 
+router.get("/getGeralInst", reportsController.getGeralInst);
+
+router.get("/getTotalAlertas", reportsController.getTotalAlertas);
+
+router.get("/getRankingAlertas", reportsController.getRankingAlertas);
+
 export default router;
