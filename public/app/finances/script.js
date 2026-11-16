@@ -61,7 +61,7 @@ const config = {
     plugins: [ChartDataLabels, alignLineToFirstBar],
     options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         aspectRatio: 3,
         onClick: (event, elements, chart) => {
             if (elements.length > 0) {
@@ -187,10 +187,29 @@ const getInstances = async () => {
     }
 };
 
-const generateSummary = async (month, infra_multiplier) => {
+const renderMonthSelect = (month) => {
     const month_name = document.getElementById("month")
+    
+    month_name.innerHTML = `<option value="${month}" selected>${month}</option>`
 
-    month_name.innerHTML = month
+    let monthOptions = ``
+
+    labels.forEach(monthName => {
+        if(monthName != month) {
+            monthOptions += `<option value="${monthName}">${monthName}</option>`
+        }
+    })
+    console.log(monthOptions)
+
+    month_name.innerHTML += monthOptions
+}
+
+const monthChange = (month) => {
+    generateSummary(month, forecast[labels.indexOf(month)])
+}
+
+const generateSummary = async (month, infra_multiplier) => {
+    renderMonthSelect(month);
 
     const instances = await getInstances();
 
@@ -318,6 +337,8 @@ const generateSummaryHTML = (
     vertical_cost = round2(vertical_cost);
     horizontal_cost = round2(horizontal_cost);
 
+    renderCurrentInfraestructure(current_instances, current_cpus, current_ram, current_cost)
+
     return `
     <div class="w-full flex gap-8">
         <div class="w-1/2">
@@ -426,6 +447,19 @@ const errorSummaryHTML = `
         </div>
     </div>
 `
+
+const renderCurrentInfraestructure = (instances, cpus, ram, cost) => {
+    let instance_container = document.getElementById('current-instances')
+    let cpus_container = document.getElementById('current-cpus')
+    let ram_container = document.getElementById('current-ram')
+    let cost_container = document.getElementById('current-cost')
+
+
+    instance_container.innerHTML = instances
+    cpus_container.innerHTML = `${cpus} vCPU`
+    ram_container.innerHTML = `${ram} GiB`
+    cost_container.innerHTML = `$${cost}`
+}
 
 const atualizarDataHora = () => {
     const elementoData = document.getElementById('data-atualizacao');
