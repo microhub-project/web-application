@@ -174,28 +174,61 @@
                 </div>
                 <!-- <hr class="border-t border-slate-400 my-5"> -->
             </div>
+            <div
+                class="w-full h-fit rounded-xl flex justify-center items-center p-2 bg-blue-300 border-blue-800 border text-blue-950">
+                <p class="font-bold text-xl">Infraestrutura Atual</p>
+            </div>
+            <div class="flex w-full gap-4">
+                <div
+                    class="w-1/4 text-center h-fit rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
+                    <h2 class="font-bold">Instâncias</h2>
+                    <h1 class="font-bold text-4xl" id="current-instances">Erro ao carregar.</h1>
+                </div>
+                <div
+                    class="w-1/4 text-center h-fit rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
+                    <h2 class="font-bold">CPUs</h2>
+                    <h1 class="font-bold text-4xl" id="current-cpus">Erro ao carregar.</h1>
+                </div>
+                <div
+                    class="w-1/4 text-center h-fit rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
+                    <h2 class="font-bold">RAM</h2>
+                    <h1 class="font-bold text-4xl" id="current-ram">Erro ao carregar.</h1>
+                </div>
+                <div
+                    class="w-1/4 text-center h-fit rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
+                    <h2 class="font-bold">Custo</h2>
+                    <h1 class="font-bold text-4xl" id="current-cost">Erro ao carregar.</h1>
+                </div>
+            </div>
 
             <div
-                class="col-span-1 lg:col-span-2 min-w-0 w-full bg-slate-100 rounded-2xl border border-blue-900 p-3 md:p-6 mb-8 flex flex-col text-slate-900 h-fit">
+                class="col-span-1 lg:col-span-2 min-w-0 w-full bg-slate-100 rounded-2xl border border-blue-900 p-3 md:p-6 mb-4 flex flex-col text-slate-950 h-fit">
                 <h2 class="text-xl font-bold mb-8">Previsibilidade de uso da infraestrutura</h2>
 
-                <div class="flex-1 relative w-full min-w-0 min-h-0">
-                    <canvas id="months-graph"></canvas>
+                <div class="flex-1 relative w-full min-w-0 min-h-0 max-h-80">
+                    <canvas id="months-graph" class="w-full"></canvas>
                 </div>
             </div>
 
             <div>
-                <h2 class="text-xl font-bold mb-8">Visão da infraestrutura - <span class="text-xl font-bold" id="month">Janeiro</span>
+                <h2 class="text-xl font-bold mb-8">Visão da infraestrutura - 
+                    <select id="month"
+                        class="text-xl font-bold bg-slate-100 rounded-lg p-2 hover:cursor-pointer border border-blue-900 text-blue-950"
+                        onchange="monthChange(this.value)">
+
+                    </select>
                 </h2>
                 <div class="w-full flex gap-8">
                     <div class="flex-1">
-                        <div class="w-full h-fit mb-4 rounded-xl flex justify-center items-center gap-2 p-2 bg-blue-300 border-blue-800 border text-blue-950">
+                        <div
+                            class="w-full h-fit mb-4 rounded-xl flex justify-center items-center gap-2 p-2 bg-blue-300 border-blue-800 border text-blue-950">
                             <i class="ph-bold ph-arrow-up text-xl"></i>
                             <p class="font-bold text-xl">Vertical</p>
                         </div>
                     </div>
                     <div class="flex-1">
-                        <div class="w-full h-fit mb-4 rounded-xl flex justify-center items-center gap-2 p-2 bg-blue-300 border-blue-800 border text-blue-950">
+                        <div
+                            class="w-full h-fit mb-4 rounded-xl flex justify-center items-center gap-2 p-2 bg-blue-300 border-blue-800 border text-blue-950">
                             <i class="ph-bold ph-plus text-xl"></i>
                             <p class="font-bold text-xl">Horizontal</p>
                         </div>
@@ -216,7 +249,8 @@
                                     <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
                                         [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
                                         md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
-                                        Fácil de aplicar: basta alterar o tamanho da instância na nuvem em poucos cliques.
+                                        Fácil de aplicar: basta alterar o tamanho da instância na nuvem em poucos
+                                        cliques.
                                     </p>
                                 </div>
 
@@ -229,7 +263,8 @@
                                     <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
                                         [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
                                         md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
-                                        A aplicação roda em um único ambiente, sem precisar adaptar o código para sistemas distribuídos.
+                                        A aplicação roda em um único ambiente, sem precisar adaptar o código para
+                                        sistemas distribuídos.
                                     </p>
                                 </div>
 
@@ -242,7 +277,8 @@
                                     <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
                                         [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
                                         md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
-                                        Dispensa balanceadores de carga, sincronização entre nós ou particionamento de banco.
+                                        Dispensa balanceadores de carga, sincronização entre nós ou particionamento de
+                                        banco.
                                     </p>
                                 </div>
                             </div>
@@ -257,7 +293,8 @@
                                     <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
                                         [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
                                         md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
-                                        Redimensionar a máquina exige reiniciar o servidor, tirando o sistema do ar temporariamente.
+                                        Redimensionar a máquina exige reiniciar o servidor, tirando o sistema do ar
+                                        temporariamente.
                                     </p>
                                 </div>
 
@@ -270,7 +307,8 @@
                                     <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
                                         [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
                                         md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
-                                        Ponto único de falha: se o servidor ou hardware falhar, toda a aplicação sai do ar.
+                                        Ponto único de falha: se o servidor ou hardware falhar, toda a aplicação sai do
+                                        ar.
                                     </p>
                                 </div>
 
@@ -283,7 +321,8 @@
                                     <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
                                         [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
                                         md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
-                                        Máquinas com muita CPU e RAM custam bem mais caro que várias instâncias menores somadas.
+                                        Máquinas com muita CPU e RAM custam bem mais caro que várias instâncias menores
+                                        somadas.
                                     </p>
                                 </div>
                             </div>
@@ -302,7 +341,8 @@
                                     <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
                                         [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
                                         md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
-                                        Se um servidor falha, os outros assumem o tráfego e evitam a queda total do sistema.
+                                        Se um servidor falha, os outros assumem o tráfego e evitam a queda total do
+                                        sistema.
                                     </p>
                                 </div>
 
@@ -328,7 +368,8 @@
                                     <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
                                         [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
                                         md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
-                                        Usar várias instâncias menores ou spot na nuvem sai mais barato que uma super-máquina.
+                                        Usar várias instâncias menores ou spot na nuvem sai mais barato que uma
+                                        super-máquina.
                                     </p>
                                 </div>
                             </div>
@@ -343,7 +384,8 @@
                                     <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
                                         [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
                                         md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
-                                        O software exige controle de sessão, estado e replicação de dados para rodar em múltiplos nós.
+                                        O software exige controle de sessão, estado e replicação de dados para rodar em
+                                        múltiplos nós.
                                     </p>
                                 </div>
 
@@ -356,7 +398,8 @@
                                     <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
                                         [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
                                         md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
-                                        Exige load balancers e monitoramento avançado para distribuir o tráfego e vigiar os nós.
+                                        Exige load balancers e monitoramento avançado para distribuir o tráfego e vigiar
+                                        os nós.
                                     </p>
                                 </div>
 
@@ -369,7 +412,8 @@
                                     <p class="text-md overflow-hidden max-h-0 opacity-0 transition-all duration-300
                                         [&.ativo]:max-h-40 [&.ativo]:opacity-100 [&.ativo]:mt-2
                                         md:group-hover:max-h-40 md:group-hover:opacity-100 md:group-hover:mt-2">
-                                        Logs centralizados, backups e consistência de dados dão muito mais trabalho para a operação.
+                                        Logs centralizados, backups e consistência de dados dão muito mais trabalho para
+                                        a operação.
                                     </p>
                                 </div>
                             </div>
