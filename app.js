@@ -26,6 +26,7 @@ import microserviceRouter from "./src/routes/microservices.js";
 import instanceRouter from "./src/routes/instances.js";
 import AlertRouter from "./src/routes/alerts.js";
 import lixeiraRouter from "./src/routes/lixeira.js"
+import financeIndividualRouter from "./src/routes/finance-individual.js";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -40,6 +41,7 @@ app.use("/microservices", microserviceRouter);
 app.use("/instances", instanceRouter);
 app.use("/alerts", AlertRouter);
 app.use("/lixeira", lixeiraRouter);
+app.use("/finance-individual", financeIndividualRouter);
 
 app.listen(PORTA_APP, function () {
   console.log(`

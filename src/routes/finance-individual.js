@@ -1,11 +1,13 @@
 import express from "express";
-import lixeiraController from "../controllers/finance-individual.controller.js";
+import financeIndividualController from "../controllers/finance-individual.controller.js";
 import verifyJWT from "../authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/listar-instancias", lixeiraController.listarInstancias);
+router.use(verifyJWT);
 
-router.get("/listar-itens-instancia/:uuid", lixeiraController.listarItens);
+router.get("/listar-instancias", financeIndividualController.listarInstancias);
+
+router.get("/listar-itens-instancia/:uuid", financeIndividualController.listarItens);
 
 export default router;

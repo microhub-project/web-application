@@ -55,7 +55,7 @@ const navItems = [
 const pages = [
   "/app/index.html",
   "/app/reports/index.html",
-  "/app/instance-analysis/index.html",
+  "/app/instace-analysis/index.html",
   "/app/alerts/index.html",
   "/app/finances/index.html", // página de financas
   "/app/analysis/index.html",
