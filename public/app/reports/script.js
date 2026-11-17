@@ -5,14 +5,6 @@ var switchBase = "px-4 py-1.5 rounded-md text-sm font-semibold transition-colors
 var switchActive = switchBase + " bg-white text-slate-900 shadow-sm";
 var switchInactive = switchBase + " text-blue-500";
 
-
-window.addEventListener("DOMContentLoaded", function () {
-    lastUpdate.innerHTML = getCurrentDateText();
-    showEmployees();
-});
-
-
-
 async function showEmployees() {
 
     const token = sessionStorage.getItem('JWT_TOKEN');
@@ -342,7 +334,6 @@ function drawEmployeesList(data) {
         html += `
         <article class="${cardClass} px-6 py-5 flex flex-col lg:flex-row lg:items-center gap-6">
             <div class="flex items-center gap-4 lg:w-1/4 min-w-0">
-                <div class="rounded-full bg-slate-900 text-slate-50 size-12 shrink-0 flex justify-center items-center text-sm font-bold">${'cu'}</div>
                 <h3 class="text-3xl font-semibold truncate">${item.funcionario}</h3>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-y-5 flex-1 lg:divide-x lg:divide-slate-300">
@@ -352,6 +343,7 @@ function drawEmployeesList(data) {
                 ${buildMetric("Maior tempo de resolução", convertTime(item.alertaMax), "text-3xl", "text-red-600")}
             </div>
         </article>`;
+
     }
 
     detailList.innerHTML = html;
