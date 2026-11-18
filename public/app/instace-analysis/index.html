@@ -21,12 +21,14 @@
             verifyIfUserCanAccess();
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="./script.js"></script>
     <script src="../../js/toast.js"></script>
 
 </head>
 
-<body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
+<body onload="loadAllMetrics();loadCharts();"
+    class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh overflow-hidden">
 
     <div class="flex min-h-screen">
 
@@ -156,19 +158,291 @@
         </header>
 
         <main
-            class="text-slate-900 flex flex-col p-8 min-h-dvh gap-12 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
+            class="text-slate-900 flex flex-col xl:flex-row h-dvh w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
 
-            <div class="flex flex-col gap-4 w-full">
-                <div class="">
-                    <h1 class="text-2xl font-extrabold">Instâncias</h1>
+            <!-- Painel de instâncias: sobreposto abaixo de xl, lateral fixa no xl -->
+            <section id="painel-instancias" class="flex xl:flex flex-col gap-5 p-4 md:p-8 bg-slate-200
+               max-xl:fixed max-xl:top-0 max-xl:bottom-0 max-xl:left-0 max-xl:right-20 lg:max-xl:left-72 lg:max-xl:right-0 max-xl:z-30 max-xl:shadow-2xl
+               max-xl:overflow-y-auto
+               xl:w-[400px] xl:shrink-0 xl:border-r xl:border-slate-300 xl:h-full xl:overflow-y-auto
+               [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div class="flex items-start justify-between gap-3 w-full">
+                    <div>
+                        <h1 class="text-2xl font-extrabold">Instâncias</h1>
+                        <h5 class="text-1 text-blue-950 font-thin">Monitoramento da infraestrutura de microsserviços
+                        </h5>
+                    </div>
+                    <button type="button" onclick="toggleInstancias(false)" aria-label="Fechar lista de instâncias"
+                        class="xl:hidden flex items-center justify-center size-10 shrink-0 rounded-md border border-slate-400 bg-slate-100 hover:bg-slate-50 cursor-pointer">
+                        <i class="ph-bold ph-x text-lg"></i>
+                    </button>
                 </div>
-                <hr class="border-t border-slate-400 my-5">
-            </div>
-            <div
-                class="fixed inset-0 z-30 lg:ml-72 max-lg:mr-20 h-dvh backdrop-blur-lg bg-slate-950/10 flex flex-col justify-center items-center text-slate-900 pointer-events-auto">
-                <i class="ph ph-barricade text-[16rem] max-sm:text-[8rem]"></i>
-                <h1 class="text-3xl font-bold max-sm:text-2xl">Em desenvolvimento</h1>
-            </div>
+                <div
+                    class="bg-slate-100 border border-blue-900/70 rounded-2xl p-5 flex flex-col gap-4 h-[calc(100dvh-11rem)] xl:h-[85vh]">
+                    <div class="relative">
+                        <input id="instanciasProcura" type="text" placeholder="Buscar..."
+                            class="w-full bg-slate-50 border border-slate-400 rounded-md px-3 py-2 text-xs outline-none focus:border-blue-600">
+                        <i class="ph ph-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-slate-600"></i>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="flex flex-col gap-1 text-[10px] text-slate-600">
+                            Microsserviço
+                            <select id="filtroServiço"
+                                class="bg-slate-50 border border-slate-400 rounded-md px-2 py-2 text-xs text-slate-900">
+                                <option value="">Todos</option>
+                                <option>placeholder</option>
+                            </select>
+                        </label>
+                        <label class="flex flex-col gap-1 text-[10px] text-slate-600">
+                            Status
+                            <select id="filtroStatus"
+                                class="bg-slate-50 border border-slate-400 rounded-md px-2 py-2 text-xs text-slate-900">
+                                <option value="">Todos</option>
+                                <option>Crítico</option>
+                                <option>Atenção</option>
+                                <option>Normal</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                        <table class="w-full text-[11px]">
+                            <thead>
+                                <tr class="text-slate-500 text-[10px]">
+                                    <th class="sticky top-0 bg-slate-100 text-left font-normal px-2 py-2">Instância</th>
+                                    <th class="sticky top-0 bg-slate-100 text-left font-normal px-2 py-2">Microsserviço
+                                    </th>
+                                    <th class="sticky top-0 bg-slate-100 text-center font-normal px-2 py-2">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listaDeInstancias" class="divide-y divide-slate-300">
+                                <tr class="cursor-pointer bg-blue-100 border-l-2 border-blue-900">
+                                    <td class="px-2 py-3">placeholder</td>
+                                    <td class="px-2 py-3">placeholder</td>
+                                    <td class="px-2 py-3 text-center"><span
+                                            class="inline-flex items-center gap-1 rounded-full border border-red-500 bg-red-50 text-red-700 px-2 py-0.5"><span
+                                                class="size-1.5 rounded-full bg-red-600"></span>Crítico</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="flex flex-col gap-5 p-4 md:p-8 flex-1 min-w-0 h-full overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <button type="button" onclick="toggleInstancias(true)"
+                    class="xl:hidden flex items-center justify-between w-full bg-slate-100 border border-blue-900/70 rounded-2xl px-4 py-3 text-left cursor-pointer">
+                    <span class="flex flex-col">
+                        <span class="text-[10px] text-slate-500">Instância selecionada (toque para trocar)</span>
+                        <span id="toggle-instancia-nome" class="text-sm font-bold">placeholder</span>
+                    </span>
+                    <i class="ph-bold ph-list text-xl"></i>
+                </button>
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                        <h2 id="detalheNome" class="text-2xl font-extrabold">placeholder</h2>
+                        <p id="detalheServico" class="text-xs text-slate-500">placeholder</p>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-50 rounded-md px-4 py-3 text-xs text-slate-600">
+                        <i class="ph ph-clock text-base"></i>
+                        Última atualização: <span class="text-slate-900">10 de nov. de 2026, 18:58</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2
+            2xl:grid-cols-4
+            2xl:[&:has(>:last-child:nth-child(3n):not(:nth-child(4n)))]:grid-cols-3
+            gap-4">
+                    <div id="card-cpu"
+                        class="w-full min-w-0 h-44 rounded-2xl bg-slate-100 text-slate-900 flex items-center justify-center px-5 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+                        <i id="icone-cpu"
+                            class="md:max-lg:hidden ph-bold ph-cpu absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
+                        <h2 id="texto-cpu" class="absolute top-4 left-6 w-2/3 text-lg font-semibold leading-tight">
+                            Porcentagem de uso de CPU</h2>
+                        <div class="flex items-baseline gap-1 mt-6">
+                            <span id="valor-cpu" class="text-6xl font-medium">60</span>
+                            <span id="unidade-cpu" class="text-xl font-medium text-slate-500"></span>
+                        </div>
+                        <div id="limite-cpu" class="absolute bottom-3 left-6 text-sm text-slate-500">Limite: 80%
+                        </div>
+                    </div>
+                    <div id="card-ram"
+                        class="w-full min-w-0 h-44 rounded-2xl bg-slate-100 text-slate-900 flex items-center justify-center px-5 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+                        <i id="icone-ram"
+                            class="md:max-lg:hidden ph-bold ph-memory absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
+                        <h2 id="texto-ram" class="absolute top-4 left-6 w-2/3 text-lg font-semibold leading-tight">
+                            Porcentagem de uso de memória RAM</h2>
+                        <div class="flex items-baseline gap-1 mt-6">
+                            <span id="valor-ram" class="text-6xl font-medium">60</span>
+                            <span id="unidade-ram" class="text-xl font-medium text-slate-500"></span>
+                        </div>
+                        <div id="limite-ram" class="absolute bottom-3 left-6 text-sm text-slate-500">Limite: 80%
+                        </div>
+                    </div>
+                    <div id="card-upload"
+                        class="w-full min-w-0 h-44 rounded-2xl bg-slate-100 text-slate-900 flex items-center justify-center px-5 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+                        <i id="icone-upload"
+                            class="md:max-lg:hidden ph-bold ph-box-arrow-up absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
+                        <h2 id="texto-upload" class="absolute top-4 left-6 w-2/3 text-lg font-semibold leading-tight">
+                            Tráfego de bytes de
+                            upload</h2>
+                        <div class="flex items-baseline gap-1 mt-6">
+                            <span id="valor-upload" class="text-6xl font-medium">83</span>
+                            <span id="unidade-upload" class="text-xl font-medium text-slate-500">Mbps</span>
+                        </div>
+                        <div id="limite-upload" class="absolute bottom-3 left-6 text-sm text-slate-500">Limite mínimo:
+                            30Mbps</div>
+                    </div>
+                    <div id="card-download"
+                        class="w-full min-w-0 h-44 rounded-2xl bg-slate-100 text-slate-900 flex items-center justify-center px-5 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+                        <i id="icone-download"
+                            class="md:max-lg:hidden ph-bold ph-box-arrow-down absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
+                        <h2 id="texto-download" class="absolute top-4 left-6 w-2/3 text-lg font-semibold leading-tight">
+                            Tráfego de bytes de download</h2>
+                        <div class="flex items-baseline gap-1 mt-6">
+                            <span id="valor-download" class="text-6xl font-medium">21</span>
+                            <span id="unidade-download" class="text-xl font-medium text-slate-500">Mbps</span>
+                        </div>
+                        <div id="limite-download" class="absolute bottom-3 left-6 text-sm text-slate-500">Limite mínimo:
+                            10Mbps</div>
+                    </div>
+                    <div id="card-cpu-frequency"
+                        class="w-full min-w-0 h-44 rounded-2xl bg-slate-100 text-slate-900 flex items-center justify-center px-5 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+                        <i id="icone-cpu-frequency"
+                            class="md:max-lg:hidden ph-bold ph-gauge absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
+                        <h2 id="texto-cpu-frequency"
+                            class="absolute top-4 left-6 w-2/3 text-lg font-semibold leading-tight">Frequência da CPU
+                        </h2>
+                        <div class="flex items-baseline gap-1 mt-6">
+                            <span id="valor-cpu-frequency" class="text-6xl font-medium">2.7</span>
+                            <span id="unidade-cpu-frequency" class="text-xl font-medium text-slate-500">GHz</span>
+                        </div>
+                        <div id="limite-cpu-frequency" class="absolute bottom-3 left-6 text-sm text-slate-500">Limite:
+                            1.5GHz
+                        </div>
+                    </div>
+                    <div id="card-disk"
+                        class="w-full min-w-0 h-44 rounded-2xl bg-slate-100 text-slate-900 flex items-center justify-center px-5 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+                        <i id="icone-disk"
+                            class="md:max-lg:hidden ph-bold ph-floppy-disk absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
+                        <h2 id="texto-disk" class="absolute top-4 left-6 w-2/3 text-lg font-semibold leading-tight">
+                            Espaço livre no disco</h2>
+                        <div class="flex items-baseline gap-1 mt-6">
+                            <span id="valor-disk" class="text-6xl font-medium">108</span>
+                            <span id="unidade-disk" class="text-xl font-medium text-slate-500">GiB</span>
+                        </div>
+                        <div id="limite-disk" class="absolute bottom-3 left-6 text-sm text-slate-500">Limite: 420GiB
+                        </div>
+                    </div>
+                    <div id="card-processos"
+                        class="w-full min-w-0 h-44 rounded-2xl bg-slate-100 text-slate-900 flex items-center justify-center px-5 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+                        <i id="icone-processos"
+                            class="md:max-lg:hidden ph-bold ph-circuitry absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
+                        <h2 id="texto-processos"
+                            class="absolute top-4 left-6 w-2/3 text-lg font-semibold leading-tight">Quantidade de
+                            processos</h2>
+                        <div class="flex items-baseline gap-1 mt-6">
+                            <span id="valor-processos" class="text-6xl font-medium">240</span>
+                            <span id="unidade-processos" class="text-xl font-medium text-slate-500"></span>
+                        </div>
+                        <div id="limite-processos" class="absolute bottom-3 left-6 text-sm text-slate-500">Limite: 400
+                        </div>
+                    </div>
+                    <div id="card-zumbi"
+                        class="w-full min-w-0 h-44 rounded-2xl bg-slate-100 text-slate-900 flex items-center justify-center px-5 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+                        <i id="icone-zumbi"
+                            class="md:max-lg:hidden ph-bold ph-ghost absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
+                        <h2 id="texto-zumbi" class="absolute top-4 left-6 w-2/3 text-lg font-semibold leading-tight">
+                            Porcentagem de processos zumbi</h2>
+                        <div class="flex items-baseline gap-1 mt-6">
+                            <span id="valor-zumbi" class="text-6xl font-medium">1%</span>
+                            <span id="unidade-zumbi" class="text-xl font-medium text-slate-500"></span>
+                        </div>
+                        <div id="limite-zumbi" class="absolute bottom-3 left-6 text-sm text-slate-500">Limite: 5%</div>
+                    </div>
+                    <div id="card-swap"
+                        class="w-full min-w-0 h-44 rounded-2xl bg-slate-100 text-slate-900 flex items-center justify-center px-5 relative overflow-hidden border border-blue-900 transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+                        <i id="icone-swap"
+                            class="md:max-lg:hidden ph-bold ph-swap absolute top-4 right-4 text-xl p-3 rounded border border-current"></i>
+                        <h2 id="texto-swap" class="absolute top-4 left-6 w-2/3 text-lg font-semibold leading-tight">
+                            Porcentagem de uso de memória SWAP</h2>
+                        <div class="flex items-baseline gap-1 mt-6">
+                            <span id="valor-swap" class="text-6xl font-medium">9%</span>
+                            <span id="unidade-swap" class="text-xl font-medium text-slate-500"></span>
+                        </div>
+                        <div id="limite-swap" class="absolute bottom-3 left-6 text-sm text-slate-500">
+                            Limite: 50%</div>
+                    </div>
+                </div>
+                <div
+                    class="min-w-0 w-full bg-slate-100 rounded-2xl border border-blue-900 p-3 md:p-6 flex flex-col text-slate-900">
+                    <h2 class="text-2xl font-bold mb-1">Utilização da Infraestrutura</h2>
+                    <p class="text-xl text-slate-500 mb-6">Média entre todas as instâncias</p>
+                    <div class="flex flex-col gap-4 mb-6 min-w-0">
+                        <div id="botoes-grafico" class="flex flex-wrap gap-2 text-sm font-medium">
+                            <button onclick="mudarGrafico('cpu', this)"
+                                class="px-4 py-1 bg-slate-200  border border-blue-900 rounded-2xl text-blue-950 font-bold transition-all duration-300 ease-in-out">CPU</button>
+                            <button onclick="mudarGrafico('ram', this)"
+                                class="px-4 py-1 border-2 border-transparent text-slate-500 hover:text-slate-900 transition-all duration-300 ease-in-out">RAM</button>
+                            <button onclick="mudarGrafico('upload', this)"
+                                class="px-4 py-1 border-2 border-transparent text-slate-500 hover:text-slate-900 transition-all duration-300 ease-in-out">Upload</button>
+                            <button onclick="mudarGrafico('download', this)"
+                                class="px-4 py-1 border-2 border-transparent text-slate-500 hover:text-slate-900 transition-all duration-300 ease-in-out">Download</button>
+                            <button onclick="mudarGrafico('cpu_frequency', this)"
+                                class="px-4 py-1 border-2 border-transparent text-slate-500 hover:text-slate-900 transition-all duration-300 ease-in-out">Frequência
+                                da cpu</button>
+                            <button onclick="mudarGrafico('disk', this)"
+                                class="px-4 py-1 bg-slate-200  border border-blue-900 rounded-2xl text-blue-950 font-bold transition-all duration-300 ease-in-out">Disco</button>
+                            <button onclick="mudarGrafico('processos', this)"
+                                class="px-4 py-1 border-2 border-transparent text-slate-500 hover:text-slate-900 transition-all duration-300 ease-in-out">Processos</button>
+                            <button onclick="mudarGrafico('zumbi', this)"
+                                class="px-4 py-1 border-2 border-transparent text-slate-500 hover:text-slate-900 transition-all duration-300 ease-in-out">Processos
+                                Zumbis</button>
+                            <button onclick="mudarGrafico('swap', this)"
+                                class="px-4 py-1 border-2 border-transparent text-slate-500 hover:text-slate-900 transition-all duration-300 ease-in-out">Memória
+                                SWAP</button>
+                        </div>
+                        <div id="texto-limite" class="text-sm md:text-xl font-medium text-slate-800">
+                            Limite de alerta: 80%
+                        </div>
+                    </div>
+                    <div class="relative w-full min-w-0 h-[28rem] md:h-[36rem] xl:h-[42rem]">
+                        <canvas id="myChart1"></canvas>
+                    </div>
+                </div>
+                <div class="bg-slate-100 border border-blue-900/70 rounded-xl p-5 flex flex-col gap-3">
+                    <h3 class="text-xl font-extrabold">Histórico de Alertas</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-[11px]">
+                            <thead>
+                                <tr class="text-slate-500 border-b border-slate-300">
+                                    <th class="text-left font-normal py-2 px-2">Data e hora</th>
+                                    <th class="text-center font-normal py-2 px-2">Componente</th>
+                                    <th class="text-center font-normal py-2 px-2">Valor</th>
+                                    <th class="text-center font-normal py-2 px-2">Limite</th>
+                                    <th class="text-center font-normal py-2 px-2">Severidade</th>
+                                    <th class="text-center font-normal py-2 px-2">Status</th>
+                                    <th class="text-center font-normal py-2 px-2">Resolvido em</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-300">
+                                <tr>
+                                    <td class="py-3 px-2">24/11/2026 09:11</td>
+                                    <td class="py-3 px-2 text-center">placeholder</td>
+                                    <td class="py-3 px-2 text-center">79%</td>
+                                    <td class="py-3 px-2 text-center">80%</td>
+                                    <td class="py-3 px-2 text-center"><span
+                                            class="inline-flex items-center gap-1 rounded-full border border-amber-500 bg-amber-50 text-amber-700 px-2 py-0.5"><span
+                                                class="size-1.5 rounded-full bg-amber-500"></span>Atenção</span></td>
+                                    <td class="py-3 px-2 text-center"><span
+                                            class="inline-flex rounded-full border border-blue-500 bg-blue-100 text-blue-800 px-2 py-0.5">Ativo</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center">—</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
         </main>
         <div id="toast-container"
             class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">
