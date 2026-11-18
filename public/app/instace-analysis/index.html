@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css"
         href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
+    <link rel="stylesheet" href="style.css">
  
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../../js/toast.js"></script>
@@ -21,7 +21,7 @@
     <script type="module" src="./script.js"></script>
 </head>
 
-<body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh overflow-y-hidden">
+<body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh overflow-y-hidden  max-md:overflow-y-auto">
 
     <div class="flex min-h-screen">
 
@@ -150,135 +150,255 @@
             </nav>
         </header>
 
-          <main
-            class="text-slate-900 grid grid-cols-[0.9fr_2.1fr] p-8 min-h-dvh w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
+         
+<main class="text-slate-900 grid grid-cols-[0.9fr_2.1fr] p-8 min-h-dvh w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24 max-lg:grid-cols-1 max-lg:gap-6 max-[1600px]:grid-cols-[0.85fr_2.15fr] max-[1600px]:p-6 max-md:pl-3 max-md:pr-24 max-md:pt-5 max-md:pb-8">
 
-            <div class="flex flex-col gap-4 w-full">
-                <div class="flex flex-col justify-center">
-                    <h1 class="text-2xl font-extrabold">Análise Individual</h1>
-                    <h3 class="text-base">Análise de previsibilidade e custo por instância</h3>
-                </div>
-                <div id="menu" class="flex flex-col bg-slate-100 border-2 border-blue-900 rounded-2xl h-full w-full p-5">
-                    <div id="serchField" class="grid grid-cols-2 grid-rows-1 relative gap-3">
-                        <input placeholder="Buscar" class="p-2 rounded-lg border-2 border-slate-400 col-span-2 h-full  max-h-10"></input>
-                        <i class="absolute right-4 translate-y-3 text-slate-600 z-40 fa-solid fa-magnifying-glass"></i>
-                        <div class="col-span-1 flex flex-col items-start ">
-                            <span class="text-slate-500 text-sm">Custo</span>
-                            <select name="" id="" class="w-full right-3 rounded-lg border-2 border-slate-400 h-10">
-                                <option selected value="">Todos</option>
+    <!-- LISTA DE INSTÂNCIAS -->
+    <div class="flex flex-col gap-4 w-full min-w-0">
 
-                            </select>
-                        </div>
-                        <div class="col-span-1 flex flex-col items-start">
-                            <span class="text-slate-500 text-sm">Status</span>
-                            <select name="" id="" class="w-full right-3 rounded-lg border-2 border-slate-400 h-10">
-                                <option selected value="">Todos</option>
-                                <option value="1">Estável</option>
-                                <option value="2">Sub-utilizada</option>
-                                <option value="3">Super-utilizada</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="allInstances" class="flex flex-col scroll-auto overflow-y-scroll h-full gap-3 mt-4">
-                        <div class="w-full flex flex-col rounded-xl border-2 border-slate-400 p-4 bg-white">
-                            <div class="flex flex-row items-center justify-between">
-                                <span class="">autenticação-01</span>
-                                <span class="pr-4 text-sm text-slate-500">Custo: <span class="text-black">$00.00</span></span>
-                            </div>
-                            <div class="flex flex-row items-center justify-between">
-                                <span class="text-sm text-slate-500">t3.medium</span>
-                                <div class="rounded-3xl border-[1px] border-yellow-500 text-yellow-500 text-lg bg-yellow-100 p-1">Sub-utilizada</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="instanceMostra" class="grid grid-cols-[2fr_1fr] grid-rows-[auto_auto] w-full h-full pl-8 gap-6">
-                <div class="flex flex-col gap-6 row-span-1 col-span-1">
-                    <div class="flex flex-col items-start justify-between h-28">
-                        <span id="instanceName" class="text-2xl font-extrabold">autenticação-01</span>
-                        <span id="typeName" class="text-xl">t3.medium</span>
-                        <span class="text-slate-400">Microsserviço: <span id="microsserviceName">Pagamento</span></span>
-                    </div>
-                    <div class="flex flex-col w-full h-80 bg-white border-[1px] border-blue-900 rounded-lg p-2">
-                        <span class="ml-4 font-bold">Capacidade da instância</span>
-                         <div class="relative flex-1 min-h-0">
-                             <canvas id="graficoBarras"></canvas>
-                         </div>
-                    </div>
-                </div>
-                
-            
-                <div class="grid grid-rows-1 row-span-1 col-span-1">
-                    <div class="flex flex-col gap-5">
-                        <div class="bg-white rounded-2xl border-[1px] border-slate-500 w-full flex flex-col items-center justify-center gap-3 py-4">
-                            <div class="text-slate-400">Custo total</div>
-                            <div class="text-5xl font-bold">$80.00</div>
-                        </div>
-                        <div class="bg-white rounded-2xl border-[1px] border-slate-500 w-full flex flex-col items-center justify-center gap-3 py-7">
-                            <div class="text-slate-400">Desperdício</div>
-                            <div class="text-6xl font-bold text-red-700">20%</div>
-                        </div>
-                        <div class="bg-white rounded-2xl border-[1px] border-slate-500 w-full flex flex-col items-center justify-center gap-3 py-8">
-                               <div class="text-slate-400">Status da instância</div>
-                            <div class="text-4xl font-bold text-orange-500">Sub-utilizada</div>
-                        </div>
-                    </div>
+        <div class="flex flex-col justify-center gap-1">
+            <h1 class="text-2xl font-extrabold">Análise Individual</h1>
+            <h3 class="text-base">Análise de previsibilidade e custo por instância</h3>
+        </div>
+
+        <!-- BOTÃO MOBILE -->
+        <button
+            type="button"
+            id="btnToggleInstances"
+            aria-expanded="false"
+            class="hidden max-md:flex items-center justify-between w-full p-3 bg-blue-900 text-white rounded-xl font-bold shadow-sm">
+
+            <span class="flex items-center gap-2">
+                <i class="fa-solid fa-server"></i>
+                Selecionar instância
+            </span>
+
+            <i id="iconToggleInstances" class="fa-solid fa-chevron-down"></i>
+        </button>
+
+        <!-- MENU DE INSTÂNCIAS -->
+        <div id="menu"
+            class="hidden md:flex flex-col bg-slate-100 border-2 border-blue-900 rounded-2xl h-full w-full p-5 min-w-0 max-lg:h-auto max-lg:max-h-[360px] max-md:max-h-[55dvh]">
+
+            <div id="serchField" class="grid grid-cols-2 grid-rows-1 relative gap-3">
+
+                <input
+                    id="inputBuscar"
+                    placeholder="Buscar"
+                    class="p-2 rounded-lg border-2 border-slate-400 col-span-2 h-full max-h-10 min-w-0">
+
+                <i class="absolute right-4 translate-y-3 text-slate-600 z-40 fa-solid fa-magnifying-glass"></i>
+
+                <div class="col-span-1 flex flex-col items-start min-w-0">
+                    <span class="text-slate-500 text-sm">Custo</span>
+
+                    <select name="" id=""
+                        class="w-full rounded-lg border-2 border-slate-400 h-10 min-w-0">
+                        <option selected value="">Todos</option>
+                    </select>
                 </div>
 
-                <div class="flex flex-col gap-8 row-span-1 col-span-1">
-                    <div id="verticalContainer" class="flex flex-col gap-4 w-full flex-1">
-                        <div class="w-full rounded-lg p-3 bg-blue-400 border-[1px] border-blue-900 flex justify-center items-center text-xl font-bold">Vertical</div>
-                        <div class="flex gap-4 justify-center items-center flex-1">
-                            <div class="grid grid-cols-3 grid-rows-3 items-center justify-center bg-white border-[1px] border-slate-500 rounded-xl p-4 max-lg:h-24 h-44 text-xl">
-                                <span class="font-bold">t3.medium</span>
-                                <span class="justify-self-end pr-8">></span>
-                                <span class="font-bold">t3.small</span>
-                                <span>2 CPU</span>
-                                <span class="justify-self-end pr-8">></span>
-                                <span>2 CPU</span>
-                                <span>4 RAM</span>
-                                <span class="justify-self-end pr-8">></span>
-                                <span>2 RAM</span>
-                            </div>
-                            <div class="flex flex-col justify-center gap-5  bg-white border-[1px] border-slate-500 rounded-xl p-4 max-lg:h-24 h-44">
-                                <div class="flex justify-center gap-3 text-3xl font-bold">
-                                    <span id="">$80</span>
-                                    <span class="mx-5">></span>
-                                    <span id="">$40</span>
-                                </div>
-                                <div class="bg-green-50 border-[1px] border-lime-700 rounded-2xl text-lime-700 p-1 px-1 flex justify-center items-center">-$40 (-50%)</div>
-                            </div>
-                            <div class="flex flex-col justify-center items-center gap-3 bg-white border-[1px] border-slate-500 rounded-xl pb-4 px-6 h-full">
-                                <div class="text-slate-500">Desperdício</div>
-                                <div class="text-5xl font-semibold text-lime-600">15%</div>
-                            </div>
-                        </div>
-                    </div>
-                     <div id="horizontalContainer" class="flex flex-col gap-4 w-full flex-1">
-                        <div class="w-full rounded-lg p-3 bg-blue-400 border-[1px] border-blue-900 flex justify-center items-center text-xl font-bold">Horizontal</div>
-                        <div class="bg-white flex h-full text-center w-full rounded-xl border-[1px] border-slate-500 flex justify-center items-center max-lg:h-24 min-h-44">A escalabilidade horizontal só é indicada em casos de super-utilização.</div>
-                     </div>
+                <div class="col-span-1 flex flex-col items-start min-w-0">
+                    <span class="text-slate-500 text-sm">Status</span>
+
+                    <select name="" id=""
+                        class="w-full rounded-lg border-2 border-slate-400 h-10 min-w-0">
+                        <option selected value="">Todos</option>
+                        <option value="1">Estável</option>
+                        <option value="2">Sub-utilizada</option>
+                        <option value="3">Super-utilizada</option>
+                    </select>
                 </div>
 
-                <div class="flex flex-col gap-6 row-span-1 col-span-1">
-                       
-                <div class="h-full min-h-[380px] mt-1 bg-white rounded-2xl border-[1px] border-slate-500 w-full flex flex-col items-center gap-3 py-6 px-4">
-                
-                    <div class="text-center text-xl font-bold">
-                        Porcentagem de uso da instância
-                    </div>
-                
-                    <div class="relative flex-1 min-h-0 w-full">
-                        <canvas id="graficoRosca"></canvas>
-                    </div>
-                
-                </div>
-
-                </div>
             </div>
 
-        </main>
+            <div id="allInstances"
+                class="flex flex-col overflow-y-auto h-full min-h-0 gap-3 mt-4 max-lg:max-h-[220px] max-md:max-h-[35dvh]">
+
+                <div class="w-full flex flex-col rounded-xl border-2 border-slate-400 p-4 bg-white">
+                    <div class="flex flex-row items-center justify-between gap-2">
+                        <span>autenticação-01</span>
+
+                        <span class="pr-4 text-sm text-slate-500">
+                            Custo:
+                            <span class="text-black">$00.00</span>
+                        </span>
+                    </div>
+
+                    <div class="flex flex-row items-center justify-between gap-2">
+                        <span class="text-sm text-slate-500">t3.medium</span>
+
+                        <div class="rounded-3xl border-[1px] border-yellow-500 text-yellow-500 text-lg bg-yellow-100 p-1">
+                            Sub-utilizada
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- VISUALIZAÇÃO DA INSTÂNCIA -->
+    <div id="instanceMostra"
+        class="grid grid-cols-[2fr_1fr] grid-rows-[auto_auto] w-full h-full pl-8 gap-6 min-w-0 max-lg:grid-cols-1 max-lg:pl-0 max-lg:gap-5 max-[1600px]:grid-cols-[1.4fr_1fr]">
+
+        <!-- INFORMAÇÕES E GRÁFICO DE BARRAS -->
+        <div class="flex flex-col gap-6 row-span-1 col-span-1 min-w-0">
+
+            <div class="flex flex-col items-start justify-between h-28 max-md:h-auto max-md:gap-2">
+
+                <span id="instanceName" class="text-2xl font-extrabold break-words">
+                    autenticação-01
+                </span>
+
+                <span id="typeName" class="text-xl">
+                    t3.medium
+                </span>
+
+                <span class="text-slate-400">
+                    Microsserviço:
+                    <span id="microsserviceName">Pagamento</span>
+                </span>
+
+            </div>
+
+            <div class="flex flex-col w-full h-80 bg-white border-[1px] border-blue-900 rounded-lg p-2 max-md:h-64">
+
+                <span class="ml-4 font-bold">Capacidade da instância</span>
+
+                <div class="relative flex-1 min-h-0">
+                    <canvas id="graficoBarras"></canvas>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- INDICADORES -->
+        <div class="grid grid-rows-1 row-span-1 col-span-1 min-w-0">
+
+            <div class="flex flex-col gap-5">
+
+                <div class="bg-white rounded-2xl border-[1px] border-slate-500 w-full flex flex-col items-center justify-center gap-3 py-4">
+
+                    <div class="text-slate-400">Custo total</div>
+
+                    <div class="text-5xl font-bold max-md:text-4xl">
+                        $80.00
+                    </div>
+
+                </div>
+
+                <div class="bg-white rounded-2xl border-[1px] border-slate-500 w-full flex flex-col items-center justify-center gap-3 py-7">
+
+                    <div class="text-slate-400">Desperdício</div>
+
+                    <div class="text-6xl font-bold text-red-700 max-md:text-4xl">
+                        20%
+                    </div>
+
+                </div>
+
+                <div class="bg-white rounded-2xl border-[1px] border-slate-500 w-full flex flex-col items-center justify-center gap-3 py-8">
+
+                    <div class="text-slate-400">Status da instância</div>
+
+                    <div class="text-4xl font-bold text-orange-500 max-md:text-2xl">
+                        Sub-utilizada
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ESCALABILIDADE -->
+        <div class="flex flex-col gap-8 row-span-1 col-span-1 min-w-0">
+
+            <div id="verticalContainer" class="flex flex-col gap-4 w-full flex-1 min-w-0">
+
+                <div class="w-full rounded-lg p-3 bg-blue-400 border-[1px] border-blue-900 flex justify-center items-center text-xl font-bold">
+                    Vertical
+                </div>
+
+                <div class="flex gap-4 justify-center items-center flex-1 max-[1600px]:flex-wrap max-md:flex-wrap">
+
+                    <div class="grid grid-cols-3 grid-rows-3 items-center justify-center bg-white border-[1px] border-slate-500 rounded-xl p-4 max-lg:h-24 h-44 text-xl max-[1600px]:flex-1 max-[1600px]:min-w-[140px] max-md:flex-1 max-md:min-w-[130px] max-md:text-sm">
+
+                        <span class="font-bold">t3.medium</span>
+                        <span class="justify-self-end pr-8 max-md:pr-2">&gt;</span>
+                        <span class="font-bold">t3.small</span>
+
+                        <span>2 CPU</span>
+                        <span class="justify-self-end pr-8 max-md:pr-2">&gt;</span>
+                        <span>2 CPU</span>
+
+                        <span>4 RAM</span>
+                        <span class="justify-self-end pr-8 max-md:pr-2">&gt;</span>
+                        <span>2 RAM</span>
+
+                    </div>
+
+                    <div class="flex flex-col justify-center gap-5 bg-white border-[1px] border-slate-500 rounded-xl p-4 max-lg:h-24 h-44 max-[1600px]:flex-1 max-[1600px]:min-w-[140px] max-md:flex-1 max-md:min-w-[130px]">
+
+                        <div class="flex justify-center gap-3 text-3xl font-bold max-md:text-xl">
+                            <span>$80</span>
+                            <span class="mx-5 max-md:mx-1">&gt;</span>
+                            <span>$40</span>
+                        </div>
+
+                        <div class="bg-green-50 border-[1px] border-lime-700 rounded-2xl text-lime-700 p-1 px-1 flex justify-center items-center text-sm">
+                            -$40 (-50%)
+                        </div>
+
+                    </div>
+
+                    <div class="flex flex-col justify-center items-center gap-3 bg-white border-[1px] border-slate-500 rounded-xl pb-4 px-6 h-full max-[1600px]:flex-1 max-[1600px]:min-w-[140px] max-md:flex-1 max-md:min-w-[130px]">
+
+                        <div class="text-slate-500">Desperdício</div>
+
+                        <div class="text-5xl font-semibold text-lime-600 max-md:text-3xl">
+                            15%
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="horizontalContainer" class="flex flex-col gap-4 w-full flex-1 min-w-0">
+
+                <div class="w-full rounded-lg p-3 bg-blue-400 border-[1px] border-blue-900 flex justify-center items-center text-xl font-bold">
+                    Horizontal
+                </div>
+
+                <div class="bg-white flex h-full text-center w-full rounded-xl border-[1px] border-slate-500 justify-center items-center max-lg:h-24 min-h-44 p-4">
+                    A escalabilidade horizontal só é indicada em casos de super-utilização.
+                </div>
+
+            </div>
+        </div>
+
+        <!-- GRÁFICO DE ROSCA -->
+        <div class="flex flex-col gap-6 row-span-1 col-span-1 min-w-0">
+
+            <div class="h-full min-h-[380px] mt-1 bg-white rounded-2xl border-[1px] border-slate-500 w-full flex flex-col items-center gap-3 py-6 px-4 max-md:min-h-[300px]">
+
+                <div class="text-center text-xl font-bold">
+                    Porcentagem de uso da instância
+                </div>
+
+                <div class="relative flex-1 min-h-0 w-full">
+                    <canvas id="graficoRosca"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
         <div id="toast-container"
             class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">
         </div>
