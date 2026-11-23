@@ -29,7 +29,7 @@ async function showEmployees() {
         var min = 10000
 
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 5 && i < body.data.length; i++) {
             var pessoa = body.data[i]
 
             employeesRanking[i] = {
@@ -378,6 +378,24 @@ function buildMetric(label, value, size, color) {
             <span class="text-[11px] leading-tight text-slate-600">${label}</span>
             <span class="${size} font-semibold ${color}">${value}</span>
         </div>`;
+}
+
+async function downloadPdf() {
+    const token = sessionStorage.getItem('JWT_TOKEN');
+
+    try {
+        const response = await fetch('/reports/download-url', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const body = await response.json();
+
+        const link = document.createElement("a");
+        link.href = body.url;
+        link.click();
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 showEmployees();

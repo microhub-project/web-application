@@ -14,4 +14,6 @@ router.get("/getTotalAlertas", reportsController.getTotalAlertas);
 
 router.get("/getRankingAlertas", reportsController.getRankingAlertas);
 
+router.get("/download-url", reportsController.getDownloadUrl);
+
 export default router;
