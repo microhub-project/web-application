@@ -11,7 +11,6 @@ async function listar(req, res) {
         return res.status(400).json(responseBody);
     }
 
-    // Pega os filtros que vieram no body (se não vierem, ficam undefined)
     const filters = {
         data: req.body?.data,
         instancia: req.body?.instancia,
