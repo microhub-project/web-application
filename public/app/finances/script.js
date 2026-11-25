@@ -1,126 +1,180 @@
 const labels = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
 const forecast = [1.23, 1.45, 1.8, 1.47, 2.07, 1.9, 2.06, 1.67, 1.66, 1.77, 6.65, 2.57]
 
-const alignLineToFirstBar = {
-    id: 'alignLineToFirstBar',
-    beforeDatasetsDraw(chart) {
-        const firstBarMeta = chart.getDatasetMeta(0);
-        const lineMeta = chart.getDatasetMeta(2);
+const setGraphLoading = (isLoading) => {
+    const loading = document.getElementById("months-graph-loading")
+    if (!loading) return
 
-        if (firstBarMeta && lineMeta && firstBarMeta.data.length && lineMeta.data.length) {
-            lineMeta.data.forEach((point, index) => {
-                if (firstBarMeta.data[index]) {
-                    point.x = firstBarMeta.data[index].x;
-                }
-            });
-        }
+    loading.classList.toggle("hidden", !isLoading)
+    loading.classList.toggle("flex", isLoading)
+}
+
+const renderGraph = async (current_cpus, current_ram) => {
+    const userData = getUserSession();
+
+    if (!userData) {
+        logout();
+        return showToast("Sessão inválida, faça login novamente", "warning");
     }
-};
 
-const data = {
-    labels: labels,
-    datasets: [
-        {
-            label: 'Previsão',
-            data: forecast,
-            borderRadius: 7.5,
-            backgroundColor: '#FFFFFF',
-            borderColor: '#1E3A8A',
-            borderWidth: 1,
-            order: 1,
-            borderSkipped: false
-        },
-        {
-            label: 'Real',
-            data: [1.1, 1.2, 1.7, 1.3, 2.07, 1.1, 2.06, 1.67, 1.4, 1.5, 5.8, 0],
-            borderRadius: 7.5,
-            backgroundColor: '#93C5FD',
-            borderColor: '#1E3A8A',
-            borderWidth: 1,
-            order: 1,
-            borderSkipped: false
-        },
-        {
-            data: forecast,
-            backgroundColor: '#D9D9D9',
-            borderColor: '#1E3A8A',
-            borderWidth: 1,
-            pointBorderColor: '#64748B',
-            pointRadius: 5,
-            type: 'line',
-            order: 0,
-            grouped: true,
-            borderSkipped: false
+    setGraphLoading(true)
+
+    const body = {
+        "company": userData.companyName,
+        "instances": 0,
+        "cpus": 0,
+        "ram": 0
+    }
+
+    const current_components = current_cpus + current_ram
+
+    const toPercent = (value) => Math.round((value * 100) / current_components - 100)
+
+    let historical_infra = Array(12).fill(null)
+    let infra_forecast = Array(12).fill(null)
+    const current_infra = Array(12).fill(0)
+
+    try {
+        if (!current_components) throw new Error("Infraestrutura atual vazia")
+
+        const analysis = await fetch("http://localhost:8000/infra-analysis-year/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        })
+
+        const response = await analysis.json()
+
+        for (let i = 0; i < response.cpus_month.length; i++) {
+            const total = response.cpus_month[i] + response.ram_month[i]
+
+            historical_infra[i] = total > 0 ? toPercent(total) : null
         }
-    ]
-};
 
-const config = {
-    type: 'bar',
-    data: data,
-    plugins: [ChartDataLabels, alignLineToFirstBar],
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        aspectRatio: 3,
-        onClick: (event, elements, chart) => {
-            if (elements.length > 0) {
-                const monthIndex = elements[0].index;
+        for (let i = 0; i < forecast.length; i++) {
+            infra_forecast[i] = toPercent(forecast[i] * current_components)
+        }
+    } catch (e) {
+        console.error(e)
+        setGraphLoading(false)
+        let fallback = document.getElementById("months-graph-fallback")
+        fallback.classList.remove("hidden")
+        fallback.classList.add("flex")
+        return
+    }
 
-                const selectedMonth = chart.data.labels[monthIndex];
-                const infraMultiplier = chart.data.datasets[0].data[monthIndex];
+    const formatPercent = (value) => `${value > 0 ? '+' : ''}${value}%`
 
-                generateSummary(selectedMonth, infraMultiplier);
+    const data = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Variação média do mercado',
+                data: infra_forecast,
+                borderRadius: 7.5,
+                backgroundColor: '#FFFFFF',
+                borderColor: '#1E3A8A',
+                borderWidth: 1,
+                order: 1,
+                borderSkipped: false
+            },
+            {
+                label: 'Variação da sua infraestrutura',
+                data: historical_infra,
+                borderRadius: 7.5,
+                backgroundColor: '#93C5FD',
+                borderColor: '#1E3A8A',
+                borderWidth: 1,
+                order: 1,
+                borderSkipped: false
             }
-        },
-        onHover: (event, elements) => {
-            event.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
-        },
-        plugins: {
-            legend: {
-                display: true,
-                labels: {
-                    filter: function (item, chartData) {
-                        return item.datasetIndex != 2;
-                    }
+        ]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        plugins: [ChartDataLabels],
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            aspectRatio: 3,
+            onClick: (event, elements, chart) => {
+                if (elements.length > 0) {
+                    const monthIndex = elements[0].index;
+                    const selectedMonth = chart.data.labels[monthIndex];
+                    const infraMultiplier = forecast[monthIndex];
+
+                    generateSummary(selectedMonth, infraMultiplier);
                 }
             },
-            datalabels: {
-                display: function (context) {
-                    return context.datasetIndex === 2;
-                },
-                align: 'top',
-                anchor: 'end',
-                offset: 4,
-                color: '#64748B',
-                font: {
-                    weight: 'bold',
-                    size: 14
-                }
-            }
-        },
-        scales: {
-            y: {
-                title: {
+            onHover: (event, elements) => {
+                event.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
+            },
+            plugins: {
+                legend: {
                     display: true,
-                    text: 'Multiplicador',
+                    labels: {
+                        usePointStyle: true,
+                        generateLabels: (chart) => {
+                            const defaults = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+
+                            defaults.forEach(label => {
+                                const dataset = chart.data.datasets[label.datasetIndex];
+                                label.pointStyle = dataset.type === 'line' ? 'line' : 'rect';
+                            });
+
+                            return defaults;
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => `${ctx.dataset.label}: ${formatPercent(ctx.parsed.y)}`
+                    }
+                },
+                datalabels: {
+                    display: (context) => {
+                        const value = context.dataset.data[context.dataIndex]
+                        return context.datasetIndex !== 2 && value !== null
+                    },
+                    formatter: (value) => formatPercent(value),
+                    align: (context) => context.dataset.data[context.dataIndex] < 0 ? 'bottom' : 'top',
+                    anchor: 'end',
+                    offset: 4,
+                    color: '#64748B',
                     font: {
                         weight: 'bold',
                         size: 14
                     }
-                },
-                beginAtZero: true,
+                }
             },
-            x: {
-                grid: {
-                    display: false
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Variação da infraestrutura atual (%)',
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        }
+                    },
+                    ticks: {
+                        callback: (value) => `${value}%`
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
                 }
             }
-        }
-    },
-};
+        },
+    };
 
-let months_graph = new Chart(document.getElementById('months-graph'), config)
+    new Chart(document.getElementById('months-graph'), config)
+    setGraphLoading(false)
+}
 
 let volumes_cost = 0
 
@@ -189,17 +243,16 @@ const getInstances = async () => {
 
 const renderMonthSelect = (month) => {
     const month_name = document.getElementById("month")
-    
+
     month_name.innerHTML = `<option value="${month}" selected>${month}</option>`
 
     let monthOptions = ``
 
     labels.forEach(monthName => {
-        if(monthName != month) {
+        if (monthName != month) {
             monthOptions += `<option value="${monthName}">${monthName}</option>`
         }
     })
-    console.log(monthOptions)
 
     month_name.innerHTML += monthOptions
 }
@@ -217,8 +270,6 @@ const generateSummary = async (month, infra_multiplier) => {
         "instances": instances,
         "infra_multiplier": infra_multiplier
     }
-
-    console.log(body)
 
     const container = document.getElementById("summary-container")
 
@@ -272,8 +323,6 @@ const generateSummary = async (month, infra_multiplier) => {
 
         vertical_cost += volumes_cost
         horizontal_cost += volumes_cost
-
-        console.log(response)
 
         container.innerHTML = generateSummaryHTML(current_instances, current_cpus, current_ram, current_cost, vertical_cpus, vertical_ram, vertical_cost, horizontal_instances, horizontal_cpus, horizontal_ram, horizontal_cost)
     } catch (e) {
@@ -428,7 +477,7 @@ const errorSummaryHTML = `
         <div class="w-1/2">
             <div class="w-full h-fit mb-4 rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
                 <div class="flex w-full items-center justify-center h-32">
-                    <h1 class="text-center">O servico <span class="font-bold">FinOps Predictability</span> está fora do ar no momento.
+                    <h1 class="text-center">O serviço <span class="font-bold">FinOps Predictability</span> está fora do ar no momento.
                         <br>
                         Tente novamente mais tarde.
                     </h1>
@@ -438,7 +487,7 @@ const errorSummaryHTML = `
         <div class="w-1/2">
             <div class="w-full h-fit mb-4 rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
                 <div class="flex w-full items-center justify-center h-32">
-                    <h1 class="text-center">O servico <span class="font-bold">FinOps Predictability</span> está fora do ar no momento.
+                    <h1 class="text-center">O serviço <span class="font-bold">FinOps Predictability</span> está fora do ar no momento.
                         <br>
                         Tente novamente mais tarde.
                     </h1>
@@ -490,4 +539,29 @@ const atualizarDataHora = () => {
     generateSummary(mes_atual_formatado, forecast[labels.indexOf(mes_atual_formatado)])
 };
 
+const initialize = async () => {
+    const instances = await getInstances();
+
+    if (!instances) {
+        setGraphLoading(false)
+        const fallback = document.getElementById("months-graph-fallback")
+        fallback.classList.remove("hidden")
+        fallback.classList.add("flex")
+        return
+    }
+
+    let current_cpus = 0
+    let current_ram = 0
+
+    instances.forEach(instance => {
+        const { cpu, ram } = instance;
+
+        current_cpus += cpu
+        current_ram += parseFloat(ram)
+    })
+
+    renderGraph(current_cpus, current_ram)
+}
+
+initialize()
 atualizarDataHora()

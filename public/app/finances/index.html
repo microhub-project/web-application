@@ -202,10 +202,22 @@
             </div>
 
             <div
-                class="col-span-1 lg:col-span-2 min-w-0 w-full bg-slate-100 rounded-2xl border border-blue-900 p-3 md:p-6 mb-4 flex flex-col text-slate-950 h-fit">
-                <h2 class="text-xl font-bold mb-8">Previsibilidade de uso da infraestrutura</h2>
+                class="col-span-1 lg:col-span-2 min-w-0 w-full bg-slate-100 rounded-2xl border border-blue-800 p-3 md:p-6 mb-4 flex flex-col text-slate-950 h-fit">
+                <h2 class="text-xl font-bold mb-8">Análise anual de uso da infraestrutura</h2>
 
                 <div class="flex-1 relative w-full min-w-0 min-h-0 max-h-80">
+                    <div id="months-graph-loading"
+                        class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-slate-100 z-10">
+                        <div class="size-10 rounded-full border-4 border-blue-200 border-t-blue-800 animate-spin"></div>
+                        <p class="text-slate-500 text-sm">Carregando análise anual...</p>
+                    </div>
+
+                    <div id="months-graph-fallback" class="hidden w-full h-full items-center justify-center">
+                        <h1 class="text-center">O serviço <span class="font-bold">FinOps Predictability</span> está fora do ar no momento.
+                            <br>
+                            Tente novamente mais tarde.
+                        </h1>
+                    </div>
                     <canvas id="months-graph" class="w-full"></canvas>
                 </div>
             </div>
@@ -213,7 +225,7 @@
             <div>
                 <h2 class="text-xl font-bold mb-8">Visão da infraestrutura - 
                     <select id="month"
-                        class="text-xl font-bold bg-slate-100 rounded-lg p-2 hover:cursor-pointer border border-blue-900 text-blue-950"
+                        class="text-xl font-bold bg-slate-100 rounded-lg p-2 hover:cursor-pointer border border-blue-800 text-blue-950"
                         onchange="monthChange(this.value)">
 
                     </select>
