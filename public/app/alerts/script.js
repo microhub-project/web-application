@@ -1,85 +1,3 @@
-const atualizarDataHora = () => {
-  const elementoData = document.getElementById('data-atualizacao');
-  if (!elementoData) return;
-
-  const agora = new Date();
-
-  const opcoes = {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  };
-
-  let dataFormatada = agora.toLocaleDateString('pt-BR', opcoes);
-  elementoData.innerText = dataFormatada;
-};
-
-const getAlerts = async () => {
-    const token = sessionStorage.getItem('JWT_TOKEN');
-    const userData = getUserSession();
-
-    if (!token || !userData) {
-        logout();
-        return showToast("Sessão inválida, faça login novamente", "warning");
-    }
-
-    try {
-        const response = await fetch('/alerts/listar', {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (response.status === 401 || response.status === 403) {
-            logout();
-            return;
-        }
-
-        if (response.status === 204) {
-            return showToast("Nenhum alerta encontrado", "warning");
-        }
-
-        const body = await response.json();
-
-        if (response.status === 400) {
-            return showToast(body.message || "Requisição inválida", "warning");
-        }
-
-        if (response.status === 500) {
-            return showToast(body.message || "Erro interno do servidor", "error");
-        }
-
-        const data = body.data || [];
-        const kpis = data.kpis || [];
-        const alerts = data.alerts || data || [];
-
-        if (document.getElementById("valor-ativos") && kpis.ativos !== undefined) {
-            document.getElementById("valor-ativos").textContent = kpis.ativos;
-        }
-        if (document.getElementById("valor-criticos") && kpis.criticos !== undefined) {
-            document.getElementById("valor-criticos").textContent = kpis.criticos;
-        }
-        if (document.getElementById("valor-atencao") && kpis.atencao !== undefined) {
-            document.getElementById("valor-atencao").textContent = kpis.atencao;
-        }
-        if (document.getElementById("valor-resolvidos") && kpis.resolvidosHoje !== undefined) {
-            document.getElementById("valor-resolvidos").textContent = kpis.resolvidosHoje;
-        }
-        if (document.getElementById("data-atualizacao") && data.ultimaAtualizacao) {
-            document.getElementById("data-atualizacao").textContent = data.ultimaAtualizacao;
-        }
-
-        renderAlerts(Array.isArray(alerts) ? alerts : []);
-    } catch (e) {
-        console.error(e);
-        showToast("Algo deu errado ao carregar os alertas.", "error");
-    }
-};
-
 const renderAlerts = (alerts) => {
     const mobileContainer = document.getElementById("alertsMobileContainer");
     const tableBody = document.getElementById("alertsTableBody");
@@ -90,34 +8,40 @@ const renderAlerts = (alerts) => {
     for (const alert of alerts) {
         const {
             uuid,
-            data_hora,
+            criado_em,
             instancia,
             componente,
-            valor,
-            limite,
-            severidade,
+            valor_detectado,
+            limite_maximo,
+            prioridade,
             status,
-            resolvido_em,
+            data_hora_resolvido,
             resolvido_por
         } = alert;
 
-        const isResolved = status?.toLowerCase() === "resolvido";
-        const resolvedAtText = resolvido_em || "—";
+        const isResolved = status === 0 || status === false || String(status).toLowerCase() === "resolvido";
+        const statusText = isResolved ? "Resolvido" : "Ativo";
+        const resolvedAtText = data_hora_resolvido || "—";
         const resolvedByText = resolvido_por || "—";
 
-        const badgeSeveridade = severidade?.toLowerCase() === "crítico" || severidade?.toLowerCase() === "critico"
-            ? `<span class="inline-flex items-center justify-center gap-1 px-2 py-0.5 bg-pink-100 text-red-700 border border-red-700 rounded-xl font-medium text-[10px]"><i class="ph-fill ph-circle text-[6px]"></i>${severidade}</span>`
-            : `<span class="inline-flex items-center justify-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-600 border border-amber-500 rounded-xl font-medium text-[10px]"><i class="ph-fill ph-circle text-[6px]"></i>${severidade}</span>`;
+        const isCritical = Number(prioridade) >= 3 || String(prioridade).toLowerCase() === "crítico" || String(prioridade).toLowerCase() === "critico";
+        const severidadeText = isCritical
+            ? "Crítico"
+            : (Number(prioridade) === 2 ? "Atenção" : (prioridade || "Atenção"));
+
+        const badgeSeveridade = isCritical
+            ? `<span class="inline-flex items-center justify-center gap-1 px-2 py-0.5 bg-pink-100 text-red-700 border border-red-700 rounded-xl font-medium text-[10px]"><i class="ph-fill ph-circle text-[6px]"></i>${severidadeText}</span>`
+            : `<span class="inline-flex items-center justify-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-600 border border-amber-500 rounded-xl font-medium text-[10px]"><i class="ph-fill ph-circle text-[6px]"></i>${severidadeText}</span>`;
 
         const badgeStatus = isResolved
-            ? `<span class="inline-flex items-center justify-center px-2 py-0.5 bg-green-100 text-green-800 border border-green-800 rounded-xl font-medium">${status}</span>`
-            : `<span class="inline-flex items-center justify-center px-2 py-0.5 bg-blue-100 text-blue-800 border border-blue-800 rounded-xl font-medium">${status || "Ativo"}</span>`;
+            ? `<span class="inline-flex items-center justify-center px-2 py-0.5 bg-green-100 text-green-800 border border-green-800 rounded-xl font-medium">${statusText}</span>`
+            : `<span class="inline-flex items-center justify-center px-2 py-0.5 bg-blue-100 text-blue-800 border border-blue-800 rounded-xl font-medium">${statusText}</span>`;
 
         if (mobileContainer) {
             mobileContainer.innerHTML += `
                 <div id="mobile-alert-${uuid}" class="bg-slate-50 border border-blue-900 rounded-2xl p-4 shadow-sm flex flex-col gap-3 text-xs text-slate-700">
                     <div class="flex items-center justify-between gap-2 pb-2 border-b border-slate-200">
-                        <span class="font-semibold text-slate-900">${data_hora || "—"}</span>
+                        <span class="font-semibold text-slate-900">${criado_em || "—"}</span>
                         ${badgeSeveridade}
                     </div>
                     <div class="grid grid-cols-2 gap-2">
@@ -131,11 +55,11 @@ const renderAlerts = (alerts) => {
                         </div>
                         <div>
                             <span class="text-slate-500 font-semibold block">Valor</span>
-                            <span>${valor ?? "—"}</span>
+                            <span>${valor_detectado ?? "—"}</span>
                         </div>
                         <div>
                             <span class="text-slate-500 font-semibold block">Limite</span>
-                            <span>${limite ?? "—"}</span>
+                            <span>${limite_maximo ?? "—"}</span>
                         </div>
                         <div>
                             <span class="text-slate-500 font-semibold block">Status</span>
@@ -148,7 +72,7 @@ const renderAlerts = (alerts) => {
                     </div>
                     <div class="pt-2 border-t border-slate-200 flex items-center justify-between gap-2">
                         <span class="text-slate-500 font-semibold">Resolvido em</span>
-                        <span class="${resolvido_em ? "font-semibold text-slate-900" : "text-slate-400"}">${resolvedAtText}</span>
+                        <span class="${data_hora_resolvido ? "font-semibold text-slate-900" : "text-slate-400"}">${resolvedAtText}</span>
                     </div>
                 </div>
             `;
@@ -157,22 +81,17 @@ const renderAlerts = (alerts) => {
         if (tableBody) {
             tableBody.innerHTML += `
                 <div id="row-alert-${uuid}" class="grid grid-cols-12 py-4 text-xs items-center text-slate-700">
-                    <div class="col-span-2">${data_hora || "—"}</div>
+                    <div class="col-span-2">${criado_em || "—"}</div>
                     <div class="col-span-2 text-center mr-10 ml-1">${instancia || "—"}</div>
                     <div class="col-span-1 text-center mr-2 lg:mr-5">${componente || "—"}</div>
-                    <div class="col-span-1 text-center">${valor ?? "—"}</div>
-                    <div class="col-span-1 text-center mr-6">${limite ?? "—"}</div>
+                    <div class="col-span-1 text-center">${valor_detectado ?? "—"}</div>
+                    <div class="col-span-1 text-center mr-6">${limite_maximo ?? "—"}</div>
                     <div class="col-span-1">${badgeSeveridade}</div>
                     <div class="col-span-1">${badgeStatus}</div>
-                    <div class="col-span-2 ${resolvido_em ? "text-slate-700" : "text-slate-400"} text-[0.6rem] lg:text-[0.7rem] text-center mr-0 ml-1 lg:mr-6">${resolvedAtText}</div>
+                    <div class="col-span-2 ${data_hora_resolvido ? "text-slate-700" : "text-slate-400"} text-[0.6rem] lg:text-[0.7rem] text-center mr-0 ml-1 lg:mr-6">${resolvedAtText}</div>
                     <div class="col-span-1 ${resolvido_por ? "text-slate-700" : "text-slate-400"} text-center mr-1 lg:mr-9">${resolvedByText}</div>
                 </div>
             `;
         }
     }
 };
-
-window.addEventListener("DOMContentLoaded", () => {
-    atualizarDataHora();
-
-});

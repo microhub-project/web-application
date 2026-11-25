@@ -8,4 +8,8 @@ router.use(verifyJWT);
 
 router.get("/listar", alertController.listar);
 
+router.get("/filtrar")
+
+router.post("/resolver", alertController.resolver);
+
 export default router;
