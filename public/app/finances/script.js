@@ -32,7 +32,6 @@ const renderGraph = async (current_cpus, current_ram) => {
 
     let historical_infra = Array(12).fill(null)
     let infra_forecast = Array(12).fill(null)
-    const current_infra = Array(12).fill(0)
 
     try {
         if (!current_components) throw new Error("Infraestrutura atual vazia")
@@ -79,7 +78,7 @@ const renderGraph = async (current_cpus, current_ram) => {
                 borderSkipped: false
             },
             {
-                label: 'Variação da sua infraestrutura',
+                label: `Variação da infraestrutura da ${userData.companyName}`,
                 data: historical_infra,
                 borderRadius: 7.5,
                 backgroundColor: '#93C5FD',
@@ -91,6 +90,8 @@ const renderGraph = async (current_cpus, current_ram) => {
         ]
     };
 
+    const isMobile = window.innerWidth < 768
+
     const config = {
         type: 'bar',
         data: data,
@@ -98,7 +99,6 @@ const renderGraph = async (current_cpus, current_ram) => {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            aspectRatio: 3,
             onClick: (event, elements, chart) => {
                 if (elements.length > 0) {
                     const monthIndex = elements[0].index;
@@ -114,6 +114,7 @@ const renderGraph = async (current_cpus, current_ram) => {
             plugins: {
                 legend: {
                     display: true,
+                    position: isMobile ? 'bottom' : 'top',
                     labels: {
                         usePointStyle: true,
                         generateLabels: (chart) => {
@@ -143,25 +144,17 @@ const renderGraph = async (current_cpus, current_ram) => {
                     anchor: 'end',
                     offset: 4,
                     color: '#64748B',
-                    font: {
-                        weight: 'bold',
-                        size: 14
-                    }
+                    font: { weight: 'bold', size: isMobile ? 11 : 14 }
                 }
             },
             scales: {
                 y: {
                     title: {
-                        display: true,
+                        display: !isMobile,
                         text: 'Variação da infraestrutura atual (%)',
-                        font: {
-                            weight: 'bold',
-                            size: 14
-                        }
+                        font: { weight: 'bold', size: 14 }
                     },
-                    ticks: {
-                        callback: (value) => `${value}%`
-                    }
+                    ticks: { callback: (value) => `${value}%` }
                 },
                 x: {
                     grid: {
@@ -271,7 +264,8 @@ const generateSummary = async (month, infra_multiplier) => {
         "infra_multiplier": infra_multiplier
     }
 
-    const container = document.getElementById("summary-container")
+    const containerV = document.getElementById("summary-vertical")
+    const containerH = document.getElementById("summary-horizontal")
 
     try {
         const summary = await fetch("http://localhost:8000/predict-infra/", {
@@ -324,10 +318,13 @@ const generateSummary = async (month, infra_multiplier) => {
         vertical_cost += volumes_cost
         horizontal_cost += volumes_cost
 
-        container.innerHTML = generateSummaryHTML(current_instances, current_cpus, current_ram, current_cost, vertical_cpus, vertical_ram, vertical_cost, horizontal_instances, horizontal_cpus, horizontal_ram, horizontal_cost)
+        const html = generateSummaryHTML(current_instances, current_cpus, current_ram, current_cost, vertical_cpus, vertical_ram, vertical_cost, horizontal_instances, horizontal_cpus, horizontal_ram, horizontal_cost)
+        containerV.innerHTML = html.vertical
+        containerH.innerHTML = html.horizontal
     } catch (e) {
         console.error(e)
-        container.innerHTML = errorSummaryHTML;
+        containerV.innerHTML = errorSummaryHTML
+        containerH.innerHTML = errorSummaryHTML
     }
 }
 
@@ -388,111 +385,54 @@ const generateSummaryHTML = (
 
     renderCurrentInfraestructure(current_instances, current_cpus, current_ram, current_cost)
 
-    return `
-    <div class="w-full flex gap-8">
-        <div class="w-1/2">
-            <div class="w-full h-fit mb-4 rounded-xl py-2 bg-slate-100 border-blue-800 border text-blue-950">
-                <div class="flex w-full">
-                    <div class="w-3/5">
-                        <div class="flex w-full items-center gap-2 my-4 ml-4">
-                            <p class="font-bold">Instâncias:</p>
-                            <p>${current_instances}</p>
-                            <i class="ph-bold ph-arrow-right text-xl"></i>
-                            <p>${current_instances}</p>
-                            <p class="rounded-3xl ${badgeStyles.neutral} w-fit py-1 px-2 border">+0 (+0%)</p>
-                        </div>
-                        <div class="flex w-full items-center gap-2 my-4 ml-4">
-                            <p class="font-bold">CPUs:</p>
-                            <p>${current_cpus}</p>
-                            <i class="ph-bold ph-arrow-right text-xl"></i>
-                            <p>${vertical_cpus}</p>
-                            <p class="rounded-3xl ${vertical_cpus_style} w-fit py-1 px-2 border">+${vertical_cpus_increase} (+${vertical_cpus_increase_percentage}%)</p>
-                        </div>
-                        <div class="flex w-full items-center gap-2 my-4 ml-4">
-                            <p class="font-bold">RAM (GiB):</p>
-                            <p>${current_ram}</p>
-                            <i class="ph-bold ph-arrow-right text-xl"></i>
-                            <p>${vertical_ram}</p>
-                            <p class="rounded-3xl ${vertical_ram_style} w-fit py-1 px-2 border">+${vertical_ram_increase} (+${vertical_ram_increase_percentage}%)</p>
-                        </div>
+    const row = (label, from, to, style, badge) => `
+        <div class="flex flex-wrap items-center gap-1.5 my-3 mx-3">
+            <p class="font-bold">${label}</p>
+            <p>${from}</p>
+            <i class="ph-bold ph-arrow-right text-lg shrink-0"></i>
+            <p>${to}</p>
+            <p class="rounded-3xl ${style} w-fit py-1 px-2 border text-xs md:text-sm whitespace-nowrap">${badge}</p>
+        </div>`
+
+    const card = (rows, from, to, toClass, badgeStyle, badge) => `
+        <div class="w-full h-fit mb-4 rounded-xl py-2 bg-slate-100 border-blue-800 border text-blue-950">
+            <div class="flex flex-col md:flex-row xl:flex-col 2xl:flex-row w-full">
+                <div class="w-full md:w-3/5 xl:w-full 2xl:w-3/5 min-w-0">${rows.join('')}</div>
+                <div class="w-full md:w-2/5 xl:w-full 2xl:w-2/5 min-w-0 text-center my-auto px-2 pb-4 md:pb-0 xl:pb-4 2xl:pb-0">
+                    <h2 class="text-lg md:text-xl font-bold">Custo:</h2>
+                    <div class="flex flex-wrap items-center justify-center gap-1.5 mb-3">
+                        <p class="text-base sm:text-lg font-bold whitespace-nowrap">$${from}</p>
+                        <i class="ph-bold ph-arrow-right text-base sm:text-lg shrink-0"></i>
+                        <p class="text-base sm:text-lg font-bold whitespace-nowrap ${toClass}">$${to}</p>
                     </div>
-                    
-                    <div class="w-2/5 text-center m-auto mr-4">
-                        <h2 class="w-full text-2xl text-center font-bold">Custo:</h2>
-                        <div class="flex w-full items-center justify-center gap-4 mb-4">
-                            <p class="flex-1 text-left ml-4 text-2xl font-bold">$${current_cost}</p>
-                            <i class="ph-bold ph-arrow-right text-xl"></i>
-                            <p class="flex-1 text-right mr-4 text-2xl font-bold ${vertical_cost_text}">$${vertical_cost}</p>
-                        </div>
-                        <p class="rounded-3xl ${vertical_cost_style} mx-auto w-fit py-1 px-2 border">+$${vertical_cost_increase} (+${vertical_cost_increase_percentage}%)</p>
-                    </div>
+                    <p class="rounded-3xl ${badgeStyle} mx-auto w-fit max-w-full py-1 px-2 border text-xs sm:text-sm whitespace-nowrap">${badge}</p>
                 </div>
             </div>
-        </div>
-        <div class="w-1/2">
-            <div class="w-full h-fit mb-4 rounded-xl py-2 bg-slate-100 border-blue-800 border text-blue-950">
-                <div class="flex w-full">
-                    <div class="w-3/5">
-                        <div class="flex w-full items-center gap-2 my-4 ml-4">
-                            <p class="font-bold">Instâncias:</p>
-                            <p>${current_instances}</p>
-                            <i class="ph-bold ph-arrow-right text-xl"></i>
-                            <p>${horizontal_instances}</p>
-                            <p class="rounded-3xl ${badgeStyles.red} w-fit py-1 px-2 border">+${horizontal_instances_increase} (+${horizontal_instances_increase_percentage}%)</p>
-                        </div>
-                        <div class="flex w-full items-center gap-2 my-4 ml-4">
-                            <p class="font-bold">CPUs:</p>
-                            <p>${current_cpus}</p>
-                            <i class="ph-bold ph-arrow-right text-xl"></i>
-                            <p>${horizontal_cpus_total}</p>
-                            <p class="rounded-3xl ${horizontal_cpus_style} w-fit py-1 px-2 border">+${horizontal_cpus_increase} (+${horizontal_cpus_increase_percentage}%)</p>
-                        </div>
-                        <div class="flex w-full items-center gap-2 my-4 ml-4">
-                            <p class="font-bold">RAM (GiB):</p>
-                            <p>${current_ram}</p>
-                            <i class="ph-bold ph-arrow-right text-xl"></i>
-                            <p>${horizontal_ram_total}</p>
-                            <p class="rounded-3xl ${horizontal_ram_style} w-fit py-1 px-2 border">+${horizontal_ram_increase} (+${horizontal_ram_increase_percentage}%)</p>
-                        </div>
-                    </div>
-                    
-                    <div class="w-2/5 text-center m-auto mr-4">
-                        <h2 class="w-full text-2xl text-center font-bold">Custo:</h2>
-                        <div class="flex w-full items-center justify-center gap-4 mb-4">
-                            <p class="flex-1 text-left ml-4 text-2xl font-bold">$${current_cost}</p>
-                            <i class="ph-bold ph-arrow-right text-xl"></i>
-                            <p class="flex-1 text-right mr-4 text-2xl font-bold ${horizontal_cost_text}">$${horizontal_cost}</p>
-                        </div>
-                        <p class="rounded-3xl ${horizontal_cost_style} mx-auto w-fit py-1 px-2 border">+$${horizontal_cost_increase} (+${horizontal_cost_increase_percentage}%)</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    `;
+        </div>`
+
+    return {
+        vertical: card([
+            row('Instâncias:', current_instances, current_instances, badgeStyles.neutral, '+0 (+0%)'),
+            row('CPUs:', current_cpus, vertical_cpus, vertical_cpus_style, `+${vertical_cpus_increase} (+${vertical_cpus_increase_percentage}%)`),
+            row('RAM (GiB):', current_ram, vertical_ram, vertical_ram_style, `+${vertical_ram_increase} (+${vertical_ram_increase_percentage}%)`)
+        ], current_cost, vertical_cost, vertical_cost_text, vertical_cost_style,
+           `+$${vertical_cost_increase} (+${vertical_cost_increase_percentage}%)`),
+
+        horizontal: card([
+            row('Instâncias:', current_instances, horizontal_instances, badgeStyles.red, `+${horizontal_instances_increase} (+${horizontal_instances_increase_percentage}%)`),
+            row('CPUs:', current_cpus, horizontal_cpus_total, horizontal_cpus_style, `+${horizontal_cpus_increase} (+${horizontal_cpus_increase_percentage}%)`),
+            row('RAM (GiB):', current_ram, horizontal_ram_total, horizontal_ram_style, `+${horizontal_ram_increase} (+${horizontal_ram_increase_percentage}%)`)
+        ], current_cost, horizontal_cost, horizontal_cost_text, horizontal_cost_style,
+           `+$${horizontal_cost_increase} (+${horizontal_cost_increase_percentage}%)`)
+    }
 };
 
 const errorSummaryHTML = `
-    <div class="w-full flex gap-8">
-        <div class="w-1/2">
-            <div class="w-full h-fit mb-4 rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
-                <div class="flex w-full items-center justify-center h-32">
-                    <h1 class="text-center">O serviço <span class="font-bold">FinOps Predictability</span> está fora do ar no momento.
-                        <br>
-                        Tente novamente mais tarde.
-                    </h1>
-                </div>
-            </div>
-        </div>
-        <div class="w-1/2">
-            <div class="w-full h-fit mb-4 rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
-                <div class="flex w-full items-center justify-center h-32">
-                    <h1 class="text-center">O serviço <span class="font-bold">FinOps Predictability</span> está fora do ar no momento.
-                        <br>
-                        Tente novamente mais tarde.
-                    </h1>
-                </div>
-            </div>
+    <div class="w-full h-fit mb-4 rounded-xl p-2 bg-slate-100 border-blue-800 border text-blue-950">
+        <div class="flex w-full items-center justify-center h-32">
+            <h1 class="text-center">O serviço <span class="font-bold">FinOps Predictability</span> está fora do ar no momento.
+                <br>Tente novamente mais tarde.
+            </h1>
         </div>
     </div>
 `
@@ -563,5 +503,31 @@ const initialize = async () => {
     renderGraph(current_cpus, current_ram)
 }
 
+const setupScalabilityPoints = () => {
+    const points = document.querySelectorAll(".scalability-point");
+    const isDesktopHover = () =>
+        window.innerWidth >= 1024 && window.matchMedia("(hover: hover)").matches;
+
+    points.forEach((point) => {
+        point.addEventListener("click", () => {
+            if (isDesktopHover()) return;
+
+            const description = point.querySelector(".scalability-description");
+            if (description) {
+                description.classList.toggle("ativo");
+            }
+        });
+    });
+
+    window.addEventListener("resize", () => {
+        if (isDesktopHover()) {
+            document.querySelectorAll(".scalability-description.ativo").forEach((el) => {
+                el.classList.remove("ativo");
+            });
+        }
+    });
+};
+
+setupScalabilityPoints()
 initialize()
 atualizarDataHora()
