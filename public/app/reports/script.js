@@ -199,19 +199,25 @@ function drawChart(title, labels, values) {
     }
 
     var biggest = values[0];
+    var sum = 0;
     for (var i = 0; i < values.length; i++) {
         if (values[i] > biggest) {
             biggest = values[i];
         }
+        sum += values[i];
     }
 
+    var average = values.length > 0 ? sum / values.length : 0;
+
     var colors = [];
+    var averageLine = [];
     for (var i = 0; i < values.length; i++) {
         if (values[i] == biggest) {
             colors.push("#2563eb");
         } else {
             colors.push("#93c5fd");
         }
+        averageLine.push(average);
     }
 
     var ctx = document.getElementById("mainChart").getContext("2d");
@@ -220,10 +226,23 @@ function drawChart(title, labels, values) {
         type: "bar",
         data: {
             labels: labels,
-            datasets: [{
-                data: values,
-                backgroundColor: colors
-            }]
+            datasets: [
+                {
+                    type: "bar",
+                    data: values,
+                    backgroundColor: colors
+                },
+                {
+                    type: "line",
+                    data: averageLine,
+                    borderColor: "#ef4444",
+                    borderWidth: 2,
+                    borderDash: [6, 6],
+                    pointRadius: 2,
+                    pointHoverRadius: 2,
+                    fill: false
+                }
+            ]
         },
         options: {
             responsive: true,
