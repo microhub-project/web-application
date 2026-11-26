@@ -470,8 +470,8 @@ const deleteUser = async (usuario_uuid, empresa_uuid) => {
         // 1. Remove a referência do usuário nos alertas
         await connection.execute(`
             UPDATE alerta a
-            SET a.resolvido_por = NULL
-            WHERE a.resolvido_por = UUID_TO_BIN(?)
+            SET a.responsavel = NULL
+            WHERE a.responsavel = UUID_TO_BIN(?)
               AND a.empresa_uuid = UUID_TO_BIN(?);
         `, [usuario_uuid, empresa_uuid]);
 

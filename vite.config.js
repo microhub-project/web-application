@@ -15,6 +15,8 @@ export default defineConfig({
       '/alerts': 'http://localhost:3333',
       '/lixeira': 'http://localhost:3333',
       '/finance-individual': 'http://localhost:3333',
+      '/dashboard': 'http://localhost:3333',
+      '/reports': 'http://localhost:3333',
     },
   },
 });

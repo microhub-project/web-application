@@ -12,6 +12,8 @@
         href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
     <link rel="stylesheet" type="text/css"
         href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css" />
 
     <script type="module">
         import { fillUserInfos, verifyIfUserCanAccess } from "../../js/session.js";
@@ -26,7 +28,7 @@
 
 </head>
 
-<body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh">
+<body class="bg-slate-200 text-slate-50 font-mono font-normal overflow-x-hidden antialiased relative h-dvh md:pr-16 lg:pr-0">
 
     <div class="flex min-h-screen">
 
@@ -155,24 +157,161 @@
             </nav>
         </header>
 
-        <main
-            class="text-slate-900 flex flex-col p-8 min-h-dvh gap-12 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
-
-            <div class="flex flex-col gap-4 w-full">
-                <div class="">
-                    <h1 class="text-2xl font-extrabold">Alertas</h1>
+        <main class="text-slate-900 flex flex-col p-6 sm:p-8 min-h-dvh gap-8 sm:gap-12 w-full lg:ml-72 lg:w-[calc(100%-18rem)] max-lg:pr-24">
+            <div class="flex justify-between items-start sm:items-center w-full mb-2 flex-col sm:flex-row gap-4">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl text-blue-950 font-extrabold mb-1 sm:mb-2">Alertas</h1>
+                    <h2 class="text-lg sm:text-xl text-blue-950 font-thin">Visão dos alertas das instâncias</h2>
                 </div>
-                <hr class="border-t border-slate-400 my-5">
+
+                <div class="flex items-center gap-3 text-sm sm:text-base text-slate-500 bg-slate-100 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl border border-slate-200 shadow-sm">
+                    <i class="ph ph-clock text-xl sm:text-2xl text-slate-400"></i>
+                    <span>Última atualização: <span id="data-atualizacao" class="font-bold text-slate-800">Carregando...</span></span>
+                </div>
             </div>
-            <div
-                class="fixed inset-0 z-30 lg:ml-72 max-lg:mr-20 h-dvh backdrop-blur-lg bg-slate-950/10 flex flex-col justify-center items-center text-slate-900 pointer-events-auto">
-                <i class="ph ph-barricade text-[16rem] max-sm:text-[8rem]"></i>
-                <h1 class="text-3xl font-bold max-sm:text-2xl">Em desenvolvimento</h1>
+
+            <div class="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-6">
+                <!--Card de alertas ativos-->
+                <div id="card-ativos" class="flex flex-col justify-between px-3 sm:px-4 py-3 bg-slate-100 border border-blue-900 rounded-xl shadow-sm h-32 w-full min-w-0">
+                    <div class="flex items-center justify-between gap-1 w-full">
+                        <span id="texto-ativos" class="text-slate-900 font-semibold">Alertas ativos</span>
+                        <i id="icone-ativos" class="ph ph-bell text-xl border border-blue-950 rounded-xl p-1 px-2 text-slate-900 shrink-0"></i>
+                    </div>
+                    <div class="flex justify-center items-center my-auto">
+                        <span id="valor-ativos" class="text-3xl sm:text-5xl text-slate-900">3</span>
+                    </div>
+                </div>
+
+                <!--Card de alertas críticos-->
+                <div id="card-criticos" class="flex flex-col justify-between px-3 sm:px-4 py-3 bg-pink-100 border border-red-700 rounded-xl shadow-sm h-32 w-full min-w-0">
+                    <div class="flex items-center justify-between gap-1 w-full">
+                        <span id="texto-criticos" class="text-red-700 font-semibold">Críticos</span>
+                        <i id="icone-criticos" class="ph ph-warning-circle text-xl border border-red-700 rounded-xl p-1 px-2 text-red-700 shrink-0"></i>
+                    </div>
+                    <div class="flex justify-center items-center my-auto">
+                        <span id="valor-criticos" class="text-3xl sm:text-5xl text-red-700">2</span>
+                    </div>
+                </div>
+
+                <!--Card de atenção-->
+                <div id="card-atencao" class="flex flex-col justify-between px-3 sm:px-4 py-3 bg-amber-50 border border-amber-500 rounded-xl shadow-sm h-32 w-full min-w-0">
+                    <div class="flex items-center justify-between gap-1 w-full">
+                        <span id="texto-atencao" class="text-amber-600 font-semibold">Atenção</span>
+                        <i id="icone-atencao" class="ph ph-warning text-xl border border-amber-500 rounded-xl p-1 px-2 text-amber-600 shrink-0"></i>
+                    </div>
+                    <div class="flex justify-center items-center my-auto">
+                        <span id="valor-atencao" class="text-3xl sm:text-5xl text-amber-600">1</span>
+                    </div>
+                </div>
+
+                <!--Resolvidos hoje-->
+                <div id="card-resolvidos" class="flex flex-col justify-between px-3 sm:px-4 py-3 bg-slate-100 border border-blue-900 rounded-xl shadow-sm h-32 w-full min-w-0">
+                    <div class="flex items-center justify-between gap-1 w-full">
+                        <span id="texto-resolvidos" class="text-slate-900 font-semibold">Resolvidos hoje</span>
+                        <i id="icone-resolvidos" class="ph ph-check-circle text-xl border border-blue-950 rounded-xl p-1 px-2 text-slate-900 shrink-0"></i>
+                    </div>
+                    <div class="flex justify-center items-center my-auto">
+                        <span id="valor-resolvidos" class="text-3xl sm:text-5xl text-slate-900">1</span>
+                    </div>
+                </div>
             </div>
+
+            <!-- Filtros -->
+            <div class="bg-slate-100 border border-blue-900 rounded-2xl p-4 sm:p-5">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+                    <!-- Data -->
+                    <div class="flex flex-col gap-1 min-w-0">
+                        <label for="filtro-data" class="text-xs font-semibold text-slate-500">Data</label>
+                        <div class="relative flex items-center bg-white border border-slate-300 rounded-xl py-1 text-slate-700 shadow-sm">
+                            <i class="ph ph-calendar absolute left-3 text-slate-400 text-lg pointer-events-none"></i>
+                            <input id="filtro-data" type="text" placeholder="dd/mm/aa" class="w-full bg-transparent pl-9 pr-3 outline-none text-slate-700 placeholder-slate-400">
+                        </div>
+                    </div>
+
+                    <!--Instância-->
+                    <div class="flex flex-col gap-1 min-w-0">
+                        <label for="filtro-instancia" class="text-xs font-semibold text-slate-500">Instância</label>
+                        <div class="bg-white border border-slate-300 rounded-xl px-3 py-1 text-slate-700 shadow-sm">
+                            <select id="filtro-instancia" class="w-full bg-transparent text-slate-700 cursor-pointer outline-none">
+                                <option value="Todos">Todos</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!--Componente-->
+                    <div class="flex flex-col gap-1 min-w-0">
+                        <label for="filtro-componente" class="text-xs font-semibold text-slate-500">Componente</label>
+                        <div class="bg-white border border-slate-300 rounded-xl px-3 py-1 text-slate-700 shadow-sm">
+                            <select id="filtro-componente" class="w-full bg-transparent text-slate-700 cursor-pointer outline-none">
+                                <option value="Todos">Todos</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!--Severidade-->
+                    <div class="flex flex-col gap-1 min-w-0">
+                        <label for="filtro-severidade" class="text-xs font-semibold text-slate-500">Severidade</label>
+                        <div class="bg-white border border-slate-300 rounded-xl px-3 py-1 text-slate-700 shadow-sm">
+                            <select id="filtro-severidade" class="w-full bg-transparent text-slate-700 cursor-pointer outline-none">
+                                <option value="Todos">Todos</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!--Status-->
+                    <div class="flex flex-col gap-1 min-w-0">
+                        <label for="filtro-status" class="text-xs font-semibold text-slate-500">Status</label>
+                        <div class="bg-white border border-slate-300 rounded-xl px-3 py-1 text-slate-700 shadow-sm">
+                            <select id="filtro-status" class="w-full bg-transparent text-slate-700 cursor-pointer outline-none">
+                                <option value="Todos">Todos</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!--Resolvido por-->
+                    <div class="flex flex-col gap-1 min-w-0">
+                        <label for="filtro-resolvido-por" class="text-xs font-semibold text-slate-500">Resolvido por</label>
+                        <div class="bg-white border border-slate-300 rounded-xl px-3 py-1 text-slate-700 shadow-sm">
+                            <select id="filtro-resolvido-por" class="w-full bg-transparent text-slate-700 cursor-pointer outline-none">
+                                <option value="Todos">Todos</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards para telas menores (com todos os dados e "Resolvido em") -->
+            <div id="alertsMobileContainer" class="grid grid-cols-1 gap-4 md:hidden"></div>
+
+            <!-- Tabela-->
+            <div class="hidden md:block w-full overflow-x-auto bg-slate-50 border border-blue-900 rounded-2xl p-4 lg:p-6 xl:px-10 mt-2">
+                <div class="min-w-[700px] lg:min-w-full">
+
+                    <!--Nomes gráfico-->
+                    <div class="grid grid-cols-12 pb-4 text-xs font-semibold text-slate-500 border-b border-slate-400 items-center">
+                        <div class="col-span-2">Data e hora</div>
+                        <div class="col-span-2 text-center mr-11">Instância</div>
+                        <div class="col-span-1 text-center mr-12">Componente</div>
+                        <div class="col-span-1 text-center items">Valor</div>
+                        <div class="col-span-1 text-center mr-6">Limite</div>
+                        <div class="col-span-1">Severidade</div>
+                        <div class="col-span-1 text-center ml-3 lg:mr-5">Status</div>
+                        <div class="col-span-2 text-center mr-1 lg:mr-7">Resolvido em</div>
+                        <div class="col-span-1 text-center lg:mr-10 ">Resolvido por</div>
+                    </div>
+
+                    <!--Linhas-->
+                    <div id="alertsTableBody" class="divide-y divide-slate-300"></div>
+
+                </div>
+            </div>
+
         </main>
-        <div id="toast-container"
-            class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">
-        </div>
+    </div>
+
+    <div id="toast-container"
+        class="fixed w-xs bottom-4 right-4 pointer-events-none z-90 max-h-[calc(100dvh-8rem)] flex flex-col-reverse gap-2 overflow-hidden">
+    </div>
 </body>
 
 </html>

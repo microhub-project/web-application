@@ -7,5 +7,6 @@ const router = express.Router();
 router.use(verifyJWT);
 
 router.get("/listar", alertController.listar);
+router.post("/resolver", alertController.resolver);
 
 export default router;

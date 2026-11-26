@@ -1,5 +1,5 @@
 {
-  "name": "web-data-viz",
+  "name": "microhub",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -12,10 +12,12 @@
     "preview": "vite preview",
     "start": "node app.js"
   },
-  "author": "Feito pelos desenvolvedores @ São Paulo Tech School / Bandtec Digital School",
+  "author": "Feito pelos desenvolvedores @ São Paulo Tech School",
   "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1177.0",
+    "@aws-sdk/client-s3": "^3.1175.0",
+    "@aws-sdk/s3-request-presigner": "^3.1175.0",
     "@tailwindcss/cli": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
     "bcryptjs": "^3.0.3",

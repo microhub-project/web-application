@@ -53,14 +53,14 @@ const navItems = [
 ];
 
 const pages = [
-  "/app/index.html",
-  "/app/reports/index.html",
-  "/app/instace-analysis/index.html",
-  "/app/alerts/index.html",
+  "/app/index.html", 
+  "/app/reports/index.html", 
+  "/app/instance-analysis/index.html", 
+  "/app/alerts/index.html", 
   "/app/finances/index.html", // página de financas
-  "/app/analysis/index.html",
-  "/app/microservices/index.html",
-  "/app/instances/index.html",
+  "/app/analysis/index.html", 
+  "/app/microservices/index.html", 
+  "/app/instances/index.html", 
   "/app/users/index.html",
   "/app/codes/index.html",
   "/app/trash/index.html"
