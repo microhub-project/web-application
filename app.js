@@ -25,7 +25,6 @@ import codeRouter from "./src/routes/code.js";
 import microserviceRouter from "./src/routes/microservices.js";
 import instanceRouter from "./src/routes/instances.js";
 import AlertRouter from "./src/routes/alerts.js";
-import lixeiraRouter from "./src/routes/lixeira.js"
 import dashboardRouter from "./src/routes/dashboard.js";
 import lixeiraRouter from "./src/routes/lixeira.js";
 import reportsRouter from "./src/routes/reports.js"
