@@ -201,7 +201,7 @@ const renderizarTabelaAlertas = (alertas) => {
       ? `<span class="inline-flex items-center gap-2 text-base font-bold bg-red-50 text-red-700 border border-red-700 rounded-full px-3 py-1"><span class="size-2 rounded-full bg-red-600"></span>Crítico</span>`
       : `<span class="inline-flex items-center gap-2 text-base font-bold bg-amber-50 text-amber-800 border border-amber-500 rounded-full px-3 py-1"><span class="size-2 rounded-full bg-amber-500"></span>Atenção</span>`;
 
-    const link = `../instace-analysis/index.html?uuid=${encodeURIComponent(a.instanciaUuid)}`;
+    const link = `../instance-analysis/index.html?uuid=${encodeURIComponent(a.instanciaUuid)}`;
 
     return `
       <tr class="border-b border-slate-200 last:border-0">
