@@ -140,18 +140,18 @@ CREATE TABLE IF NOT EXISTS `microhub`.`alerta` (
   `status` TINYINT(1) NOT NULL,
   `criado_em` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `data_hora_resolvido` DATETIME NULL DEFAULT NULL,
-  `resolvido_por` BINARY(16) NULL,
+  `responsavel` BINARY(16) NULL,
   `empresa_uuid` BINARY(16) NULL,
   `instancia_tem_componente_componente_uuid` BINARY(16) NOT NULL,
   `instancia_tem_componente_instancia_uuid` BINARY(16) NOT NULL,
   PRIMARY KEY (`uuid`),
   INDEX `fk_alerta_instancia_tem_componente1_uuidx` (`instancia_tem_componente_componente_uuid` ASC, `instancia_tem_componente_instancia_uuid` ASC) VISIBLE,
-  INDEX `fk_alerta_usuario1_idx` (`resolvido_por` ASC, `empresa_uuid` ASC) VISIBLE,
+  INDEX `fk_alerta_usuario1_idx` (`responsavel` ASC, `empresa_uuid` ASC) VISIBLE,
   CONSTRAINT `fk_alerta_instancia_tem_componente1`
     FOREIGN KEY (`instancia_tem_componente_componente_uuid` , `instancia_tem_componente_instancia_uuid`)
     REFERENCES `microhub`.`instancia_tem_componente` (`componente_uuid` , `instancia_uuid`),
   CONSTRAINT `fk_alerta_usuario1`
-    FOREIGN KEY (`resolvido_por` , `empresa_uuid`)
+    FOREIGN KEY (`responsavel` , `empresa_uuid`)
     REFERENCES `microhub`.`usuario` (`uuid` , `empresa_uuid`));
     
 -- -----------------------------------------------------

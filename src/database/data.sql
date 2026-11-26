@@ -21,7 +21,7 @@
 
 LOCK TABLES `alerta` WRITE;
 /*!40000 ALTER TABLE `alerta` DISABLE KEYS */;
-INSERT INTO `alerta` (`uuid`, `prioridade`, `descricao`, `valor_detectado`, `status`, `criado_em`, `data_hora_resolvido`, `resolvido_por`, `empresa_uuid`, `instancia_tem_componente_componente_uuid`, `instancia_tem_componente_instancia_uuid`) VALUES 
+INSERT INTO `alerta` (`uuid`, `prioridade`, `descricao`, `valor_detectado`, `status`, `criado_em`, `data_hora_resolvido`, `responsavel`, `empresa_uuid`, `instancia_tem_componente_componente_uuid`, `instancia_tem_componente_instancia_uuid`) VALUES 
     (0x1E6729FD2C174AC88E8DB0A83CCDBD1C,2,'Consumo de RAM acima do limite',91.20,1,'2026-11-22 21:29:41',NULL,NULL,0x61983115A0714CEC8BB7D5E45E126C66,0x196D04B2A9764DA5A2E82CCCB42CB0AC,0x0361802D91CE4190866430AB1E1C9177),
     (0xDD03A4C8F6D44F82B0C32E126633F4CE,3,'Uso excessivo de CPU detectado',92.50,1,'2026-11-22 21:29:41',NULL,NULL,0x61983115A0714CEC8BB7D5E45E126C66,0xF40975FE1A284526ABA07B15DD6048F9,0x0361802D91CE4190866430AB1E1C9177),
     (0xE1000001000040008000000000000001,3,'CPU acima do limite em autenticação-02',91.40,0,'2026-11-02 10:00:00','2026-11-02 10:15:00',0x1C1D54B572784BFE8AA9F9E7ADB14202,0x61983115A0714CEC8BB7D5E45E126C66,0xF40975FE1A284526ABA07B15DD6048F9,0x481782F4BCD6463A83024760691302E6),
@@ -84,7 +84,7 @@ INSERT INTO `componente` (`uuid`, `nome`, `nome_tecnico`, `unidade_medida`) VALU
 (0x40A9DE89D4274C6DA7D21E4F4889B661,'Tráfego de bytes de download','download_traffic','Mbps'),
 (0x5ACF74F97E8F46A2853A56FA6C6EC1E2,'Espaço livre no disco','disk','GiB'),
 (0x6379189DAEC347DC8EFA9DAADD23D36D,'Porcentagem de uso de memória SWAP','swap_memory_percent','%'),
-(0x83589FB2DFEE484ABC534ED0C5B1777D,'Tráfego de bytes de upload','upload_traffic','Mpbs'),
+(0x83589FB2DFEE484ABC534ED0C5B1777D,'Tráfego de bytes de upload','upload_traffic','Mbps'),
 (0x845926403FA94F77ADC66F9E878A5F40,'Frequência da CPU','cpu_frequency','GHz'),
 (0xF40975FE1A284526ABA07B15DD6048F9,'Porcentagem de uso de CPU','cpu_percent','%'),
 (0xF80CA86DD17E4B8CAA52B2261B0FE643,'Porcentagem de processos zumbi','zombie_processes_percent','%');

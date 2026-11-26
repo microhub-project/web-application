@@ -9,7 +9,7 @@ async function getGeralFunc(empresa_uuid) {
     CAST(ROUND(MAX(TIMESTAMPDIFF(SECOND, a.criado_em, a.data_hora_resolvido)) / 60) AS UNSIGNED) AS alertaMax
     FROM microhub.alerta a
     JOIN microhub.usuario u
-    ON u.uuid = a.resolvido_por
+    ON u.uuid = a.responsavel
     AND u.empresa_uuid = a.empresa_uuid
     WHERE a.empresa_uuid = UUID_TO_BIN('${empresa_uuid}')
     AND u.deletado_em IS NULL
