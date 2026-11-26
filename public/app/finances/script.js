@@ -56,6 +56,10 @@ const renderGraph = async (current_cpus, current_ram) => {
     } catch (e) {
         console.error(e)
         setGraphLoading(false)
+        showToast(
+            "Algo deu errado ao carregar a análise anual.",
+            "error"
+        );
         let fallback = document.getElementById("months-graph-fallback")
         fallback.classList.remove("hidden")
         fallback.classList.add("flex")
