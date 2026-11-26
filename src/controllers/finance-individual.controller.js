@@ -1,4 +1,5 @@
 import financeIndividualModel from "../models/finance-individual.model.js";
+import financeIndividualService from "../services/finance-individual.service.js";
 
 async function listarInstancias(req, res) {
     const empresaUUID = req.companyUUID;
@@ -10,13 +11,24 @@ async function listarInstancias(req, res) {
     }
 
     try {
-        const resultado = await financeIndividualModel.getInstances(empresaUUID);
+        const instancias =
+            await financeIndividualModel.getInstances(empresaUUID);
 
-        return res.status(200).json({ data: resultado });
-    } catch (e) {
-        console.error(e);
+        const resultado =
+            await financeIndividualService.analisarInstancias(
+                empresaUUID,
+                instancias
+            );
+
+        return res.status(200).json({
+            data: resultado
+        });
+
+    } catch (erro) {
+        console.error("Erro ao listar instâncias:", erro);
+
         return res.status(500).json({
-            message: "Erro ao listar instâncias."
+            message: "Erro ao listar e analisar as instâncias."
         });
     }
 }
@@ -25,26 +37,39 @@ async function listarItens(req, res) {
     const empresaUUID = req.companyUUID;
     const uuid = req.params.uuid;
 
-
     if (!uuid || !empresaUUID) {
-        return res.status(401).json({
+        return res.status(400).json({
             message: "Dados inválidos."
         });
     }
 
     try {
-        const resultado = await financeIndividualModel.getItens(uuid, empresaUUID);
+        const resultado =
+            await financeIndividualService.analisarInstancia(
+                empresaUUID,
+                uuid
+            );
 
-        return res.status(200).json({ data: resultado });
-    } catch (e) {
-        console.error(e);
+        if (!resultado.length) {
+            return res.status(404).json({
+                message: "Instância não encontrada."
+            });
+        }
+
+        return res.status(200).json({
+            data: resultado
+        });
+
+    } catch (erro) {
+        console.error("Erro ao buscar análise da instância:", erro);
+
         return res.status(500).json({
-            message: "Erro ao listar itens."
+            message: "Erro ao carregar a análise da instância."
         });
     }
 }
 
-export default{
+export default {
     listarInstancias,
     listarItens
 };
