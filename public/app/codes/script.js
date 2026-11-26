@@ -237,13 +237,13 @@ const disableCode = (elementId) => {
     <div class="flex flex-col sm:flex-row justify-around gap-2 sm:gap-4 mt-2">
       <button 
         onclick="closePopUp()"
-        class="w-full py-2.5 sm:py-3 border border-blue-600 hover:bg-blue-700 text-blue-400 hover:text-white rounded-full font-normal sm:font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center text-sm sm:text-base">
+        class="w-full py-2.5 sm:py-3 border border-slate-600 hover:bg-slate-800 text-slate-200 rounded-xl font-medium transition-colors cursor-pointer text-center">
         <span class="font-normal sm:font-medium">Cancelar</span>
       </button>
       <button 
         onclick="disableCodeConfirmed('${elementId}')"
         id="disableCodeConfirmedButton"
-        class="w-full py-2.5 sm:py-3 bg-red-600 hover:bg-red-700 rounded-full font-normal sm:font-medium transition-colors cursor-pointer flex gap-2 items-center justify-center text-sm sm:text-base">
+        class="w-full py-2.5 sm:py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-colors cursor-pointer text-center">
         <span class="font-normal sm:font-medium">Desativar código</span>
       </button>
     </div>
@@ -480,12 +480,6 @@ const showPopUp = (title, popUpBody) => {
   popUpContainer.classList.replace("hidden", "flex");
   popUpContent.innerHTML = `
     <h1 class="text-lg sm:text-2xl pb-4 pr-8 break-words">${title}</h1>
-    <button 
-      type="button" 
-      onclick="closePopUp()"
-      class="absolute top-4 right-4 sm:top-5 sm:right-5 text-slate-400 hover:text-white cursor-pointer transition-all duration-300"> 
-      <i class="ph ph-x text-2xl sm:text-3xl"></i>
-    </button>
   `;
 
   popUpContent.innerHTML += popUpBody;
