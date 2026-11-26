@@ -62,7 +62,21 @@ const getAll = async (empresa_uuid, filters = {}) => {
 
   query += " ORDER BY a.criado_em DESC;";
 
-  return await database.execute(query, params);
+  console.log("[SQL EM USO]", query, params);
+  const [alerts] = await database.execute(query, params);
+
+  const [usuarios] = await database.execute(
+    `SELECT BIN_TO_UUID(uuid) AS uuid, nome
+     FROM usuario
+     WHERE empresa_uuid = UUID_TO_BIN(?) AND deletado_em IS NULL
+     ORDER BY nome ASC`,
+    [empresa_uuid]
+  );
+
+  return {
+    alerts,
+    usuarios
+  };
 };
 
 const alterResolvidoPor = async (resolvido_por, empresa_uuid, uuid) => {
@@ -75,7 +89,8 @@ const alterResolvidoPor = async (resolvido_por, empresa_uuid, uuid) => {
       data_hora_resolvido = CURRENT_TIMESTAMP()
     WHERE uuid = UUID_TO_BIN(?);
   `;
-  return await database.execute(query, [resolvido_por, empresa_uuid, uuid]);
+  const [result] = await database.execute(query, [resolvido_por, empresa_uuid, uuid]);
+  return result;
 };
 
 export default {

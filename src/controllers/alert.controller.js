@@ -1,7 +1,7 @@
 import alertModel from "../models/alert.model.js";
 
 async function listar(req, res) {
-    const companyUUID = req.body?.empresa_uuid;
+    const companyUUID = req.companyUUID || req.query?.empresa_uuid;
     const responseBody = {
         message: ""
     };
@@ -12,17 +12,17 @@ async function listar(req, res) {
     }
 
     const filters = {
-        data: req.body?.data,
-        instancia: req.body?.instancia,
-        componente: req.body?.componente,
-        severidade: req.body?.severidade,
-        status: req.body?.status,
-        resolvido_por: req.body?.resolvido_por
+        data: req.query?.data,
+        instancia: req.query?.instancia,
+        componente: req.query?.componente,
+        severidade: req.query?.severidade,
+        status: req.query?.status,
+        resolvido_por: req.query?.resolvido_por
     };
 
     try {
         const resultado = await alertModel.getAll(companyUUID, filters);
-
+        console.log("[listar] alertas:", resultado.alerts.length, "usuarios:", resultado.usuarios.length);
         return res.status(200).json({
             data: resultado
         });
@@ -34,7 +34,8 @@ async function listar(req, res) {
 }
 
 async function resolver(req, res) {
-    const { uuid, resolvido_por, empresa_uuid } = req.body;
+    const { uuid, resolvido_por } = req.body;
+    const empresa_uuid = req.body?.empresa_uuid || req.companyUUID;
     const responseBody = {
         message: ""
     };
@@ -42,10 +43,12 @@ async function resolver(req, res) {
     if (!uuid) {
         responseBody.message = "UUID do alerta inválido";
         return res.status(400).json(responseBody);
-    } else if (!resolvido_por) {
+    }
+    if (!resolvido_por) {
         responseBody.message = "Responsável pela resolução inválido";
         return res.status(400).json(responseBody);
-    } else if (!empresa_uuid) {
+    }
+    if (!empresa_uuid) {
         responseBody.message = "UUID da empresa inválido";
         return res.status(400).json(responseBody);
     }
