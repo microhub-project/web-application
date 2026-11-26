@@ -27,6 +27,8 @@ import instanceRouter from "./src/routes/instances.js";
 import AlertRouter from "./src/routes/alerts.js";
 import lixeiraRouter from "./src/routes/lixeira.js"
 import dashboardRouter from "./src/routes/dashboard.js";
+import lixeiraRouter from "./src/routes/lixeira.js";
+import reportsRouter from "./src/routes/reports.js"
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -42,6 +44,7 @@ app.use("/instances", instanceRouter);
 app.use("/alerts", AlertRouter);
 app.use("/lixeira", lixeiraRouter);
 app.use("/dashboard", dashboardRouter);
+app.use("/reports", reportsRouter);
 
 app.listen(PORTA_APP, function () {
   console.log(`
