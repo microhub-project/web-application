@@ -5,9 +5,67 @@ var switchBase = "px-4 py-1.5 rounded-md text-sm font-semibold transition-colors
 var switchActive = switchBase + " bg-white text-slate-900 shadow-sm";
 var switchInactive = switchBase + " text-blue-500";
 
+
+function errorBox(msg) {
+    return `
+        <div class="flex flex-col items-center justify-center gap-2 flex-1 w-full h-full text-center text-slate-500 py-6">
+            <i class="ph ph-warning-circle text-3xl text-red-500"></i>
+            <span class="text-sm font-semibold">${msg}</span>
+        </div>`;
+}
+
+function setChartError(title, msg) {
+    chartTitle.innerHTML = title;
+
+    if (myChart != null) {
+        myChart.destroy();
+        myChart = null;
+    }
+
+    var canvas = document.getElementById("mainChart");
+    canvas.classList.add("hidden");
+
+    var box = document.getElementById("chartError");
+    if (!box) {
+        box = document.createElement("div");
+        box.id = "chartError";
+        canvas.parentElement.appendChild(box);
+    }
+    box.className = "absolute inset-0 flex";
+    box.innerHTML = errorBox(msg);
+}
+
+function clearChartError() {
+    var box = document.getElementById("chartError");
+    if (box) {
+        box.className = "hidden";
+    }
+    document.getElementById("mainChart").classList.remove("hidden");
+}
+
+function setRankError(title, msg) {
+    rankTitle.innerHTML = title;
+    rankList.innerHTML = `<li class="flex flex-1">${errorBox(msg)}</li>`;
+}
+
+function setSideError(msg) {
+    sideCards.innerHTML = `<div class="${cardClass} p-4 flex flex-col flex-1">${errorBox(msg)}</div>`;
+}
+
+function setListError(msg) {
+    detailList.innerHTML = `<div class="${cardClass} p-4 flex">${errorBox(msg)}</div>`;
+}
+
+
 async function showEmployees() {
 
     const token = sessionStorage.getItem('JWT_TOKEN');
+
+    const chartTitleText = "Top 5 funcionários com mais alertas resolvidos/mês";
+    const rankTitleText = "Top 5 melhores médias de tempo de resolução/mês";
+
+    btnEmployees.className = switchActive;
+    btnInstances.className = switchInactive;
 
     try {
         const response = await fetch('/reports/getGeralFunc', {
@@ -18,7 +76,24 @@ async function showEmployees() {
             }
         });
 
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
         const body = await response.json();
+
+        if (!body || !Array.isArray(body.data)) {
+            throw new Error("Resposta inválida");
+        }
+
+        if (body.data.length == 0) {
+            showToast("Sem alertas resolvidos neste mês", "warning");
+            setChartError(chartTitleText, "Sem dados neste mês");
+            setRankError(rankTitleText, "Sem dados neste mês");
+            setSideError("Sem dados neste mês");
+            setListError("Sem dados neste mês");
+            return;
+        }
 
         var employeesRanking = []
         var employeesChartLabels = []
@@ -65,12 +140,17 @@ async function showEmployees() {
         btnEmployees.className = switchActive;
         btnInstances.className = switchInactive;
 
-        drawChart("Top 5 funcionários com mais alertas resolvidos/mês", employeesChartLabels, employeesChartValues);
-        drawRankingFunc("Top 5 melhores médias de tempo de resolução/mês", employeesRanking);
+        drawChart(chartTitleText, employeesChartLabels, employeesChartValues);
+        drawRankingFunc(rankTitleText, employeesRanking);
         drawEmployeesSideCards(employeesMin, employeesMax);
         drawEmployeesList(body.data);
     } catch (e) {
-        console.log("caquinha")
+        console.log(e)
+        showToast("Erro ao carregar dados dos funcionários", "error");
+        setChartError(chartTitleText, "Erro ao carregar");
+        setRankError(rankTitleText, "Erro ao carregar");
+        setSideError("Erro ao carregar");
+        setListError("Erro ao carregar");
     }
 
 }
@@ -80,6 +160,9 @@ async function showInstances() {
     btnEmployees.className = switchInactive;
     btnInstances.className = switchActive;
     var maxKpi = {}
+
+    const chartTitleText = "Top 5 instancias com mais alertas/mês";
+    const rankTitleText = "Componentes com mais alertas";
 
     try {
         const token = sessionStorage.getItem('JWT_TOKEN');
@@ -91,8 +174,22 @@ async function showInstances() {
             }
         });
 
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
         const body = await response.json();
+
+        if (!body || !Array.isArray(body.data)) {
+            throw new Error("Resposta inválida");
+        }
+
         const dados = body.data
+
+        if (dados.length == 0) {
+            throw new Error("vazio");
+        }
+
         var instancesChartLabels = []
         var instancesChartValues = []
 
@@ -144,12 +241,21 @@ async function showInstances() {
             "valor": max
         }
 
-        drawChart("Top 5 instancias com mais alertas/mês", instancesChartLabels, instancesChartValues);
+        drawChart(chartTitleText, instancesChartLabels, instancesChartValues);
         drawInstancesList(dados);
     } catch (e) {
-        console.log('fodeo')
+        console.log(e)
+        var msg = "Erro ao carregar";
+        if (e.message == "vazio") {
+            msg = "Sem dados neste mês";
+            showToast("Sem alertas neste mês", "warning");
+        } else {
+            showToast("Erro ao carregar instâncias", "error");
+        }
+        setChartError(chartTitleText, msg);
+        setListError(msg);
     }
-    try{
+    try {
         const token = sessionStorage.getItem('JWT_TOKEN');
         const response = await fetch('/reports/getTotalAlertas', {
             method: "GET",
@@ -158,14 +264,28 @@ async function showInstances() {
                 'Authorization': `Bearer ${token}`
             }
         });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
         const body = await response.json();
 
+        if (!body || !Array.isArray(body.data) || body.data.length == 0 || !body.data[0]) {
+            throw new Error("Resposta inválida");
+        }
+
+        if (Object.keys(maxKpi).length == 0) {
+            throw new Error("Sem dados de instâncias");
+        }
+
         drawInstancesSideCards(maxKpi, body.data[0]);
-    } catch(e){
-        console.log("nhe")
+    } catch (e) {
+        console.log(e)
+        setSideError("Erro ao carregar");
     }
 
-    try{
+    try {
         const token = sessionStorage.getItem('JWT_TOKEN');
         const response = await fetch('/reports/getRankingAlertas', {
             method: "GET",
@@ -174,11 +294,26 @@ async function showInstances() {
                 'Authorization': `Bearer ${token}`
             }
         });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
         const body = await response.json();
 
-        drawRankingFunc("Componentes com mais alertas", body.data);
-    } catch(e){
-        console.log('sla')
+        if (!body || !Array.isArray(body.data)) {
+            throw new Error("Resposta inválida");
+        }
+
+        if (body.data.length == 0) {
+            setRankError(rankTitleText, "Sem dados neste mês");
+            return;
+        }
+
+        drawRankingFunc(rankTitleText, body.data);
+    } catch (e) {
+        console.log(e)
+        setRankError(rankTitleText, "Erro ao carregar");
     }
 
 }
@@ -192,6 +327,7 @@ function twoDigits(number) {
 }
 
 function drawChart(title, labels, values) {
+    clearChartError();
     chartTitle.innerHTML = title;
 
     if (myChart != null) {
@@ -210,14 +346,8 @@ function drawChart(title, labels, values) {
     var average = values.length > 0 ? sum / values.length : 0;
 
     var colors = [];
-    var averageLine = [];
     for (var i = 0; i < values.length; i++) {
-        if (values[i] == biggest) {
-            colors.push("#2563eb");
-        } else {
-            colors.push("#93c5fd");
-        }
-        averageLine.push(average);
+        colors.push(values[i] == biggest ? "#2563eb" : "#93c5fd");
     }
 
     var ctx = document.getElementById("mainChart").getContext("2d");
@@ -226,23 +356,7 @@ function drawChart(title, labels, values) {
         type: "bar",
         data: {
             labels: labels,
-            datasets: [
-                {
-                    type: "bar",
-                    data: values,
-                    backgroundColor: colors
-                },
-                {
-                    type: "line",
-                    data: averageLine,
-                    borderColor: "#ef4444",
-                    borderWidth: 2,
-                    borderDash: [6, 6],
-                    pointRadius: 2,
-                    pointHoverRadius: 2,
-                    fill: false
-                }
-            ]
+            datasets: [{ data: values, backgroundColor: colors }]
         },
         options: {
             responsive: true,
@@ -252,7 +366,22 @@ function drawChart(title, labels, values) {
                 x: { grid: { display: false } },
                 y: { beginAtZero: true, ticks: { precision: 0 } }
             }
-        }
+        },
+        plugins: [{
+            afterDatasetsDraw: function (chart) {
+                var c = chart.ctx;
+                var y = chart.scales.y.getPixelForValue(average);
+                c.save();
+                c.setLineDash([6, 6]);
+                c.strokeStyle = "#ef4444";
+                c.lineWidth = 2;
+                c.beginPath();
+                c.moveTo(chart.chartArea.left, y);
+                c.lineTo(chart.chartArea.right, y);
+                c.stroke();
+                c.restore();
+            }
+        }]
     });
 }
 
