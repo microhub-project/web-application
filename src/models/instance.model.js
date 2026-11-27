@@ -99,7 +99,22 @@ const updateInstanceComponent = async (limite_maximo, limite_minimo, monitorado,
   return await database.execute(query, [limite_maximo, limite_minimo, monitorado, componente_uuid, instancia_uuid]);
 };
 
+const getMetricsInstance = async (instancia_uuid, empresa_uuid) => {
+  const query = `
+    SELECT
+      BIN_TO_UUID(i.uuid) AS uuid, i.endereco_mac, i.nome
+    FROM instancia i
+    JOIN microsservico m ON i.microsservico_uuid = m.uuid
+    WHERE i.uuid = UUID_TO_BIN(?)
+      AND m.empresa_uuid = UUID_TO_BIN(?)
+      AND m.deletado_em IS NULL
+      AND i.deletado_em IS NULL;
+  `;
+  return await database.execute(query, [instancia_uuid, empresa_uuid]);
+};
+
 export default {
+  getMetricsInstance,
   create,
   createVolume,
   createInstanceComponent,

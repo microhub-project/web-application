@@ -16,6 +16,8 @@ router.get("/listar-tipos", instanceController.listarTipos);
 
 router.get("/listar-componentes-monitorados/:instance_uuid", instanceController.listarComponentesMonitorados);
 
+router.get("/metricas/:instance_uuid", instanceController.listarMetricas);
+
 router.post("/cadastrar", instanceController.cadastrar);
 
 router.post("/cadastrar-volume", instanceController.cadastrarVolume);

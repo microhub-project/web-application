@@ -1,86 +1,86 @@
 let graficoPrincipal;
-const labelsEixoX = ['7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00'];
-const cpu_valor =[45, 55, 75, 68, 65, 50, 64]
-const ram_valor =[60, 64, 72, 75, 73, 65, 68]
-const upload_valor =[50, 75, 115, 100, 95, 65, 83]
-const download_valor =[10, 18, 35, 28, 25, 12, 21]
-const cpu_frequency_valor =[2.4, 2.8, 3.2, 3.0, 2.9, 2.6, 2.7]
-const disk_valor =[120, 118, 115, 114, 112, 110, 108]
-const processos_valor =[210, 230, 260, 250, 245, 225, 240]
-const zumbi_valor =[0, 1, 2, 1, 1, 0, 1]
-const swap_valor =[5, 8, 15, 12, 10, 7, 9]
+const labelsEixoX = [];
+const cpu_valor = [];
+const ram_valor = [];
+const upload_valor = [];
+const download_valor = [];
+const cpu_frequency_valor = [];
+const disk_valor = [];
+const processos_valor = [];
+const zumbi_valor = [];
+const swap_valor = [];
 const dadosGrafico = {
   cpu: {
     label: 'CPU (%)',
     data: cpu_valor, 
-    limite: 80,
+    limite: null,
     cor: '#64748b',
     tipoLimite: 'Limite Máximo',
-    alertaTexto: 'Limite Máximo: 80%'
+    alertaTexto: ''
   },
   ram: {
     label: 'RAM (%)',
     data: ram_valor, 
-    limite: 85,
+    limite: null,
     cor: '#8b5cf6',
     tipoLimite: 'Limite Máximo',
-    alertaTexto: 'Limite Máximo: 85%'
+    alertaTexto: ''
   },
   upload: {
     label: 'Upload (Mbps)',
     data: upload_valor,
-    limite: 30,
+    limite: null,
     cor: '#10b981',
     tipoLimite: 'Limite Mínimo',
-    alertaTexto: 'Limite Mínimo: 30 Mbps'
+    alertaTexto: ''
   },
   download: {
     label: 'Download (Mbps)',
     data: download_valor, 
-    limite: 10,
+    limite: null,
     cor: '#3b82f6',
     tipoLimite: 'Limite Mínimo',
-    alertaTexto: 'Limite Mínimo: 10 Mbps'
+    alertaTexto: ''
   },
   cpu_frequency: {
     label: 'Frequência da CPU (GHz)',
     data: cpu_frequency_valor, 
-    limite: 1.5,
+    limite: null,
     cor: '#f59e0b',
     tipoLimite: 'Limite Mínimo',
-    alertaTexto: 'Limite Mínimo: 1.5 GHz'
+    alertaTexto: ''
   },
   disk: {
     label: 'Espaço livre no disco (GiB)',
     data: disk_valor, 
-    limite: 420,
+    limite: null,
     cor: '#0ea5e9',
     tipoLimite: 'Limite Máximo',
-    alertaTexto: 'Limite Máximo: 420 GiB'
+    alertaTexto: ''
   },
   processos: {
     label: 'Quantidade de processos',
     data: processos_valor, 
-    limite: 400,
+    limite: null,
     cor: '#14b8a6',
     tipoLimite: 'Limite Máximo',
-    alertaTexto: 'Limite Máximo: 400 processos'
+    alertaTexto: ''
   },
   zumbi: {
     label: 'Processos zumbi (%)',
     data: zumbi_valor, 
-    limite: 5,
+    limite: null,
     cor: '#ef4444',
     tipoLimite: 'Limite Máximo',
-    alertaTexto: 'Limite Máximo: 5%'
+    alertaTexto: ''
   },
   swap: {
     label: 'Uso de memória SWAP (%)',
     data: swap_valor, 
-    limite: 50,
+    limite: null,
     cor: '#ec4899',
     tipoLimite: 'Limite Máximo',
-    alertaTexto: 'Limite Máximo: 50%'
+    alertaTexto: ''
   }
 };
 
@@ -104,7 +104,7 @@ const loadCharts = () => {
           },
           {
             label: padrao.tipoLimite,
-            data: Array(7).fill(padrao.limite),
+            data: Array(labelsEixoX.length).fill(padrao.limite),
             borderDash: [6, 6],
             borderColor: '#334155',
             borderWidth: 2,
@@ -146,7 +146,7 @@ const mudarGrafico = (metrica, botaoClicado) => {
 
   // substitui os dados da linha de limite 
   graficoPrincipal.data.datasets[1].label = novosDados.tipoLimite;
-  graficoPrincipal.data.datasets[1].data = Array(7).fill(novosDados.limite);
+  graficoPrincipal.data.datasets[1].data = Array(labelsEixoX.length).fill(novosDados.limite);
 
   if (metrica === 'cpu' || metrica === 'ram' ) { // Se cpu ou ram, eixo x vai até 100 / Se não, deixa livre (upload e download)
     graficoPrincipal.options.scales.y.max = 100;
@@ -156,6 +156,8 @@ const mudarGrafico = (metrica, botaoClicado) => {
     delete graficoPrincipal.options.scales.y.ticks.stepSize;
   }
 
+
+  aplicarLimitesNoGrafico(metrica);
 
   graficoPrincipal.update();
 
@@ -291,7 +293,7 @@ const aplicarVisibilidadeCards = () => {
   }
   ajustarColunasGrid();
 };
-
+//Antigo load para nortea em caso de confusão
 const loadAllMetrics = () => {
   atualizarDataHora();
   aplicarVisibilidadeCards();
@@ -517,6 +519,227 @@ const getMonitoredComponents = async (instance_uuid) => {
   }
 };
 
+const arraysDasMetricas = {
+  cpu: cpu_valor,
+  ram: ram_valor,
+  upload: upload_valor,
+  download: download_valor,
+  cpu_frequency: cpu_frequency_valor,
+  disk: disk_valor,
+  processos: processos_valor,
+  zumbi: zumbi_valor,
+  swap: swap_valor
+};
+
+const formatarRotuloTempo = (timestamp) => {
+  const m = String(timestamp ?? '').match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);
+  return m ? `${m[3]}/${m[2]} ${m[4]}:${m[5]}` : String(timestamp ?? '');
+};
+
+const getMetrics = async (instance_uuid) => {
+  const token = sessionStorage.getItem('JWT_TOKEN');
+  const userData = getUserSession();
+
+  if (!token || !userData) {
+    logout();
+    return null;
+  }
+
+  try {
+    const response = await fetch(`/instances/metricas/${instance_uuid}?pontos=13`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.status === 401 || response.status === 403) {
+      logout();
+      return null;
+    }
+
+    const body = await response.json();
+
+    if (!response.ok) {
+      showToast(body.message || "Não foi possível carregar as métricas", "warning");
+      return null;
+    }
+
+    return body.data || null;
+  } catch (e) {
+    console.error(e);
+    showToast("Algo deu errado ao carregar as métricas.", "error");
+    return null;
+  }
+};
+
+const carregarMetricas = async (instance_uuid) => {
+  const dados = await getMetrics(instance_uuid);
+
+  if (!dados) return;
+
+  const leituras = dados.leituras || [];
+
+  labelsEixoX.splice(0, labelsEixoX.length, ...leituras.map((l) => formatarRotuloTempo(l.timestamp)));
+
+  for (const [card, array] of Object.entries(arraysDasMetricas)) {
+    array.splice(0, array.length, ...leituras.map((l) => l[card]));
+  }
+
+  if (graficoPrincipal) graficoPrincipal.update();
+};
+
+window.addEventListener('DOMContentLoaded', () => {
+  for (const nome of Object.keys(componentesCards)) {
+    document.getElementById(`card-${nome}`)?.classList.add('hidden');
+    const valor = document.getElementById(`valor-${nome}`);
+    if (valor) valor.innerText = '';
+  }
+});
+
+const corrigirKPIs = () => {
+  for (const [card, array] of Object.entries(arraysDasMetricas)) {
+    const limite = limitesInstancia[card];
+
+    if (!limite) continue;
+
+    const valor = array[array.length - 1];
+    const campoUnidade = document.getElementById(`unidade-${card}`);
+    const semLeitura = valor === null || valor === undefined || !Number.isFinite(Number(valor));
+
+    if (semLeitura) {
+      aplicarAlertaCard(card, 0, null, null, '—');
+      if (campoUnidade) campoUnidade.innerText = '';
+      continue;
+    }
+
+    const numero = Number(valor);
+    const texto = formatarValor(numero, '');
+
+    if (limite.unidade === '%') {
+      document.getElementById(`valor-${card}`).innerText = `${texto}%`;
+      if (campoUnidade) campoUnidade.innerText = '';
+    } else {
+      document.getElementById(`valor-${card}`).innerText = texto;
+      if (campoUnidade) campoUnidade.innerText = limite.unidade || '';
+    }
+  }
+};
+
+const MARGEM_ALERTA_GRAFICO = 5;
+
+const COR_ZONA_VERMELHA = 'rgba(239, 68, 68, 0.20)';
+const COR_ZONA_AMARELA = 'rgba(245, 158, 11, 0.25)';
+
+const zonasLimitesPlugin = {
+  id: 'zonasLimites',
+
+  beforeDatasetsDraw(chart, args, opcoes) {
+    if (!opcoes || (opcoes.max == null && opcoes.min == null)) return;
+
+    const { ctx, chartArea: area, scales } = chart;
+    const y = scales.y;
+    if (!area || !y) return;
+
+    const pintarFaixa = (deValor, ateValor, cor) => {
+      const p1 = y.getPixelForValue(deValor);
+      const p2 = y.getPixelForValue(ateValor);
+      const topo = Math.max(area.top, Math.min(p1, p2));
+      const base = Math.min(area.bottom, Math.max(p1, p2));
+      if (base <= topo) return;
+      ctx.fillStyle = cor;
+      ctx.fillRect(area.left, topo, area.right - area.left, base - topo);
+    };
+
+    const margem = opcoes.margem ?? MARGEM_ALERTA_GRAFICO;
+
+    ctx.save();
+
+    if (opcoes.max != null) pintarFaixa(opcoes.max - margem, opcoes.max, COR_ZONA_AMARELA);
+    if (opcoes.min != null) pintarFaixa(opcoes.min, opcoes.min + margem, COR_ZONA_AMARELA);
+
+    if (opcoes.max != null) pintarFaixa(opcoes.max, y.max, COR_ZONA_VERMELHA);
+    if (opcoes.min != null) pintarFaixa(y.min, opcoes.min, COR_ZONA_VERMELHA);
+
+    ctx.restore();
+  },
+
+  afterDatasetsDraw(chart, args, opcoes) {
+    if (!opcoes || (opcoes.max == null && opcoes.min == null)) return;
+
+    const { ctx, chartArea: area, scales } = chart;
+    const y = scales.y;
+    if (!area || !y) return;
+
+    const escreverRotulo = (valor, rotulo, cor) => {
+      const yLinha = y.getPixelForValue(valor);
+      if (yLinha < area.top || yLinha > area.bottom) return;
+
+      const texto = `${rotulo}: ${formatarValor(valor, opcoes.unidade)}`;
+
+      ctx.save();
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+
+      const largura = ctx.measureText(texto).width;
+      const x = area.right - 8;
+
+      const yCaixa = yLinha - 22 >= area.top ? yLinha - 21 : yLinha + 5;
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+      ctx.fillRect(x - largura - 6, yCaixa, largura + 12, 16);
+
+      ctx.fillStyle = cor;
+      ctx.fillText(texto, x, yCaixa + 8);
+      ctx.restore();
+    };
+
+    if (opcoes.max != null) escreverRotulo(opcoes.max, 'Máximo', '#991b1b');
+    if (opcoes.min != null) escreverRotulo(opcoes.min, 'Mínimo', '#92400e');
+  }
+};
+
+if (typeof Chart !== 'undefined') Chart.register(zonasLimitesPlugin);
+
+const aplicarLimitesNoGrafico = (card) => {
+  if (!graficoPrincipal) return;
+
+  const limite = limitesInstancia[card];
+  const max = limite && limite.max !== null ? limite.max : null;
+  const min = limite && limite.min !== null ? limite.min : null;
+  const pontos = labelsEixoX.length;
+  const datasets = graficoPrincipal.data.datasets;
+
+  if (!datasets[2]) {
+    datasets[2] = {
+      label: 'Limite Mínimo',
+      data: [],
+      borderDash: [6, 6],
+      borderColor: '#334155',
+      borderWidth: 2,
+      pointRadius: 0
+    };
+  }
+
+  datasets[1].label = 'Limite Máximo';
+  datasets[1].data = max !== null ? Array(pontos).fill(max) : [];
+  datasets[1].hidden = max === null;
+
+  datasets[2].label = 'Limite Mínimo';
+  datasets[2].data = min !== null ? Array(pontos).fill(min) : [];
+  datasets[2].hidden = min === null;
+
+  const escalaY = graficoPrincipal.options.scales.y;
+  const eixoFixo = escalaY.max !== undefined;
+  escalaY.suggestedMax = (!eixoFixo && max !== null) ? Math.ceil(max * 1.15) : undefined;
+
+  graficoPrincipal.options.plugins.zonasLimites = limite
+    ? { max, min, unidade: limite.unidade, margem: MARGEM_ALERTA_GRAFICO }
+    : false;
+};
+
 const getAlerts = async () => {
   const token = sessionStorage.getItem('JWT_TOKEN');
   const userData = getUserSession();
@@ -576,7 +799,7 @@ const updateAlertStatus = async (botao) => {
   };
 
   try {
-    const atualizar = await fetch("/alerts/atualizar", {
+    const atualizar = await fetch("/alerts/resolver", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -676,11 +899,15 @@ const selecionarInstancia = async (instance_uuid) => {
 
   if (!instanciaSelecionada || instanciaSelecionada.uuid !== instance_uuid) return;
 
+  await carregarMetricas(instance_uuid);
+
+  if (!instanciaSelecionada || instanciaSelecionada.uuid !== instance_uuid) return;
+
   limitesInstancia = {};
 
   for (const [card, nomeTecnico] of Object.entries(componentesCards)) {
     const componente = componentes.find((c) => c.nome_tecnico === nomeTecnico);
-    const monitorado = componente && monitorados.find((m) => m.componente_uuid === componente.uuid);
+    const monitorado = componente && monitorados.find((m) => m.componente_uuid === componente.uuid && Number(m.status) === 1);
 
     cardsVisiveis[card] = monitorado ? 1 : 0;
 
@@ -704,6 +931,8 @@ const selecionarInstancia = async (instance_uuid) => {
   }
 
   loadAllMetrics();
+
+  corrigirKPIs();
 
   const primeira = Object.keys(cardsVisiveis).find((card) => cardsVisiveis[card] === 1);
   if (primeira) {

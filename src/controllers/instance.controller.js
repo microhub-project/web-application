@@ -1,4 +1,5 @@
 import instanceModel from "../models/instance.model.js";
+import instanceMetricsService from "../services/instance-metrics.service.js";
 
 async function cadastrar(req, res) {
     const uuid = crypto.randomUUID();
@@ -358,7 +359,59 @@ async function atualizarComponenteInstancia(req, res) {
     }
 }
 
+async function listarMetricas(req, res) {
+    const { instance_uuid } = req.params;
+    const empresaUUID = req.companyUUID;
+
+    if (!instance_uuid || !empresaUUID) {
+        return res.status(400).json({
+            message: "Instância ou empresa inválida."
+        });
+    }
+
+    const pedido = Number.parseInt(req.query.pontos, 10);
+    const pontos = Number.isInteger(pedido)
+        ? Math.min(100, Math.max(1, pedido))
+        : instanceMetricsService.PONTOS_PADRAO;
+
+    try {
+        const instancia = await instanceModel.getMetricsInstance(
+            instance_uuid,
+            empresaUUID
+        );
+
+        if (!instancia.length) {
+            return res.status(404).json({
+                message: "Instância não encontrada."
+            });
+        }
+
+        const metricas = await instanceMetricsService.obterMetricas(
+            empresaUUID,
+            instancia[0].endereco_mac,
+            pontos
+        );
+
+        return res.status(200).json({
+            message: "Métricas carregadas com sucesso.",
+            data: {
+                instancia_uuid: instancia[0].uuid,
+                endereco_mac: instancia[0].endereco_mac,
+                ...metricas
+            }
+        });
+
+    } catch (e) {
+        console.error("Erro ao carregar métricas da instância:", e);
+
+        return res.status(500).json({
+            message: "Não foi possível carregar as métricas. Tente novamente mais tarde."
+        });
+    }
+}
+
 export default {
+    listarMetricas,
     cadastrar,
     cadastrarVolume,
     cadastrarComponenteInstancia,
