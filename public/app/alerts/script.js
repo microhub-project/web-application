@@ -4,14 +4,18 @@ let filtrosPreenchidos = false;
 const TZ = "America/Sao_Paulo"; 
 
 function formatarDataHora(valor) {
-    if (!valor) return "—";
-    const d = new Date(valor);
-    if (isNaN(d)) return String(valor);
+    if (!valor || isNan(valor)) return "—";
+    let dateTime = String(valor).replace("","T");
+    if (!/[zZ]|[+-]\d{2}:?\d{2}$/.test(dateTime)) dateTime += "Z";
+    const d = new Date(dateTime)
     return d.toLocaleString("pt-BR", { timeZone: TZ });
 }
 
 function diaLocal(valor) {
-    const d = new Date(valor);
+    if(!valor) return "—"
+    let dateLocal = String(valor).replace("","T");
+    if(!/[zZ]|[+-]\d{2}:?\d{2}$/.test(dateLocal)) dateLocal +="Z";
+    const d = new Date(dateLocal);
     if (isNaN(d)) return "";
     return d.toLocaleDateString("en-CA", { timeZone: TZ });
 }

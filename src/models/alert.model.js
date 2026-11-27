@@ -10,7 +10,7 @@ const getAll = async (empresa_uuid, filters = {}) => {
       a.status,
       a.criado_em,
       a.data_hora_resolvido,
-      BIN_TO_UUID(a.resolvido_por) AS resolvido_por,
+      BIN_TO_UUID(a.responsavel) AS resolvido_por,
       i.nome AS instancia,
       c.nome AS componente,
       itc.limite_maximo,
@@ -84,7 +84,7 @@ const alterResolvidoPor = async (resolvido_por, empresa_uuid, uuid) => {
     UPDATE alerta
     SET
       status = 0,
-      resolvido_por = UUID_TO_BIN(?),
+      responsavel = UUID_TO_BIN(?),
       empresa_uuid = UUID_TO_BIN(?),
       data_hora_resolvido = CURRENT_TIMESTAMP()
     WHERE uuid = UUID_TO_BIN(?);
