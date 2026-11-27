@@ -327,7 +327,6 @@ function twoDigits(number) {
 }
 
 function drawChart(title, labels, values) {
-    clearChartError();
     chartTitle.innerHTML = title;
 
     if (myChart != null) {
@@ -361,7 +360,25 @@ function drawChart(title, labels, values) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            plugins: {
+                legend: {
+                    display: true,
+                    onClick: function () {},
+                    labels: {
+                        generateLabels: function () {
+                            return [
+                                {
+                                    text: "Média (" + average.toFixed(1) + ")",
+                                    fillStyle: "transparent",
+                                    strokeStyle: "#ef4444",
+                                    lineWidth: 2,
+                                    lineDash: [6, 6]
+                                }
+                            ];
+                        }
+                    }
+                }
+            },
             scales: {
                 x: { grid: { display: false } },
                 y: { beginAtZero: true, ticks: { precision: 0 } }
@@ -546,4 +563,4 @@ async function downloadPdf() {
     }
 }
 
-showEmployees();
+window.addEventListener("DOMContentLoaded", showEmployees);
