@@ -126,7 +126,6 @@ function atualizarKpis(alerts) {
     const criticos = ativos.filter(a => Number(a.prioridade) >= 3 || ["crítico", "critico"].includes(String(a.prioridade).toLowerCase()));
     const atencao = ativos.filter(a => !(Number(a.prioridade) >= 3 || ["crítico", "critico"].includes(String(a.prioridade).toLowerCase())));
 
-    // ALTERADO: compara a data local (antes usava UTC)
     const hoje = diaLocal(new Date());
     const resolvidosHoje = alerts.filter(a => {
         const resolvido = a.status === 0 || a.status === false || String(a.status).toLowerCase() === "resolvido";
@@ -172,8 +171,8 @@ async function resolverAlerta(alertUuid, usuarioSelecionado, selectEl) {
             if (selectEl) selectEl.disabled = false;
             if (typeof showToast === "function") {
                 showToast(body.message || "Não foi possível resolver o alerta.", "warning");
+                return;
             }
-            return;
         }
 
         if (typeof showToast === "function") {
@@ -260,7 +259,7 @@ async function getAlerts() {
         }
 
         const data = body.data || {};
-        const alerts = normalizarLista(data.alerts ?? (Array.isArray(body.data) ? body.data : []));
+        const alerts = normalizarLista(data.alerts ?? (Array.isArray(body.data)));
         const usuarios = normalizarLista(data.usuarios);
 
         if (usuarios.length > 0) {

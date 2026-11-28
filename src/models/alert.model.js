@@ -56,7 +56,7 @@ const getAll = async (empresa_uuid, filters = {}) => {
   }
 
   if (filters.resolvido_por && filters.resolvido_por !== "Todos") {
-    query += " AND a.resolvido_por = UUID_TO_BIN(?)";
+    query += " AND a.responsavel = UUID_TO_BIN(?)";
     params.push(filters.resolvido_por);
   }
 
@@ -85,9 +85,10 @@ const alterResolvidoPor = async (resolvido_por, empresa_uuid, uuid) => {
     SET
       status = 0,
       responsavel = UUID_TO_BIN(?),
-      empresa_uuid = UUID_TO_BIN(?),
       data_hora_resolvido = CURRENT_TIMESTAMP()
-    WHERE uuid = UUID_TO_BIN(?);
+    WHERE uuid = UUID_TO_BIN(?) 
+    AND empresa_uuid = UUID_TO_BIN(?)
+    AND status <> 0;
   `;
   const [result] = await database.execute(query, [resolvido_por, empresa_uuid, uuid]);
   return result;
